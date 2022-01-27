@@ -247,7 +247,7 @@ $popular_posts = [
             <?php foreach($popular_posts as $post): ?>
             <article class="popular__post post <?= $post['type']; ?>">
                 <header class="post__header">
-                    <h2><?= $post['title']; ?></h2>
+                    <h2><?= htmlspecialchars($post['title']); ?></h2>
                 </header>
 
                 <div class="post__main">
@@ -257,36 +257,36 @@ $popular_posts = [
                         <div class="post-photo__image-wrapper">
                             <img src="img/<?= $post['content']; ?>" alt="Фото от пользователя" width="360" height="240">
                         </div>
-                    <? break ?>
+                    <?php break ?>
 
-                    <? case 'post-quote': ?>
+                    <?php case 'post-quote': ?>
                         <blockquote>
                             <p>
-                                <?= $post['content']; ?>
+                                <?= htmlspecialchars($post['content']); ?>
                             </p>
                             <cite>Неизвестный Автор</cite>
                         </blockquote>
-                    <? break ?>
+                    <?php break ?>
 
-                    <? case 'post-text': ?>
-                        <p><?= $post['content']; ?></p>
-                    <? break ?>
+                    <?php case 'post-text': ?>
+                        <p><?= htmlspecialchars($post['content']); ?></p>
+                    <?php break ?>
 
-                    <? case 'post-link': ?>
+                    <?php case 'post-link': ?>
                         <div class="post-link__wrapper">
-                            <a class="post-link__external" href="http://<?= $post['content']; ?>" title="Перейти по ссылке">
+                            <a class="post-link__external" href="http://<?= htmlspecialchars($post['content']); ?>" title="Перейти по ссылке">
                                 <div class="post-link__info-wrapper">
                                     <div class="post-link__icon-wrapper">
                                         <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
                                     </div>
                                     <div class="post-link__info">
-                                        <h3><?= $post['title']; ?></h3>
+                                        <h3><?= htmlspecialchars($post['title']); ?></h3>
                                     </div>
                                 </div>
-                                <span><?= $post['content']; ?></span>
+                                <span><?= htmlspecialchars($post['content']); ?></span>
                             </a>
                         </div>
-                    <? break ?>
+                    <?php break ?>
 
                     <?php endswitch; ?>
                 </div>
@@ -298,7 +298,7 @@ $popular_posts = [
                                 <img class="post__author-avatar" src="img/<?= $post['avatar_url']; ?>" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
-                                <b class="post__author-name"><?= $post['user_name']; ?></b>
+                                <b class="post__author-name"><?= htmlspecialchars($post['user_name']); ?></b>
                                 <time class="post__time" datetime="">дата</time>
                             </div>
                         </a>
