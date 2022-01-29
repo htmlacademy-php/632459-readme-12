@@ -41,6 +41,34 @@ $popular_posts = [
         'avatar_url' => 'userpic.jpg'
     ]
 ];
+
+function clip_post_text(string $string, int $limit = 300): string
+{
+	$words = explode(" ", $string);
+	$symbols = 0;
+	$clipped = false;
+    $last_word_index = 0;
+
+	foreach($words as $word) {
+		if($symbols < $limit) {
+            $symbols += mb_strlen($word);
+		} else {
+            $clipped = true;
+            $last_word_index = array_search($word, $words);
+			break;
+		}
+	}
+
+	if($clipped) {
+		$clipped_array = array_slice($words, 0, $last_word_index);
+		$post_text = implode(" ", $clipped_array);
+		return "<p>" . $post_text . "..." . "</p>" . "<a class=\"post-text__more-link\" href=\"#\">Читать далее</a>";
+	}
+
+	$post_text = implode(" ", $words);
+	return "<p>" . $post_text . "</p>";
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -269,7 +297,7 @@ $popular_posts = [
                     <?php break ?>
 
                     <?php case 'post-text': ?>
-                        <p><?= htmlspecialchars($post['content']); ?></p>
+                        <?= clip_post_text(htmlspecialchars($post['content'])); ?>
                     <?php break ?>
 
                     <?php case 'post-link': ?>
