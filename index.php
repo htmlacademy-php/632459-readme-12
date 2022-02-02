@@ -42,31 +42,20 @@ $popular_posts = [
     ]
 ];
 
+function utf8_wordwrap($string, $width, $break="\n")
+{
+    $pattern = '/(?=\s)(.{1,'.$width.'})(?:\s|$)/uS';
+    $replace = '$1'.$break;
+    return preg_replace($pattern, $replace, $string);
+}
+
 function clip_post_text(string $string, int $limit = 300): string
 {
-	$words = explode(" ", $string);
-	$symbols = 0;
-	$clipped = false;
-    $last_word_index = 0;
-
-	foreach($words as $word) {
-		if($symbols < $limit) {
-            $symbols += mb_strlen($word);
-		} else {
-            $clipped = true;
-            $last_word_index = array_search($word, $words);
-			break;
-		}
+	if (mb_strlen($string) > $limit) {
+		$cutted_array = explode("\n", utf8_wordwrap($string, $limit, "\n"));
+		return "<p>" . $cutted_array[0] . "..." . "</p>" . "<a class=\"post-text__more-link\" href=\"#\">Читать далее</a>";
 	}
-
-	if($clipped) {
-		$clipped_array = array_slice($words, 0, $last_word_index);
-		$post_text = implode(" ", $clipped_array);
-		return "<p>" . $post_text . "..." . "</p>" . "<a class=\"post-text__more-link\" href=\"#\">Читать далее</a>";
-	}
-
-	$post_text = implode(" ", $words);
-	return "<p>" . $post_text . "</p>";
+	return "<p>" . $string . "</p>";
 }
 
 ?>
