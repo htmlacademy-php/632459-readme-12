@@ -12,4 +12,3 @@
     ]);
 
     print($layout_content);
-?>

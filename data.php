@@ -44,4 +44,3 @@
             'avatar_url' => 'userpic.jpg'
         ]
     ];
-?>
