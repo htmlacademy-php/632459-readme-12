@@ -1,4 +1,5 @@
 <?php
+
     function utf8_wordwrap($string, $width, $break="#!#!")
     {
         $pattern = '/(?=\s)(.{1,'.$width.'})(?:\s|$)/uS';
@@ -13,4 +14,41 @@
             return "<p>" . $cutted_array[0] . "..." . "</p>" . "<a class=\"post-text__more-link\" href=\"#\">Читать далее</a>";
         }
         return "<p>" . $string . "</p>";
+    }
+
+    function date_difference($date_1 , $date_2 , $differenceFormat = '%m %d %h %i'): array
+    {
+        $datetime1 = date_create($date_1);
+        $datetime2 = date_create($date_2);
+        $interval = date_diff($datetime1, $datetime2);
+		$date_intervals = ['months', 'days', 'hours', 'minutes'];
+        $date_diff_values = explode(" ", $interval->format($differenceFormat));
+
+		return array_combine($date_intervals, $date_diff_values);
+    }
+
+    function set_post_date($date): array
+		{
+        $current_date = date('Y-m-d H:i:s');
+		$time_title = date_format(date_create($date), 'd-m-Y H:i');
+        $date_array = date_difference($current_date, $date);
+        $delta_key = max($date_array);
+        $delta_value = array_search($delta_key, $date_array);
+
+        if ($delta_value === 'minutes') {
+            $date_ago = $delta_key . get_noun_plural_form($delta_key, ' минута', ' минуты', ' минут') . ' назад';
+        } else if ($delta_value === 'hours') {
+            $date_ago = $delta_key . get_noun_plural_form($delta_key, ' час', ' часа', ' часов') . ' назад';
+        } else if ($delta_value === 'days' && $delta_key < 7) {
+            $date_ago = $delta_key . get_noun_plural_form($delta_key, ' день', ' дня', ' дней') . ' назад';
+        } else if ($delta_value === 'days' && $delta_key >= 7) {
+			$date_ago = ($delta_key % 6) . get_noun_plural_form($delta_key % 6, ' неделя', ' недели', ' недель') . ' назад';
+		} else {
+            $date_ago = $delta_key . get_noun_plural_form($delta_key, ' месяц', ' месяца', ' месяцев') . ' назад';
+        }
+
+        return [
+            'time_title' => $time_title,
+            'date_ago' => $date_ago
+        ];
     }

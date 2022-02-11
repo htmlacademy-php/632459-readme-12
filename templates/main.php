@@ -85,7 +85,8 @@
         </div>
         <div class="popular__posts">
 
-            <?php foreach($popular_posts as $post): ?>
+            <?php foreach($popular_posts as $index => $post): ?>
+                <?php $date = generate_random_date($index); ?>
             <article class="popular__post post <?= $post['type']; ?>">
                 <header class="post__header">
                     <h2><?= htmlspecialchars($post['title']); ?></h2>
@@ -135,12 +136,11 @@
                     <div class="post__author">
                         <a class="post__author-link" href="#" title="Автор">
                             <div class="post__avatar-wrapper">
-                                <!--укажите путь к файлу аватара-->
                                 <img class="post__author-avatar" src="img/<?= $post['avatar_url']; ?>" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name"><?= htmlspecialchars($post['user_name']); ?></b>
-                                <time class="post__time" datetime="">дата</time>
+                                <time class="post__time" title="<?= set_post_date($date)['time_title'] ?>" datetime="<?= $date ?>"><?= set_post_date($date)['date_ago'] ?></time>
                             </div>
                         </a>
                     </div>
