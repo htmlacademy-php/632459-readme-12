@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS content_types (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  content_type VARCHAR(255),
-  content_class VARCHAR(255)
+  type VARCHAR(255),
+  class VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS hashtags (
