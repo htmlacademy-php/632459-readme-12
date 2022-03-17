@@ -56,3 +56,44 @@ INSERT INTO likes(like_user_id, like_post_id) VALUES (1, 2);
 
 INSERT INTO subscriptions(subscribe_id, follower_id) VALUES (1, 2);
 
+-- Добавление значений в content_types
+
+UPDATE content_types
+SET name = "Цитата", priority = 4 WHERE id = 1;
+
+UPDATE content_types
+SET name = "Текст", priority = 3 WHERE id = 2;
+
+UPDATE content_types
+SET name = "Фото", priority = 1 WHERE id = 3;
+
+UPDATE content_types
+SET name = "Видео", priority = 2 WHERE id = 4;
+
+UPDATE content_types
+SET name = "Ссылка", priority = 5 WHERE id = 5;
+
+
+-- Добавление пользователей
+
+INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
+  ("2021-03-11 16:10:00", "lara@mail.ru", "Лариса", "123", "userpic-larisa-small.jpg"),
+  ("2020-11-01 13:15:10", "vlad777@mail.ru", "Владик", "456", "userpic.jpg"),
+  ("2021-11-24 23:55:00", "v_ivanov@gmail.com", "Виктор", "11111", "userpic-mark.jpg");
+
+-- Привязка пользователей к существующим постам
+
+UPDATE posts
+SET user_id = 3 WHERE id = 1;
+
+UPDATE posts
+SET user_id = 4 WHERE id = 2;
+
+UPDATE posts
+SET user_id = 5 WHERE id = 3;
+
+UPDATE posts
+SET user_id = 3 WHERE id = 4;
+
+UPDATE posts
+SET user_id = 4 WHERE id = 5;
