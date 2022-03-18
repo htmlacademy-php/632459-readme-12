@@ -78,3 +78,11 @@ CREATE TABLE IF NOT EXISTS likes (
 );
 
 CREATE INDEX user_login ON users(login);
+
+-- Добавление столбцов в content_types
+
+ALTER TABLE content_types
+ADD name VARCHAR(255);
+
+ALTER TABLE content_types
+ADD priority INT UNSIGNED;
