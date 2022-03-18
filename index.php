@@ -7,31 +7,34 @@
     if (!$con) {
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);
-    } else {
-        $sql = 'SELECT type, name FROM content_types ORDER BY priority';
-        $result = mysqli_query($con, $sql);
-
-        if ($result) {
-            $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        } else {
-            $error = mysqli_error($con);
-            print("Ошибка подключения: " . $error);
-        }
-
-        $sql = 'SELECT posts.*, login, avatar_path, class FROM posts
-        JOIN users u ON user_id = u.id
-        JOIN content_types c ON content_type = c.id
-        ORDER BY show_count DESC';
-
-        $result = mysqli_query($con, $sql);
-
-        if ($result) {
-            $popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        } else {
-            $error = mysqli_error($con);
-            print("Ошибка подключения: " . $error);
-        }
+        die();
     }
+
+    $sql = 'SELECT type, name FROM content_types ORDER BY priority';
+    $result = mysqli_query($con, $sql);
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка подключения: " . $error);
+        die();
+    }
+
+    $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    $sql = 'SELECT posts.*, login, avatar_path, class FROM posts
+    JOIN users u ON user_id = u.id
+    JOIN content_types c ON content_type = c.id
+    ORDER BY show_count DESC';
+
+    $result = mysqli_query($con, $sql);
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка подключения: " . $error);
+        die();
+    }
+
+    $popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $page_content = include_template('main.php', [
         'popular_posts' => $popular_posts,
