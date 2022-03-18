@@ -57,7 +57,7 @@
 
             <?php foreach($popular_posts as $index => $post): ?>
                 <?php $date = generate_random_date($index); ?>
-            <article class="popular__post post <?= $post['class']; ?>">
+            <article class="popular__post post <?= $post['class'] ?? ''; ?>">
                 <header class="post__header">
                     <h2><?= htmlspecialchars($post['title'] ?? ''); ?></h2>
                 </header>
@@ -106,10 +106,10 @@
                     <div class="post__author">
                         <a class="post__author-link" href="#" title="Автор">
                             <div class="post__avatar-wrapper">
-                                <img class="post__author-avatar" src="img/<?= $post['avatar_path']; ?>" alt="Аватар пользователя">
+                                <img class="post__author-avatar" src="img/<?= $post['avatar_path'] ?? ''; ?>" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
-                                <b class="post__author-name"><?= htmlspecialchars($post['login']); ?></b>
+                                <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? ''); ?></b>
                                 <time class="post__time" title="<?= set_post_date($date)['time_title'] ?>" datetime="<?= $date ?>"><?= set_post_date($date)['date_ago'] ?></time>
                             </div>
                         </a>
