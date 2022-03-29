@@ -36,16 +36,16 @@
                 <b class="popular__filters-caption filters__caption">Тип контента:</b>
                 <ul class="popular__filters-list filters__list">
                     <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                        <a class="filters__button filters__button--ellipse filters__button--all filters__button--active" href="#">
+                        <a class="filters__button filters__button--ellipse filters__button--all <?= isset($_GET['tab']) && $_GET['tab'] === '' ? 'filters__button--active' : '' ?>" href="/?tab">
                             <span>Все</span>
                         </a>
                     </li>
                     <?php foreach($types as $type): ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--photo button" href="#">
-                            <span class="visually-hidden"><?= $type['name'] ?></span>
+                        <a class="filters__button filters__button--<?= $type['type']; ?> button <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active' : '' ?>" href="/?tab=<?= $type['id']; ?>">
+                            <span class="visually-hidden"><?= $type['name']; ?></span>
                             <svg class="filters__icon" width="22" height="18">
-                                <use xlink:href="#icon-filter-<?= $type['type'] ?>"></use>
+                                <use xlink:href="#icon-filter-<?= $type['type']; ?>"></use>
                             </svg>
                         </a>
                     </li>
@@ -59,7 +59,7 @@
                 <?php $date = generate_random_date($index); ?>
             <article class="popular__post post <?= $post['class'] ?? ''; ?>">
                 <header class="post__header">
-                    <h2><?= htmlspecialchars($post['title'] ?? ''); ?></h2>
+                    <h2><a href="post.php/?post=<?= $post['id'] ?? ''; ?>"><?= htmlspecialchars($post['title'] ?? ''); ?></a></h2>
                 </header>
 
                 <div class="post__main">

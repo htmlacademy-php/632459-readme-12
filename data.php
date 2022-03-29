@@ -4,5 +4,6 @@
     $user_name = 'Алина Глинская';
 
     $page_titles = [
-        'index' => 'readme: популярное'
+        'index' => 'readme: популярное',
+        'post' => 'readme: страница поста'
     ];
