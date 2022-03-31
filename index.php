@@ -3,6 +3,7 @@
     require_once 'helpers.php';
     require_once 'functions.php';
     require_once 'data.php';
+    require_once 'post.php';
 
     if (!$con) {
         $error = mysqli_connect_error();
@@ -50,18 +51,21 @@
 
     $popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    $page_content = include_template('main.php', [
-        'popular_posts' => $popular_posts,
-		'types' => $types,
-        'tab' => $tab
-    ]);
+    if (!$post_id) {
+        $page_content = include_template('main.php', [
+            'popular_posts' => $popular_posts,
+            'types' => $types,
+            'tab' => $tab
+        ]);
 
-    $layout_content = include_template('layout.php', [
-        'content' => $page_content,
-        'title' => $page_titles['index'],
-        'user_name' => $user_name,
-        'is_auth' => $is_auth,
-        'class' => $main_classes['index']
-    ]);
+        $layout_content = include_template('layout.php', [
+            'content' => $page_content,
+            'title' => $page_titles['index'],
+            'user_name' => $user_name,
+            'is_auth' => $is_auth
+        ]);
 
-    print($layout_content);
+        print($layout_content);
+    }
+
+

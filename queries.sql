@@ -55,6 +55,17 @@ INSERT INTO likes(like_user_id, like_post_id) VALUES (1, 2);
 -- Подписка на пользователя
 
 INSERT INTO subscriptions(subscribe_id, follower_id) VALUES (1, 2);
+INSERT INTO subscriptions(subscribe_id, follower_id) VALUES
+  (3, 2),
+  (3, 4),
+  (9, 2),
+  (9, 1),
+  (1, 5),
+  (1, 6),
+  (7, 8),
+  (4, 2),
+  (9, 2),
+  (7, 2);
 
 -- Добавление значений в content_types
 
@@ -81,6 +92,15 @@ INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
   ("2020-11-01 13:15:10", "vlad777@mail.ru", "Владик", "456", "userpic.jpg"),
   ("2021-11-24 23:55:00", "v_ivanov@gmail.com", "Виктор", "11111", "userpic-mark.jpg");
 
+INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
+  ("2018-09-09 15:00:01", "markopolo@mail.ru", "Марк Смолов", "f00fcf", "userpic-mark.jpg"),
+  ("2017-03-09 13:07:07", "elvira1987@mail.ru", "Эльвира Хайпулинова", "135el", "userpic-elvira.jpg"),
+  ("2022-01-14 22:15:00", "firsovatanyua@gmail.com", "Таня Фирсова", "awesome", "userpic-tanya.jpg"),
+  ("2021-01-29 23:23:20", "petr-demin@mail.ru", "Петр Демин", "wasd!;", "userpic-petro.jpg");
+
+UPDATE users
+SET login = "Лариса Роговая" WHERE id = 3;
+
 -- Привязка пользователей к существующим постам
 
 UPDATE posts
@@ -90,10 +110,10 @@ UPDATE posts
 SET user_id = 4 WHERE id = 2;
 
 UPDATE posts
-SET user_id = 5 WHERE id = 3;
+SET user_id = 9 WHERE id = 3;
 
 UPDATE posts
-SET user_id = 3 WHERE id = 4;
+SET user_id = 7 WHERE id = 4;
 
 UPDATE posts
-SET user_id = 4 WHERE id = 5;
+SET user_id = 3 WHERE id = 5;
