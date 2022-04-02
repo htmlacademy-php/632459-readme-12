@@ -99,12 +99,7 @@
         die();
     }
 
-    $hashtags_rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    $hashtags = [];
-
-    foreach ($hashtags_rows as $hashtag) {
-        array_push($hashtags, $hashtag[0]);
-    }
+    $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     /* Данные о комментариях и авторах */
 
@@ -124,7 +119,24 @@
 
     $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    /* Шаблоны */
+    /* Количество комментариев */
+
+    $sql_comments_amount = 'SELECT COUNT(id) AS total FROM comments '
+    . 'WHERE post_id = ?';
+
+    $stmt = db_get_prepare_stmt($con, $sql_comments_amount, [$post_id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка подключения: " . $error);
+        die();
+    }
+
+    $comments_amount = mysqli_fetch_array($result);
+
+    /* Подключение шаблонов */
 
     $post_link = include_template('post-link.php', [
         'url' => $post['link'],
@@ -180,7 +192,8 @@
             'publications' => $publications,
             'likes' => $likes,
             'hashtags' => $hashtags,
-            'comments' => $comments
+            'comments' => $comments,
+            'comments_amount' => $comments_amount
         ]);
 
         $layout_content = include_template('layout.php', [

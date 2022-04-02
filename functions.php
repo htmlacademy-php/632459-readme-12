@@ -28,7 +28,7 @@
     }
 
     function set_post_date($date): array
-		{
+	{
         $current_date = date('Y-m-d H:i:s');
 		$time_title = date_format(date_create($date), 'd-m-Y H:i');
         $date_array = date_difference($current_date, $date);
@@ -52,4 +52,27 @@
             'time_title' => $time_title,
             'date_ago' => $date_ago
         ];
+    }
+
+    function set_comment_date($date): string
+    {
+        $current_date = date('Y-m-d H:i:s');
+        $date_array = date_difference($current_date, $date);
+        $delta_array = array_filter($date_array);
+        $delta_value = array_key_first($delta_array);
+        $delta_key = $delta_array[$delta_value];
+
+        if ($delta_value === 'minutes') {
+            $date_ago = $delta_key . ' мин назад';
+        } else if ($delta_value === 'hours') {
+            $date_ago = $delta_key . ' ч назад';
+        } else if ($delta_value === 'days' && $delta_key < 7) {
+            $date_ago = $delta_key . ' д назад';
+        } else if ($delta_value === 'days' && $delta_key >= 7) {
+			$date_ago = round(($delta_key / 7)) . ' н назад';
+		} else {
+            $date_ago = $delta_key . ' мес назад';
+        }
+
+        return $date_ago;
     }

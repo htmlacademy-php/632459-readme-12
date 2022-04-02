@@ -22,7 +22,7 @@
                 <svg class="post__indicator-icon" width="19" height="17">
                   <use xlink:href="#icon-comment"></use>
                 </svg>
-                <span>25</span>
+                <span><?= $comments_amount['total'] ?? ''; ?></span>
                 <span class="visually-hidden">количество комментариев</span>
               </a>
               <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
@@ -37,7 +37,7 @@
           </div>
           <ul class="post__tags">
             <?php foreach ($hashtags as $hashtag): ?>
-            <li><a href="#">#<?= $hashtag; ?></a></li>
+            <li><a href="#">#<?= $hashtag['hashtag_name'] ?? ''; ?></a></li>
             <?php endforeach; ?>
           </ul>
           <div class="comments">
@@ -58,42 +58,26 @@
             </form>
             <div class="comments__list-wrapper">
               <ul class="comments__list">
+                <?php foreach ($comments as $comment): ?>
                 <li class="comments__item user">
                   <div class="comments__avatar">
                     <a class="user__avatar-link" href="#">
-                      <img class="comments__picture" src="img/userpic-larisa.jpg" alt="Аватар пользователя">
+                      <img class="comments__picture" src="img/<?= $comment['avatar_path'] ?? ''; ?>" alt="Аватар пользователя">
                     </a>
                   </div>
                   <div class="comments__info">
                     <div class="comments__name-wrapper">
                       <a class="comments__user-name" href="#">
-                        <span>Лариса Роговая</span>
+                        <span><? $comment['login'] ?? ''; ?></span>
                       </a>
-                      <time class="comments__time" datetime="2019-03-20">1 ч назад</time>
+                      <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>">1 ч назад</time>
                     </div>
                     <p class="comments__text">
-                      Красота!!!1!
+                      <?= $comment['text'] ?? ''; ?>
                     </p>
                   </div>
                 </li>
-                <li class="comments__item user">
-                  <div class="comments__avatar">
-                    <a class="user__avatar-link" href="#">
-                      <img class="comments__picture" src="img/userpic-larisa.jpg" alt="Аватар пользователя">
-                    </a>
-                  </div>
-                  <div class="comments__info">
-                    <div class="comments__name-wrapper">
-                      <a class="comments__user-name" href="#">
-                        <span>Лариса Роговая</span>
-                      </a>
-                      <time class="comments__time" datetime="2019-03-18">2 дня назад</time>
-                    </div>
-                    <p class="comments__text">
-                      Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-                    </p>
-                  </div>
-                </li>
+                <?php endforeach; ?>
               </ul>
               <a class="comments__more-link" href="#">
                 <span>Показать все комментарии</span>
@@ -118,12 +102,12 @@
           </div>
           <div class="post-details__rating user__rating">
             <p class="post-details__rating-item user__rating-item user__rating-item--subscribers">
-              <span class="post-details__rating-amount user__rating-amount"><?= $subscribers['total'] ?></span>
-              <span class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($subscribers['total'], 'подписчик', 'подписчика', 'подписчиков') ?></span>
+              <span class="post-details__rating-amount user__rating-amount"><?= $subscribers['total'] ?? ''; ?></span>
+              <span class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($subscribers['total'], 'подписчик', 'подписчика', 'подписчиков') ?? ''; ?></span>
             </p>
             <p class="post-details__rating-item user__rating-item user__rating-item--publications">
-              <span class="post-details__rating-amount user__rating-amount"><?= $publications['total']; ?></span>
-              <span class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($publications['total'], 'публикация', 'публикации', 'публикаций') ?></span>
+              <span class="post-details__rating-amount user__rating-amount"><?= $publications['total'] ?? ''; ?></span>
+              <span class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($publications['total'], 'публикация', 'публикации', 'публикаций') ?? ''; ?></span>
             </p>
           </div>
           <div class="post-details__user-buttons user__buttons">
