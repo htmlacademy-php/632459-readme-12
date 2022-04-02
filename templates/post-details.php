@@ -5,7 +5,7 @@
       <h2 class="visually-hidden">Публикация</h2>
       <div class="post-details__wrapper post-photo">
         <div class="post-details__main-block post post--details">
-         <?php print($post_main); ?>
+         <?= $post_main; ?>
           <div class="post__indicators">
             <div class="post__buttons">
               <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
@@ -15,7 +15,7 @@
                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                   <use xlink:href="#icon-heart-active"></use>
                 </svg>
-                <span>250</span>
+                <span><?= $likes['total']; ?></span>
                 <span class="visually-hidden">количество лайков</span>
               </a>
               <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
@@ -33,15 +33,12 @@
                 <span class="visually-hidden">количество репостов</span>
               </a>
             </div>
-            <span class="post__view">500 просмотров</span>
+            <span class="post__view"><?= $post['show_count']; ?> просмотров</span>
           </div>
           <ul class="post__tags">
-            <li><a href="#">#nature</a></li>
-            <li><a href="#">#globe</a></li>
-            <li><a href="#">#photooftheday</a></li>
-            <li><a href="#">#canon</a></li>
-            <li><a href="#">#landscape</a></li>
-            <li><a href="#">#щикарныйвид</a></li>
+            <?php foreach ($hashtags as $hashtag): ?>
+            <li><a href="#">#<?= $hashtag; ?></a></li>
+            <?php endforeach; ?>
           </ul>
           <div class="comments">
             <form class="comments__form form" action="#" method="post">

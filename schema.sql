@@ -35,10 +35,8 @@ CREATE TABLE IF NOT EXISTS posts (
   show_count INT UNSIGNED,
 	user_id INT UNSIGNED,
 	content_type INT UNSIGNED,
-	hashtag_id INT UNSIGNED,
   CONSTRAINT user_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT content_type_fk FOREIGN KEY (content_type) REFERENCES content_types (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT hashtag_fk FOREIGN KEY (hashtag_id) REFERENCES hashtags (id) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT content_type_fk FOREIGN KEY (content_type) REFERENCES content_types (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS comments (
@@ -75,6 +73,11 @@ CREATE TABLE IF NOT EXISTS likes (
 	post_id INT UNSIGNED,
   CONSTRAINT like_user_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT like_post_fk FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS post_tags (
+  post_id INT UNSIGNED,
+  hashtag_id INT UNSIGNED
 );
 
 CREATE INDEX user_login ON users(login);

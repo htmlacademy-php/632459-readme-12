@@ -65,6 +65,67 @@
 
     $publications = mysqli_fetch_array($result);
 
+    /* Подсчет лайков поста */
+
+    $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
+    . 'WHERE like_post_id = ?';
+
+    $stmt = db_get_prepare_stmt($con, $sql_likes, [$post_id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка подключения: " . $error);
+        die();
+    }
+
+    $likes = mysqli_fetch_array($result);
+
+    /* Хэштеги к посту */
+
+    $sql_hashtags = 'SELECT hashtag_name FROM posts p '
+    . 'JOIN post_tags pt ON p.id=pt.post_id '
+    . 'JOIN hashtags h ON pt.hashtag_id=h.id '
+    . 'WHERE p.id = ?';
+
+    $stmt = db_get_prepare_stmt($con, $sql_hashtags, [$post_id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка подключения: " . $error);
+        die();
+    }
+
+    $hashtags_rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $hashtags = [];
+
+    foreach ($hashtags_rows as $hashtag) {
+        array_push($hashtags, $hashtag[0]);
+    }
+
+    /* Данные о комментариях и авторах */
+
+    $sql_comments = 'SELECT date_add, text, login, avatar_path FROM comments c '
+    . 'JOIN users u ON u.id=c.user_id '
+    . 'WHERE c.post_id = ?';
+
+    $stmt = db_get_prepare_stmt($con, $sql_comments, [$post_id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка подключения: " . $error);
+        die();
+    }
+
+    $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    /* Шаблоны */
+
     $post_link = include_template('post-link.php', [
         'url' => $post['link'],
         'title' => $post['title']
@@ -103,18 +164,23 @@
         case 'video':
             $post_main = $post_video;
             break;
+        default:
+            $post_main = '';
     }
 
     if ($post_id && !$post) {
         header('HTTP/1.0 404 not found');
     }
 
-    if ($post_id) {
+    if ($post_id && $post) {
         $page_content = include_template('post-details.php',[
             'post' => $post,
             'post_main' => $post_main,
             'subscribers' => $subscribers,
-            'publications' => $publications
+            'publications' => $publications,
+            'likes' => $likes,
+            'hashtags' => $hashtags,
+            'comments' => $comments
         ]);
 
         $layout_content = include_template('layout.php', [
