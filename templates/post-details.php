@@ -68,7 +68,7 @@
                   <div class="comments__info">
                     <div class="comments__name-wrapper">
                       <a class="comments__user-name" href="#">
-                        <span><? $comment['login'] ?? ''; ?></span>
+                        <span><?= $comment['login'] ?? ''; ?></span>
                       </a>
                       <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>"><?= set_post_date($comment['date_add'], true)['date_ago'] ?? ''; ?></time>
                     </div>

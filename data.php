@@ -7,3 +7,5 @@
         'index' => 'readme: популярное',
         'post' => 'readme: страница поста'
     ];
+
+    return [$is_auth, $user_name, $page_titles];

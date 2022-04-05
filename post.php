@@ -11,7 +11,7 @@
     }
 
     /* Данные о посте и пользователе */
-    $post_id = filter_input(INPUT_GET, 'post');
+    $post_id = filter_input(INPUT_GET, 'post', FILTER_VALIDATE_INT);
 
     $sql_posts = 'SELECT posts.*, type, login, avatar_path FROM posts '
     . 'JOIN content_types c ON content_type = c.id '
@@ -138,43 +138,33 @@
 
     /* Подключение шаблонов */
 
-    $post_link = include_template('post-link.php', [
-        'url' => $post['link'],
-        'title' => $post['title']
-    ]);
-
-    $post_photo = include_template('post-photo.php', [
-        'img_url' => $post['img']
-    ]);
-
-    $post_quote = include_template('post-quote.php', [
-        'text' => $post['text'],
-        'author' => $post['cite_author']
-    ]);
-
-    $post_text = include_template('post-text.php', [
-        'text' => $post['text']
-    ]);
-
-    $post_video = include_template('post-video.php', [
-        'youtube_url' => $post['video']
-    ]);
-
     switch ($post['type']) {
         case 'link':
-            $post_main = $post_link;
+            $post_main = include_template('post-link.php', [
+                'url' => $post['link'],
+                'title' => $post['title']
+            ]);
             break;
         case 'photo':
-            $post_main = $post_photo;
+            $post_main = include_template('post-photo.php', [
+                'img_url' => $post['img']
+            ]);
             break;
         case 'quote':
-            $post_main = $post_quote;
+            $post_main = include_template('post-quote.php', [
+                'text' => $post['text'],
+                'author' => $post['cite_author']
+            ]);
             break;
         case 'text':
-            $post_main = $post_text;
+            $post_main = include_template('post-text.php', [
+                'text' => $post['text']
+            ]);
             break;
         case 'video':
-            $post_main = $post_video;
+            $post_main = $include_template('post-video.php', [
+                'youtube_url' => $post['video']
+            ]);
             break;
         default:
             $post_main = '';

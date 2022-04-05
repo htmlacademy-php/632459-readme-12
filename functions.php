@@ -21,16 +21,16 @@
         $datetime1 = date_create($date_1);
         $datetime2 = date_create($date_2);
         $interval = date_diff($datetime1, $datetime2);
-		$date_intervals = ['months', 'days', 'hours', 'minutes'];
+				$date_intervals = ['months', 'days', 'hours', 'minutes'];
         $date_diff_values = explode(" ", $interval->format($differenceFormat));
 
 		return array_combine($date_intervals, $date_diff_values);
     }
 
-    function set_post_date($date, $short = false): array
+    function set_post_date(string $date, bool $short = false): array
 	{
         $current_date = date('Y-m-d H:i:s');
-		$time_title = date_format(date_create($date), 'd-m-Y H:i');
+				$time_title = date_format(date_create($date), 'd-m-Y H:i');
         $date_array = date_difference($current_date, $date);
         $delta_array = array_filter($date_array);
         $delta_value = array_key_first($delta_array);
