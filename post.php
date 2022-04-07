@@ -18,15 +18,7 @@
     . 'JOIN users u ON user_id = u.id '
     . 'WHERE posts.id = ?';
 
-    $stmt = db_get_prepare_stmt($con, $sql_posts, [$post_id]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        $error = mysqli_error($con);
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+    $result = form_sql_request($con, $sql_posts, [$post_id]);
 
     $post = mysqli_fetch_array($result);
 
@@ -35,15 +27,7 @@
     . 'JOIN posts p ON p.user_id = subscribe_id '
     . 'WHERE p.id = ?';
 
-    $stmt = db_get_prepare_stmt($con, $sql_subscribers, [$post_id]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        $error = mysqli_error($con);
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+    $result = form_sql_request($con, $sql_subscribers, [$post_id]);
 
     $subscribers = mysqli_fetch_array($result);
 
@@ -53,15 +37,7 @@
     . 'WHERE user_id = (SELECT user_id FROM posts '
     . 'WHERE id = ?)';
 
-    $stmt = db_get_prepare_stmt($con, $sql_publications, [$post_id]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        $error = mysqli_error($con);
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+    $result = form_sql_request($con, $sql_publications, [$post_id]);
 
     $publications = mysqli_fetch_array($result);
 
@@ -70,15 +46,7 @@
     $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
     . 'WHERE like_post_id = ?';
 
-    $stmt = db_get_prepare_stmt($con, $sql_likes, [$post_id]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        $error = mysqli_error($con);
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+    $result = form_sql_request($con, $sql_likes, [$post_id]);
 
     $likes = mysqli_fetch_array($result);
 
@@ -89,15 +57,7 @@
     . 'JOIN hashtags h ON pt.hashtag_id=h.id '
     . 'WHERE p.id = ?';
 
-    $stmt = db_get_prepare_stmt($con, $sql_hashtags, [$post_id]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        $error = mysqli_error($con);
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+    $result = form_sql_request($con, $sql_hashtags, [$post_id]);
 
     $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -107,15 +67,7 @@
     . 'JOIN users u ON u.id=c.user_id '
     . 'WHERE c.post_id = ?';
 
-    $stmt = db_get_prepare_stmt($con, $sql_comments, [$post_id]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        $error = mysqli_error($con);
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+    $result = form_sql_request($con, $sql_comments, [$post_id]);
 
     $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -124,15 +76,7 @@
     $sql_comments_amount = 'SELECT COUNT(id) AS total FROM comments '
     . 'WHERE post_id = ?';
 
-    $stmt = db_get_prepare_stmt($con, $sql_comments_amount, [$post_id]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        $error = mysqli_error($con);
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+    $result = form_sql_request($con, $sql_comments_amount, [$post_id]);
 
     $comments_amount = mysqli_fetch_array($result);
 

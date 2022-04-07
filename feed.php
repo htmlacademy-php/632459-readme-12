@@ -3,22 +3,17 @@
     require_once 'helpers.php';
     require_once 'functions.php';
     require_once 'data.php';
-    require_once 'post.php';
 
-if (!$con) {
+    [$is_auth, $user_name, $page_titles] = require_once ('data.php');
+
+    if (!$con) {
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);
         die();
     }
 
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
-    $result = mysqli_query($con, $sql_types);
-
-    if (!$result) {
-        $error = mysqli_error($con);
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+    $result = form_sql_request($con, $sql_types, []);
 
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
