@@ -54,7 +54,7 @@
         ];
     }
 
-    function form_sql_request(object $link, string $request, array $params): object {
+    function form_sql_request(mysqli $link, string $request, array $params): mysqli_result {
         if ($params) {
             $stmt = db_get_prepare_stmt($link, $request, $params);
             mysqli_stmt_execute($stmt);

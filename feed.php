@@ -14,7 +14,6 @@
 
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
     $result = form_sql_request($con, $sql_types, []);
-
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $tab = filter_input(INPUT_GET, 'tab');
@@ -24,7 +23,7 @@
         . 'JOIN content_types c ON content_type = c.id '
         . 'ORDER BY show_count DESC';
 
-    $stmt = db_get_prepare_stmt($con, $sql_filter);
+    $params = [];
 
     if ($tab) {
         $sql_filter = 'SELECT posts.*, login, avatar_path, class, type FROM posts '
@@ -32,17 +31,10 @@
         . 'JOIN content_types c ON content_type = c.id '
         . 'WHERE c.id = ? '
         . 'ORDER BY show_count DESC';
-        $stmt = db_get_prepare_stmt($con, $sql_filter, [$tab]);
+        $params = [$tab];
     }
 
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        $error = mysqli_error($con);
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+    $result = form_sql_request($con, $sql_filter, $params);
 
     $popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
