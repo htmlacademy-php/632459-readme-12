@@ -51,10 +51,39 @@ WHERE post_id = 2;
 -- Добавление лайка к посту
 
 INSERT INTO likes(like_user_id, like_post_id) VALUES (1, 2);
+INSERT INTO likes(like_user_id, like_post_id) VALUES
+(1, 3),
+(1, 4),
+(1, 5),
+(2, 1),
+(2, 3),
+(2, 4),
+(3, 4),
+(3, 5),
+(5, 1),
+(5, 2),
+(7, 1),
+(7, 2),
+(7, 5),
+(8, 1),
+(9, 1),
+(9, 3),
+(9, 5);
 
 -- Подписка на пользователя
 
 INSERT INTO subscriptions(subscribe_id, follower_id) VALUES (1, 2);
+INSERT INTO subscriptions(subscribe_id, follower_id) VALUES
+  (3, 2),
+  (3, 4),
+  (9, 2),
+  (9, 1),
+  (1, 5),
+  (1, 6),
+  (7, 8),
+  (4, 2),
+  (9, 2),
+  (7, 2);
 
 -- Добавление значений в content_types
 
@@ -81,6 +110,15 @@ INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
   ("2020-11-01 13:15:10", "vlad777@mail.ru", "Владик", "456", "userpic.jpg"),
   ("2021-11-24 23:55:00", "v_ivanov@gmail.com", "Виктор", "11111", "userpic-mark.jpg");
 
+INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
+  ("2018-09-09 15:00:01", "markopolo@mail.ru", "Марк Смолов", "f00fcf", "userpic-mark.jpg"),
+  ("2017-03-09 13:07:07", "elvira1987@mail.ru", "Эльвира Хайпулинова", "135el", "userpic-elvira.jpg"),
+  ("2022-01-14 22:15:00", "firsovatanyua@gmail.com", "Таня Фирсова", "awesome", "userpic-tanya.jpg"),
+  ("2021-01-29 23:23:20", "petr-demin@mail.ru", "Петр Демин", "wasd!;", "userpic-petro.jpg");
+
+UPDATE users
+SET login = "Лариса Роговая" WHERE id = 3;
+
 -- Привязка пользователей к существующим постам
 
 UPDATE posts
@@ -90,10 +128,68 @@ UPDATE posts
 SET user_id = 4 WHERE id = 2;
 
 UPDATE posts
-SET user_id = 5 WHERE id = 3;
+SET user_id = 9 WHERE id = 3;
 
 UPDATE posts
-SET user_id = 3 WHERE id = 4;
+SET user_id = 7 WHERE id = 4;
 
 UPDATE posts
-SET user_id = 4 WHERE id = 5;
+SET user_id = 3 WHERE id = 5;
+
+-- Добавление хэштегов
+
+INSERT INTO hashtags(hashtag_name) VALUES
+  ('шикарный вид'),
+  ('globe'),
+  ('landscape'),
+  ('nature'),
+  ('canon'),
+  ('photooftheday'),
+  ('курсы'),
+  ('цитата'),
+  ('любовь'),
+  ('сериалы'),
+  ('gameofthrones'),
+  ('htmlacademy'),
+  ('html'),
+  ('php'),
+  ('postoftheday');
+
+-- Привязка хэштегов к постам
+
+INSERT INTO post_tags(post_id, hashtag_id) VALUES
+  (1, 8),
+  (1, 9),
+  (1, 15),
+  (2, 10),
+  (2, 11),
+  (3, 1),
+  (3, 2),
+  (3, 3),
+  (3, 4),
+  (3, 5),
+  (3, 6),
+  (4, 1),
+  (4, 2),
+  (4, 3),
+  (4, 4),
+  (4, 5),
+  (5, 7),
+  (5, 12),
+  (5, 13),
+  (5, 14),
+  (5, 15);
+
+-- Добавление комментариев
+
+INSERT INTO comments(date_add, text, user_id, post_id) VALUES
+  ("2022-04-01 13:00:05", "Красота!!!", 3, 3),
+  ("2022-03-03 14:15:07", "Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.", 3, 3),
+  ("2021-11-11 12:42:00", "Жизненно...", 8, 1),
+  ("2021-12-30 23:00:10", "«Ходячие Мертвецы» тоже крутой сериал", 9, 2),
+  ("2022-02-25 22:12:12", "Думаю, каждый хоть раз мечтал о домике на берегу моря :)", 4, 4),
+  ("2022-02-14 21:00:45", "Мечты сбываются, стоит только расхотеть", 9, 4),
+  ("2022-03-09 16:33:00", "Учусь в Академии с 2018 года", 6, 5),
+  ("2022-03-09 15:12:08", "Интересно, кто автор", 7, 1),
+  ("2022-01-15 16:12:00", "Купила себе всю серию книг «Песнь льда и пламени»", 7, 2);
+
