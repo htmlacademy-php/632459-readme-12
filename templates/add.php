@@ -115,7 +115,7 @@
               <ul class="adding-post__tabs-list filters__list tabs__list">
                 <?php foreach ($types as $type): ?>
                 <li class="adding-post__tabs-item filters__item">
-                  <a class="adding-post__tabs-link filters__button filters__button--<?= $type['type'] ?> <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active tabs__item--active' : '' ?> tabs__item button" href="/add.php?tab=<?= $type['id'] ?>">
+                  <a class="adding-post__tabs-link filters__button filters__button--<?= $type['type'] ?> <?= isset($_GET['type']) && $_GET['type'] === $type['type'] ? 'filters__button--active tabs__item--active' : '' ?> tabs__item button" href="/add.php?type=<?= $type['type'] ?>">
                     <svg class="filters__icon" width="22" height="18">
                       <use xlink:href="#icon-filter-<?= $type['type'] ?>"></use>
                     </svg>
@@ -126,21 +126,21 @@
               </ul>
             </div>
             <div class="adding-post__tab-content">
-              <section class="adding-post__photo tabs__content <?= isset($_GET['tab']) && $_GET['tab'] === '3' ? 'tabs__content--active' : '' ?>">
+              <section class="adding-post__photo tabs__content <?= isset($_GET['type']) && $_GET['type'] === 'photo' ? 'tabs__content--active' : '' ?>">
                 <h2 class="visually-hidden">Форма добавления фото</h2>
-                <form class="adding-post__form form" action="add.php" method="post" enctype="multipart/form-data">
+                <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post" enctype="multipart/form-data">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
-                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['tab'] ?? ''; ?>">
+                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['type'] ?? ''; ?>">
                         <?= $title_input ?? ''; ?>
                       <div class="adding-post__input-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="photo-url">Ссылка из интернета</label>
                         <div class="form__input-section">
-                          <input class="adding-post__input form__input" id="photo-url" type="text" name="photo-heading" placeholder="Введите ссылку">
-                          <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
+                          <input class="adding-post__input form__input" id="photo-url" type="text" name="link" value="<?= getPostVal('link'); ?>" placeholder="Введите ссылку">
+                          <button class="form__error-button button" type="button" <?= $errors['link'] ? "style=display:block;" : "" ?>>!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
-                            <h3 class="form__error-title">Заголовок сообщения</h3>
-                            <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                            <h3 class="form__error-title">Ссылка</h3>
+                            <p class="form__error-desc"><?= $errors['link'] ?? '' ?></p>
                           </div>
                         </div>
                       </div>
@@ -156,7 +156,7 @@
                   <div class="adding-post__input-file-container form__input-container form__input-container--file">
                     <div class="adding-post__input-file-wrapper form__input-file-wrapper">
                       <div class="adding-post__file-zone adding-post__file-zone--photo form__file-zone dropzone">
-                        <input class="adding-post__input-file form__input-file" id="userpic-file-photo" type="file" name="userpic-file-photo" title=" ">
+                        <input class="adding-post__input-file form__input-file" id="userpic-file-photo" type="file" name="image">
                         <div class="form__file-zone-text">
                           <span>Перетащите фото сюда</span>
                         </div>
@@ -179,12 +179,12 @@
                 </form>
               </section>
 
-              <section class="adding-post__video tabs__content <?= isset($_GET['tab']) && $_GET['tab'] === '4' ? 'tabs__content--active' : '' ?>">
+              <section class="adding-post__video tabs__content <?= isset($_GET['type']) && $_GET['type'] === 'video' ? 'tabs__content--active' : '' ?>">
                 <h2 class="visually-hidden">Форма добавления видео</h2>
-                <form class="adding-post__form form" action="add.php" method="post" enctype="multipart/form-data">
+                <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post" enctype="multipart/form-data">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
-                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['tab'] ?? ''; ?>">
+                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['type'] ?? ''; ?>">
                         <?= $title_input ?? ''; ?>
                       <div class="adding-post__input-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="video-url">Ссылка youtube <span class="form__input-required">*</span></label>
@@ -214,12 +214,12 @@
                 </form>
               </section>
 
-              <section class="adding-post__text tabs__content <?= isset($_GET['tab']) && $_GET['tab'] === '2' ? 'tabs__content--active' : '' ?>">
+              <section class="adding-post__text tabs__content <?= isset($_GET['type']) && $_GET['type'] === 'text' ? 'tabs__content--active' : '' ?>">
                 <h2 class="visually-hidden">Форма добавления текста</h2>
-                <form class="adding-post__form form" action="add.php" method="post">
+                <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
-                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['tab'] ?? ''; ?>">
+                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['type'] ?? ''; ?>">
                       <?= $title_input ?? ''; ?>
                       <div class="adding-post__textarea-wrapper form__textarea-wrapper">
                         <label class="adding-post__label form__label" for="post-text">Текст поста <span class="form__input-required">*</span></label>
@@ -249,9 +249,9 @@
                 </form>
               </section>
 
-              <section class="adding-post__quote tabs__content  <?= isset($_GET['tab']) && $_GET['tab'] === '1' ? 'tabs__content--active' : '' ?>">
+              <section class="adding-post__quote tabs__content  <?= isset($_GET['type']) && $_GET['type'] === 'quote' ? 'tabs__content--active' : '' ?>">
                 <h2 class="visually-hidden">Форма добавления цитаты</h2>
-                <form class="adding-post__form form" action="add.php" method="post">
+                <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
                       <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['tab'] ?? ''; ?>">
@@ -295,17 +295,17 @@
                 </form>
               </section>
 
-              <section class="adding-post__link tabs__content <?= isset($_GET['tab']) && $_GET['tab'] === '5' ? 'tabs__content--active' : '' ?>">
+              <section class="adding-post__link tabs__content <?= isset($_GET['type']) && $_GET['type'] === 'link' ? 'tabs__content--active' : '' ?>">
                 <h2 class="visually-hidden">Форма добавления ссылки</h2>
-                <form class="adding-post__form form" action="add.php" method="post">
+                <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
-                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['tab'] ?? ''; ?>">
+                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['type'] ?? ''; ?>">
                       <?= $title_input ?? ''; ?>
                       <div class="adding-post__textarea-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="post-link">Ссылка <span class="form__input-required">*</span></label>
                         <div class="form__input-section">
-                          <input class="adding-post__input form__input" id="post-link" type="text" name="post-link">
+                          <input class="adding-post__input form__input" id="post-link" type="text" name="link">
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
                             <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -410,7 +410,7 @@
       </div>
     </div>
 
-    <script src="libs/dropzone.js"></script>
+    <!-- <script src="libs/dropzone.js"></script> -->
 <!--    <script src="js/dropzone-settings.js"></script>-->
     <script src="js/main.js"></script>
   </body>

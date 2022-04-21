@@ -21,7 +21,7 @@
         $datetime1 = date_create($date_1);
         $datetime2 = date_create($date_2);
         $interval = date_diff($datetime1, $datetime2);
-		$date_intervals = ['months', 'days', 'hours', 'minutes'];
+				$date_intervals = ['months', 'days', 'hours', 'minutes'];
         $date_diff_values = explode(" ", $interval->format($differenceFormat));
 
 		return array_combine($date_intervals, $date_diff_values);
@@ -30,7 +30,7 @@
     function set_post_date(string $date, bool $short = false): array
 	{
         $current_date = date('Y-m-d H:i:s');
-		$time_title = date_format(date_create($date), 'd-m-Y H:i');
+				$time_title = date_format(date_create($date), 'd-m-Y H:i');
         $date_array = date_difference($current_date, $date);
         $delta_array = array_filter($date_array);
         $delta_value = array_key_first($delta_array);
@@ -43,8 +43,8 @@
         } else if ($delta_value === 'days' && $delta_key < 7) {
             $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' день', ' дня', ' дней') . ' назад') : $delta_key . ' д назад';
         } else if ($delta_value === 'days' && $delta_key >= 7) {
-			$date_ago = !$short ? (round(($delta_key / 7)) . get_noun_plural_form(round($delta_key / 7), ' неделя', ' недели', ' недель') . ' назад') : round(($delta_key / 7)) . ' нед назад';
-		} else {
+						$date_ago = !$short ? (round(($delta_key / 7)) . get_noun_plural_form(round($delta_key / 7), ' неделя', ' недели', ' недель') . ' назад') : round(($delta_key / 7)) . ' нед назад';
+				} else {
             $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' месяц', ' месяца', ' месяцев') . ' назад') : $delta_key . ' мес назад';
         }
 
@@ -71,3 +71,158 @@
 
         return $result;
     }
+
+    function getPostVal($name) {
+        return $_POST[$name] ?? "";
+    }
+
+    function snakeToCamel($input)
+    {
+        return ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $input))));
+    }
+
+    function getValidationFunctionName(string $name) : string
+    {
+				$name = snakeToCamel($name);
+				return "validate{$name}";
+    }
+
+    function validateForm(array $inputArray, array $validationRules, $dbConnection) : array {
+        $errors = [];
+
+        foreach ($validationRules as $input => $rules) {
+            $rules = explode("|", $rules);
+
+            foreach ($rules as $rule) {
+                $ruleParameters = explode(":", $rule);
+                $ruleName = $ruleParameters[0];
+                $ruleName = getValidationFunctionName($ruleName);
+                $parameters = [];
+
+                if (count($ruleParameters) === 2) {
+                    $parameters = explode(",", $ruleParameters[1]);
+                }
+
+                if (function_exists($ruleName)) {
+                    $errors[$input] = call_user_func_array($ruleName, array_merge([$inputArray, $input, $dbConnection], $parameters));
+                }
+            }
+        }
+
+        return array_filter($errors);
+    }
+
+    function getHashtags(string $field): array {
+        return explode(" ", $field);
+    }
+
+	// Функции валидации
+
+    function validateRequired(array $inputArray, string $field): ?string {
+        if (empty($inputArray[$field])) {
+            return 'Это поле должно быть заполнено';
+        }
+
+        return null;
+    }
+
+    function validateExists(array $inputArray, string $field, $dbConnection, $dbtable, $dbfield) : ?string {
+        if (!isset($inputArray[$field])) {
+            return null;
+        }
+
+        $request = 'SELECT ' . $dbfield . ' FROM ' . $dbtable;
+        $rows = form_sql_request($dbConnection, $request);
+
+        return count($rows) > 0 ? null : 'Выбранного значения нет в базе';
+    }
+
+    function validateUnique(array $inputArray, string $field, $dbConnection, $dbtable, $dbfield) : ?string {
+        if (!isset($inputArray[$field])) {
+             return null;
+        }
+
+        $request = 'SELECT ' . $dbfield . ' FROM ' . $dbtable;
+        $rows = form_sql_request($dbConnection, $request);
+
+         return count($rows) > 0 ? 'Выбранное значение уже существует в базе' : null;
+     }
+
+    function validateString(array $inputArray, string $field): ?string {
+        if (!isset($inputArray[$field])) {
+            return null;
+        }
+
+        return is_string($inputArray[$field]) ? null : 'Значение должно быть строкой';
+     }
+
+    function validateNumber(array $inputArray, string $field): ?string {
+        if (isset($inputArray[$field])) {
+            return filter_input(INPUT_POST, $field, FILTER_VALIDATE_INT) ? null : 'Значение должно быть числом';
+        }
+
+        return null;
+    }
+
+    function validateDate(array $inputArray, string $field): ?string {
+        if(isset($inputArray[$field])) {
+            return strtotime($field) ? null : 'Неверный формат даты';
+        }
+        return null;
+    }
+
+    function validateEmail(array $inputArray, string $field): ?string {
+        if(isset($inputArray[$field])) {
+            return filter_var($inputArray[$field], FILTER_VALIDATE_EMAIL) ? null : 'Некорректный email';
+        }
+            return null;
+    }
+
+    function validateUrl(array $inputArray, string $field): ?string {
+        if(!empty($inputArray[$field])) {
+            return filter_var($inputArray[$field], FILTER_VALIDATE_URL) ? null : 'Введите корректную ссылку';
+        }
+        return null;
+    }
+
+    function validateIn(array $inputArray, string $field, ...$values): ?string {
+        if (!isset($inputArray[$field])) {
+            return null;
+        }
+
+        return in_array($inputArray[$field], $values) ? null : "Значение поля {$field} должно быть одним из " . implode(', ', $values);
+    }
+
+    function validateTags(array $inputArray, string $field): ?string {
+        if (!empty($inputArray[$field])) {
+            $tags = explode(" ", $inputArray[$field]);
+            return count($tags) > 1 ? null : "Введите одно или больше слов, разделенных пробелом";
+        }
+
+        return null;
+    }
+
+    function validateVideoUrl(array $inputArray, string $field): ?string {
+        if (isset($inputArray[$field])) {
+            return check_youtube_url($inputArray[$field]) ? null : "Видео по такой ссылке не найдено. Проверьте ссылку на видео";
+        }
+        return null;
+    }
+
+    function validateImage(array $inputArray, string $field): ?string {
+        if (isset($inputArray[$field])) {
+            $tmp_name = $inputArray[$field]['tmp_name'];
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $file_type = finfo_file($finfo, $tmp_name);
+
+            if ($file_type === "image/gif" || $file_type === "image/png" || $file_type === "image/jpeg") {
+                return null;
+            }
+
+            return "Загрузите файл в формате gif, png или jpeg";
+        }
+
+        return null;
+    }
+
+
