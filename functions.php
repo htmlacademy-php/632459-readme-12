@@ -268,18 +268,38 @@
     }
 
     function validateUrlContent(array $inputArray, string $field): ?string {
-        if (!empty($inputArray[$field])) {
-            $file = file_get_contents(urlencode($inputArray[$field]));
+        if (empty($inputArray[$field])) {
+            return null;
+        }
 
-            if ($file && in_array(mime_content_type($file), ['image/jpeg', 'image/png', 'image/gif'])) {
-				return null;
-			}
+        if (in_array(getRemoteMimeType($inputArray[$field]), ['image/jpeg', 'image/png', 'image/gif'])) {
+            return null;
+        }
 
-			return 'Ссылка должна быть корректной, файл должен быть в формате png, jpeg, gif';
+        return 'Ссылка должна быть корректной, файл должен быть в формате png, jpeg, gif';
+    }
+
+    function validateRequiredUnless(array $inputArray, string $field, $dbConnection, $anotherFieldName) {
+        if (empty($inputArray[$field]) && empty($inputArray[$anotherFieldName])) {
+            return "Поле $field должно быть заполнено, если не заполнено $anotherFieldName";
         }
 
         return null;
     }
 
 
+function getRemoteMimeType($url)
+{
+    $url = filter_var($url, FILTER_VALIDATE_URL);
+    if (!$url) {
+        return null;
+    }
 
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_exec($ch);
+
+    # get the content type
+    return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+}
