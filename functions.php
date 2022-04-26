@@ -95,6 +95,7 @@
 
 
             foreach ($rules as $rule) {
+
                 $ruleParameters = explode(":", $rule);
                 $ruleName = $ruleParameters[0];
                 $ruleName = getValidationFunctionName($ruleName);
@@ -106,6 +107,9 @@
                 }
 
                 if (function_exists($ruleName)) {
+                    if (!empty($errors[$input])) {
+                        continue;
+                    }
                     $errors[$input] = call_user_func_array($ruleName, array_merge([$inputArray, $input, $dbConnection], $parameters));
                 }
             }
@@ -117,7 +121,7 @@
 	// Функции валидации
 
     function validateRequired(array $inputArray, string $field): ?string {
-        if (empty($inputArray[$field])) {
+        if (isset($inputArray[$field]) && empty($inputArray[$field])) {
             return 'Это поле должно быть заполнено';
         }
 
@@ -208,7 +212,7 @@
     }
 
     function validateUploadedFile(array $inputArray, string $field): ?string {
-        if (!empty($inputArray[$field]['tmp_name'])) {
+        if (file_exists($inputArray[$field]['tmp_name']) || is_uploaded_file($inputArray[$field]['tmp_name'])) {
             $tmp_name = $inputArray[$field]['tmp_name'];
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $file_type = finfo_file($finfo, $tmp_name);
@@ -228,7 +232,7 @@
             return "Загрузите файл в формате gif, png или jpeg";
         }
 
-        return null;
+        return "Вы не загрузили файл";
     }
 
     function validateMin(array $inputArray, string $field, $dbConnection, $min): ?string {
@@ -247,13 +251,31 @@
         return null;
     }
 
-    function validateRequiredIf(array $inputArray, string $field, $dbConnection, ...$values): ?string {
+    function validateRequiredIfValue(array $inputArray, string $field, $dbConnection, $value, ...$values): ?string {
+        if (!isset($inputArray[$value])) {
+             return "Поле {$value} должно быть заполнено";
+        }
 
-        var_dump($inputArray['type']);
-        var_dump($inputArray[$field]);
-        var_dump($values);
-        if (!isset($inputArray['type']) || (in_array($inputArray['type'], $values) && empty($inputArray[$field]))) {
+        if (!in_array($inputArray[$value], $values)) {
+            return null;
+        }
+
+        if (empty($inputArray[$field])) {
             return "Это поле должно быть заполнено";
+        }
+
+        return null;
+    }
+
+    function validateUrlContent(array $inputArray, string $field): ?string {
+        if (!empty($inputArray[$field])) {
+            $file = file_get_contents(urlencode($inputArray[$field]));
+
+            if ($file && in_array(mime_content_type($file), ['image/jpeg', 'image/png', 'image/gif'])) {
+				return null;
+			}
+
+			return 'Ссылка должна быть корректной, файл должен быть в формате png, jpeg, gif';
         }
 
         return null;
