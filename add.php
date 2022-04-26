@@ -3,7 +3,7 @@
     require_once 'helpers.php';
     require_once 'functions.php';
 
-    [$is_auth, $user_name, $page_titles, $validate_rules] = require_once ('data.php');
+    [$is_auth, $user_name, $page_titles, $validate_rules, $input_names] = require_once ('data.php');
 
     if (!$con) {
         $error = mysqli_connect_error();
@@ -25,18 +25,21 @@
     }
 
     $title_input = include_template('title-input.php', [
-        'errors' => $errors
+        'errors' => $errors,
+        'input_names' => $input_names
     ]);
 
     $tags_input = include_template('tags-input.php', [
-        'errors' => $errors
+        'errors' => $errors,
+        'input_names' => $input_names
     ]);
 
     $page_content = include_template('add.php', [
         'types' => $types,
         'title_input' => $title_input,
         'tags_input' => $tags_input,
-        'errors' => $errors
+        'errors' => $errors,
+        'input_names' => $input_names
     ]);
 
     print($page_content);

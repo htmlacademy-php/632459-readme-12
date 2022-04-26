@@ -131,16 +131,16 @@
                 <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post" enctype="multipart/form-data">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
-                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['type'] ?? ''; ?>">
+                      <input class="visually-hidden" type="text" name="type" value="<?= $_GET['type'] ?? ''; ?>">
                         <?= $title_input ?? ''; ?>
                       <div class="adding-post__input-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="photo-url">Ссылка из интернета</label>
-                        <div class="form__input-section">
-                          <input class="adding-post__input form__input" id="photo-url" type="text" name="link" value="<?= getPostVal('link'); ?>" placeholder="Введите ссылку">
-                          <button class="form__error-button button" type="button" <?= $errors['link'] ? "style=display:block;" : "" ?>>!<span class="visually-hidden">Информация об ошибке</span></button>
+                        <div class="form__input-section <?= $errors['img_url'] ? "form__input-section--error" : "" ?>">
+                          <input class="adding-post__input form__input" id="photo-url" type="text" name="img_url" value="<?= getPostVal('img_url'); ?>" placeholder="Введите ссылку">
+                          <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
-                            <h3 class="form__error-title">Ссылка</h3>
-                            <p class="form__error-desc"><?= $errors['link'] ?? '' ?></p>
+                            <h3 class="form__error-title"><?= $input_names['img_url'] ?? '' ?></h3>
+                            <p class="form__error-desc"><?= $errors['img_url'] ?? '' ?></p>
                           </div>
                         </div>
                       </div>
@@ -160,6 +160,11 @@
                         <div class="form__file-zone-text">
                           <span>Перетащите фото сюда</span>
                         </div>
+                        <button class="form__error-button button" type="button" <?= $errors['image'] ? "style=display:block;" : "" ?>>!<span class="visually-hidden">Информация об ошибке</span></button>
+                          <div class="form__error-text">
+                            <h3 class="form__error-title">Файл</h3>
+                            <p class="form__error-desc"><?= $errors['image'] ?? '' ?></p>
+                          </div>
                       </div>
                       <button class="adding-post__input-file-button form__input-file-button form__input-file-button--photo button" type="button">
                         <span>Выбрать фото</span>
@@ -184,16 +189,16 @@
                 <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post" enctype="multipart/form-data">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
-                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['type'] ?? ''; ?>">
+                      <input class="visually-hidden" type="text" name="type" value="<?= $_GET['type'] ?? ''; ?>">
                         <?= $title_input ?? ''; ?>
                       <div class="adding-post__input-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="video-url">Ссылка youtube <span class="form__input-required">*</span></label>
-                        <div class="form__input-section">
-                          <input class="adding-post__input form__input" id="video-url" type="text" name="video-heading" placeholder="Введите ссылку">
+                        <div class="form__input-section <?= $errors['video'] ? "form__input-section--error" : "" ?>">
+                          <input class="adding-post__input form__input" id="video-url" type="text" name="video" value="<?= getPostVal('video'); ?>" placeholder="Введите ссылку">
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
-                            <h3 class="form__error-title">Заголовок сообщения</h3>
-                            <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                            <h3 class="form__error-title"><?= $input_names['video'] ?? '' ?></h3>
+                            <p class="form__error-desc"><?= $errors['video'] ?? ''; ?></p>
                           </div>
                         </div>
                       </div>
@@ -219,16 +224,16 @@
                 <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
-                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['type'] ?? ''; ?>">
+                      <input class="visually-hidden" type="text" name="type" value="<?= $_GET['type'] ?? ''; ?>">
                       <?= $title_input ?? ''; ?>
                       <div class="adding-post__textarea-wrapper form__textarea-wrapper">
                         <label class="adding-post__label form__label" for="post-text">Текст поста <span class="form__input-required">*</span></label>
-                        <div class="form__input-section">
-                          <textarea class="adding-post__textarea form__textarea form__input" id="post-text" placeholder="Введите текст публикации"></textarea>
+                        <div class="form__input-section <?= $errors['text'] ? "form__input-section--error" : ""; ?>">
+                          <textarea class="adding-post__textarea form__textarea form__input" id="post-text" name="text" <?= getPostVal('text'); ?> value="<?= getPostVal('text'); ?>" placeholder="Введите текст публикации"></textarea>
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
-                            <h3 class="form__error-title">Заголовок сообщения</h3>
-                            <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                            <h3 class="form__error-title"><?= $input_names['text'] ?? '' ?></h3>
+                            <p class="form__error-desc"><?= $errors['text'] ?? ''; ?></p>
                           </div>
                         </div>
                       </div>
@@ -254,16 +259,16 @@
                 <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
-                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['tab'] ?? ''; ?>">
+                      <input class="visually-hidden" type="text" name="type" value="<?= $_GET['type'] ?? ''; ?>">
                       <?= $title_input ?? ''; ?>
                       <div class="adding-post__input-wrapper form__textarea-wrapper">
                         <label class="adding-post__label form__label" for="cite-text">Текст цитаты <span class="form__input-required">*</span></label>
                         <div class="form__input-section">
-                          <textarea class="adding-post__textarea adding-post__textarea--quote form__textarea form__input" id="cite-text" placeholder="Текст цитаты"></textarea>
+                          <textarea class="adding-post__textarea adding-post__textarea--quote form__textarea form__input" id="cite-text" name="cite-text" <?= getPostVal('cite-text'); ?> value="<?= getPostVal('cite-text'); ?>" placeholder="Текст цитаты"></textarea>
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
-                            <h3 class="form__error-title">Заголовок сообщения</h3>
-                            <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                            <h3 class="form__error-title"><?= $input_names['cite-text'] ?? '' ?></h3>
+                            <p class="form__error-desc"><?= $errors['cite-text'] ?? '' ?></p>
                           </div>
                         </div>
                       </div>
@@ -273,8 +278,8 @@
                           <input class="adding-post__input form__input" id="quote-author" type="text" name="quote-author">
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
-                            <h3 class="form__error-title">Заголовок сообщения</h3>
-                            <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                            <h3 class="form__error-title"><?= $input_names['quote-author'] ?? '' ?></h3>
+                            <p class="form__error-desc"><?= $errors['quote-author'] ?></p>
                           </div>
                         </div>
                       </div>
@@ -300,16 +305,16 @@
                 <form class="adding-post__form form" action="add.php?type=<?= $_GET['type'] ?>" method="post">
                   <div class="form__text-inputs-wrapper">
                     <div class="form__text-inputs">
-                      <input class="visually-hidden" type="text" name="current-tab" value="<?= $_GET['type'] ?? ''; ?>">
+                      <input class="visually-hidden" type="text" name="type" value="<?= $_GET['type'] ?? ''; ?>">
                       <?= $title_input ?? ''; ?>
                       <div class="adding-post__textarea-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="post-link">Ссылка <span class="form__input-required">*</span></label>
-                        <div class="form__input-section">
-                          <input class="adding-post__input form__input" id="post-link" type="text" name="link">
+                        <div class="form__input-section <?= $errors['link'] ? "form__input-section--error" : ""; ?>">
+                          <input class="adding-post__input form__input" id="post-link" type="text" name="link" value="<?= getPostVal('link'); ?>">
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
-                            <h3 class="form__error-title">Заголовок сообщения</h3>
-                            <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                            <h3 class="form__error-title"><?= $input_names['link'] ?? '' ?></h3>
+                            <p class="form__error-desc"><?= $errors['link'] ?? ''; ?></p>
                           </div>
                         </div>
                       </div>

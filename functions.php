@@ -93,6 +93,7 @@
         foreach ($validationRules as $input => $rules) {
             $rules = explode("|", $rules);
 
+
             foreach ($rules as $rule) {
                 $ruleParameters = explode(":", $rule);
                 $ruleName = $ruleParameters[0];
@@ -101,6 +102,7 @@
 
                 if (count($ruleParameters) === 2) {
                     $parameters = explode(",", $ruleParameters[1]);
+
                 }
 
                 if (function_exists($ruleName)) {
@@ -110,10 +112,6 @@
         }
 
         return array_filter($errors);
-    }
-
-    function getHashtags(string $field): array {
-        return explode(" ", $field);
     }
 
 	// Функции валидации
@@ -185,7 +183,7 @@
         return null;
     }
 
-    function validateIn(array $inputArray, string $field, ...$values): ?string {
+    function validateIn(array $inputArray, string $field, $dbConnection, ...$values): ?string {
         if (!isset($inputArray[$field])) {
             return null;
         }
@@ -196,27 +194,35 @@
     function validateTags(array $inputArray, string $field): ?string {
         if (!empty($inputArray[$field])) {
             $tags = explode(" ", $inputArray[$field]);
-            return count($tags) > 1 ? null : "Введите одно или больше слов, разделенных пробелом";
+            return count($tags) >= 1 ? null : "Введите одно или больше слов, разделенных пробелом";
         }
 
         return null;
     }
 
     function validateVideoUrl(array $inputArray, string $field): ?string {
-        if (isset($inputArray[$field])) {
+        if (!empty($inputArray[$field])) {
             return check_youtube_url($inputArray[$field]) ? null : "Видео по такой ссылке не найдено. Проверьте ссылку на видео";
         }
         return null;
     }
 
-    function validateImage(array $inputArray, string $field): ?string {
-        if (isset($inputArray[$field])) {
+    function validateUploadedFile(array $inputArray, string $field): ?string {
+        if (!empty($inputArray[$field]['tmp_name'])) {
             $tmp_name = $inputArray[$field]['tmp_name'];
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $file_type = finfo_file($finfo, $tmp_name);
+            $path_info = pathinfo($inputArray[$field]['name']);
+            $file_ext = $path_info['extension'];
+            $file_name = uniqid('', true) . '.' . $file_ext;
 
             if ($file_type === "image/gif" || $file_type === "image/png" || $file_type === "image/jpeg") {
+
+                $file_path = 'uploads/';
+                move_uploaded_file($tmp_name, $file_path . $file_name);
+
                 return null;
+
             }
 
             return "Загрузите файл в формате gif, png или jpeg";
@@ -224,5 +230,34 @@
 
         return null;
     }
+
+    function validateMin(array $inputArray, string $field, $dbConnection, $min): ?string {
+        if (isset($inputArray[$field])) {
+            return strlen($inputArray[$field]) < $min ? "Введите минимум " . $min . " символов" : null;
+        }
+
+        return null;
+    }
+
+    function validateMax(array $inputArray, string $field, $dbConnection, $max): ?string {
+        if (isset($inputArray[$field])) {
+            return strlen($inputArray[$field]) > $max ? "Максимальная длина " . $max . " символов" : null;
+        }
+
+        return null;
+    }
+
+    function validateRequiredIf(array $inputArray, string $field, $dbConnection, ...$values): ?string {
+
+        var_dump($inputArray['type']);
+        var_dump($inputArray[$field]);
+        var_dump($values);
+        if (!isset($inputArray['type']) || (in_array($inputArray['type'], $values) && empty($inputArray[$field]))) {
+            return "Это поле должно быть заполнено";
+        }
+
+        return null;
+    }
+
 
 

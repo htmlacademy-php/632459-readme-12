@@ -9,16 +9,30 @@
     ];
 
     $validate_rules = [
-        'current-tab' => 'required|in:quote,text,photo,video,link',
+        'type' => 'required|in:quote,text,photo,video,link',
         'title' => 'required',
-        'image' => 'required_if_value:type,photo|uploaded_file|image',
-        'link' => 'required_if_value:type,link|url',
-        'text' => 'required_if_value:type,text,quote|string|min:1|max:70',
-        'video' => 'required_if_value:type,video|video_url',
+        'image' => 'required_if:photo|uploaded_file',
+        'img_url' => 'url',
+        'link' => 'required_if:link|url',
+        'text' => 'required_if:text',
+        'video' => 'required_if:video|video_url',
+        'cite-text' => 'required_if:quote|min:1|max:70',
+        'quote-author' => 'required_if:quote',
         'tags' => 'tags',
-        'email_reg' => 'required|email|unique:users, email',
-        'email_auth' => 'required|email|exists:users,email',
+        'email-reg' => 'required|email|unique:users, email',
+        'email-auth' => 'required|email|exists:users,email',
         'date' => 'date'
     ];
 
-    return [$is_auth, $user_name, $page_titles, $validate_rules];
+    $input_names = [
+        'img_url' => 'Ссылка из интернета',
+        'title' => 'Заголовок',
+        'video' => 'Ссылка на видео',
+        'tags' => 'Тэги',
+        'text' => 'Текст',
+        'link' => 'Ссылка',
+        'cite-text' => 'Текст цитаты',
+        'quote-author' => 'Автор цитаты'
+    ];
+
+    return [$is_auth, $user_name, $page_titles, $validate_rules, $input_names];
