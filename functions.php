@@ -84,7 +84,7 @@
     function getValidationFunctionName(string $name) : string
     {
 				$name = snakeToCamel($name);
-				return "validate{$name}";
+				return "validate$name";
     }
 
     function validateForm(array $inputArray, array $validationRules, $dbConnection) : array {
@@ -192,7 +192,7 @@
             return null;
         }
 
-        return in_array($inputArray[$field], $values) ? null : "Значение поля {$field} должно быть одним из " . implode(', ', $values);
+        return in_array($inputArray[$field], $values) ? null : "Значение поля $field должно быть одним из " . implode(', ', $values);
     }
 
     function validateTags(array $inputArray, string $field): ?string {
@@ -253,7 +253,7 @@
 
     function validateRequiredIfValue(array $inputArray, string $field, $dbConnection, $value, ...$values): ?string {
         if (!isset($inputArray[$value])) {
-             return "Поле {$value} должно быть заполнено";
+             return "Поле $value должно быть заполнено";
         }
 
         if (!in_array($inputArray[$value], $values)) {
@@ -288,18 +288,18 @@
     }
 
 
-function getRemoteMimeType($url)
-{
-    $url = filter_var($url, FILTER_VALIDATE_URL);
-    if (!$url) {
-        return null;
+    function getRemoteMimeType($url)
+    {
+        $url = filter_var($url, FILTER_VALIDATE_URL);
+        if (!$url) {
+            return null;
+        }
+
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_exec($ch);
+
+        # get the content type
+        return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
     }
-
-
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_exec($ch);
-
-    # get the content type
-    return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-}

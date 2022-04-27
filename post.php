@@ -4,6 +4,9 @@
     require_once 'functions.php';
     require_once 'data.php';
 
+    $con = require('init.php');
+    [$is_auth, $user_name, $page_titles] = require('data.php');
+
     if (!$con) {
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);
@@ -106,7 +109,7 @@
             ]);
             break;
         case 'video':
-            $post_main = $include_template('post-video.php', [
+            $post_main = include_template('post-video.php', [
                 'youtube_url' => $post['video']
             ]);
             break;

@@ -3,7 +3,8 @@
     require_once 'helpers.php';
     require_once 'functions.php';
 
-    [$is_auth, $user_name, $page_titles, $validate_rules, $input_names] = require_once ('data.php');
+    [$is_auth, $user_name, $page_titles, $validate_rules, $input_names] = require('data.php');
+    $con = require('init.php');
 
     if (!$con) {
         $error = mysqli_connect_error();
@@ -19,7 +20,7 @@
 
     $errors = [];
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inputArray = array_merge($_GET, $_POST, $_FILES);
         var_dump($errors = validateForm($inputArray, $validate_rules, $con));
     }
@@ -43,3 +44,5 @@
     ]);
 
     print($page_content);
+
+    return $errors;

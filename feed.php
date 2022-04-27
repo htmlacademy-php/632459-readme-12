@@ -3,7 +3,8 @@
     require_once 'helpers.php';
     require_once 'functions.php';
 
-    [$is_auth, $user_name, $page_titles] = require_once ('data.php');
+    [$is_auth, $user_name, $page_titles] = require('data.php');
+    $con = require('init.php');
 
     if (!$con) {
         $error = mysqli_connect_error();
