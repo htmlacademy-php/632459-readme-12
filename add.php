@@ -22,7 +22,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inputArray = array_merge($_GET, $_POST, $_FILES);
-        var_dump($errors = validateForm($inputArray, $validate_rules, $con));
+        $errors = validateForm($inputArray, $validate_rules, $con);
     }
 
     $title_input = include_template('title-input.php', [

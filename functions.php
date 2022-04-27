@@ -198,7 +198,7 @@
     function validateTags(array $inputArray, string $field): ?string {
         if (!empty($inputArray[$field])) {
             $tags = explode(" ", $inputArray[$field]);
-            return count($tags) >= 1 ? null : "Введите одно или больше слов, разделенных пробелом";
+            return count($tags) > 1 ? null : "Введите одно или больше слов, разделенных пробелом";
         }
 
         return null;
@@ -212,7 +212,7 @@
     }
 
     function validateUploadedFile(array $inputArray, string $field): ?string {
-        if (file_exists($inputArray[$field]['tmp_name']) || is_uploaded_file($inputArray[$field]['tmp_name'])) {
+        if (isset($inputArray[$field]) && (file_exists($inputArray[$field]['tmp_name']) || is_uploaded_file($inputArray[$field]['tmp_name']))) {
             $tmp_name = $inputArray[$field]['tmp_name'];
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $file_type = finfo_file($finfo, $tmp_name);
@@ -230,6 +230,10 @@
             }
 
             return "Загрузите файл в формате gif, png или jpeg";
+        }
+
+        if (!isset($inputArray[$field])) {
+            return null;
         }
 
         return "Вы не загрузили файл";
@@ -280,7 +284,7 @@
     }
 
     function validateRequiredUnless(array $inputArray, string $field, $dbConnection, $anotherFieldName) {
-        if (empty($inputArray[$field]) && empty($inputArray[$anotherFieldName])) {
+        if (isset(($inputArray[$field])) && empty($inputArray[$field]) && empty($inputArray[$anotherFieldName])) {
             return "Поле $field должно быть заполнено, если не заполнено $anotherFieldName";
         }
 

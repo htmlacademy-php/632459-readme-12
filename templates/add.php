@@ -136,7 +136,7 @@
                       <div class="adding-post__input-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="photo-url">Ссылка из интернета</label>
                         <div class="form__input-section <?= $errors['img_url'] ? "form__input-section--error" : "" ?>">
-                          <input class="adding-post__input form__input" id="photo-url" type="text" name="img_url" value="<?= getPostVal('img_url') ?>" placeholder="Введите ссылку">
+                          <input class="adding-post__input form__input" id="photo-url" type="text" name="img_url" value="<?= getPostVal('img_url') ?? '' ?>" placeholder="Введите ссылку">
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
                             <h3 class="form__error-title"><?= $input_names['img_url'] ?? '' ?></h3>
@@ -146,12 +146,16 @@
                       </div>
                         <?= $tags_input ?? '' ?>
                     </div>
+                    <?php if (!empty($errors)): ?>
                     <div class="form__invalid-block">
                       <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                       <ul class="form__invalid-list">
-                        <li class="form__invalid-item">Заголовок. Это поле должно быть заполнено.</li>
+                        <?php foreach($errors as $input => $error): ?>
+                            <li class="form__invalid-item"><?= $input_names[$input] ?>. <?= $error ?></li>
+                        <?php endforeach; ?>
                       </ul>
                     </div>
+                    <?php endif; ?>
                   </div>
                   <div class="adding-post__input-file-container form__input-container form__input-container--file">
                     <div class="adding-post__input-file-wrapper form__input-file-wrapper">
@@ -194,7 +198,7 @@
                       <div class="adding-post__input-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="video-url">Ссылка youtube <span class="form__input-required">*</span></label>
                         <div class="form__input-section <?= $errors['video'] ? "form__input-section--error" : "" ?>">
-                          <input class="adding-post__input form__input" id="video-url" type="text" name="video" value="<?= getPostVal('video') ?>" placeholder="Введите ссылку">
+                          <input class="adding-post__input form__input" id="video-url" type="text" name="video" value="<?= getPostVal('video') ?? '' ?>" placeholder="Введите ссылку">
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
                             <h3 class="form__error-title"><?= $input_names['video'] ?? '' ?></h3>
@@ -204,12 +208,16 @@
                       </div>
                       <?= $tags_input ?? '' ?>
                     </div>
+                    <?php if (!empty($errors)): ?>
                     <div class="form__invalid-block">
                       <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                       <ul class="form__invalid-list">
-                        <li class="form__invalid-item">Заголовок. Это поле должно быть заполнено.</li>
+                      <?php foreach($errors as $input => $error): ?>
+                            <li class="form__invalid-item"><?= $input_names[$input] ?>. <?= $error ?></li>
+                        <?php endforeach; ?>
                       </ul>
                     </div>
+                    <?php endif; ?>
                   </div>
 
                   <div class="adding-post__buttons">
@@ -229,7 +237,7 @@
                       <div class="adding-post__textarea-wrapper form__textarea-wrapper">
                         <label class="adding-post__label form__label" for="post-text">Текст поста <span class="form__input-required">*</span></label>
                         <div class="form__input-section <?= $errors['text'] ? "form__input-section--error" : "" ?>">
-                          <textarea class="adding-post__textarea form__textarea form__input" id="post-text" name="text" <?= getPostVal('text') ?> value="<?= getPostVal('text') ?>" placeholder="Введите текст публикации"></textarea>
+                          <textarea class="adding-post__textarea form__textarea form__input" id="post-text" name="text" value="<?= getPostVal('text') ?? '' ?>" placeholder="Введите текст публикации"><?= getPostVal('text') ?? '' ?></textarea>
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
                             <h3 class="form__error-title"><?= $input_names['text'] ?? '' ?></h3>
@@ -239,13 +247,16 @@
                       </div>
                       <?= $tags_input ?? '' ?>
                     </div>
+                    <?php if (!empty($errors)): ?>
                     <div class="form__invalid-block">
                       <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                       <ul class="form__invalid-list">
-                        <li class="form__invalid-item">Заголовок. Это поле должно быть заполнено.</li>
-                        <li class="form__invalid-item">Цитата. Она не должна превышать 70 знаков.</li>
+                      <?php foreach($errors as $input => $error): ?>
+                            <li class="form__invalid-item"><?= $input_names[$input] ?>. <?= $error ?></li>
+                        <?php endforeach; ?>
                       </ul>
                     </div>
+                    <?php endif; ?>
                   </div>
                   <div class="adding-post__buttons">
                     <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
@@ -263,8 +274,8 @@
                       <?= $title_input ?? '' ?>
                       <div class="adding-post__input-wrapper form__textarea-wrapper">
                         <label class="adding-post__label form__label" for="cite-text">Текст цитаты <span class="form__input-required">*</span></label>
-                        <div class="form__input-section">
-                          <textarea class="adding-post__textarea adding-post__textarea--quote form__textarea form__input" id="cite-text" name="cite-text" <?= getPostVal('cite-text') ?> value="<?= getPostVal('cite-text') ?>" placeholder="Текст цитаты"></textarea>
+                        <div class="form__input-section <?= $errors['cite-text'] ? "form__input-section--error" : "" ?>">
+                          <textarea class="adding-post__textarea adding-post__textarea--quote form__textarea form__input" id="cite-text" name="cite-text" value="<?= getPostVal('cite-text') ?? '' ?>" placeholder="Текст цитаты"><?= getPostVal('cite-text') ?? '' ?></textarea>
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
                             <h3 class="form__error-title"><?= $input_names['cite-text'] ?? '' ?></h3>
@@ -274,24 +285,27 @@
                       </div>
                       <div class="adding-post__textarea-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="quote-author">Автор <span class="form__input-required">*</span></label>
-                        <div class="form__input-section">
-                          <input class="adding-post__input form__input" id="quote-author" type="text" name="quote-author">
+                        <div class="form__input-section <?= $errors['quote-author'] ? "form__input-section--error" : "" ?>">
+                          <input class="adding-post__input form__input" id="quote-author" type="text" name="quote-author" value="<?= getPostVal('quote-author') ?? '' ?>">
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
                             <h3 class="form__error-title"><?= $input_names['quote-author'] ?? '' ?></h3>
-                            <p class="form__error-desc"><?= $errors['quote-author'] ?></p>
+                            <p class="form__error-desc"><?= $errors['quote-author'] ?? '' ?></p>
                           </div>
                         </div>
                       </div>
                       <?= $tags_input ?? '' ?>
                     </div>
+                    <?php if (!empty($errors)): ?>
                     <div class="form__invalid-block">
                       <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                       <ul class="form__invalid-list">
-                        <li class="form__invalid-item">Заголовок. Это поле должно быть заполнено.</li>
-                        <li class="form__invalid-item">Цитата. Она не должна превышать 70 знаков.</li>
+                      <?php foreach($errors as $input => $error): ?>
+                            <li class="form__invalid-item"><?= $input_names[$input] ?>. <?= $error ?></li>
+                        <?php endforeach; ?>
                       </ul>
                     </div>
+                    <?php endif; ?>
                   </div>
                   <div class="adding-post__buttons">
                     <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
@@ -310,7 +324,7 @@
                       <div class="adding-post__textarea-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="post-link">Ссылка <span class="form__input-required">*</span></label>
                         <div class="form__input-section <?= $errors['link'] ? "form__input-section--error" : "" ?>">
-                          <input class="adding-post__input form__input" id="post-link" type="text" name="link" value="<?= getPostVal('link') ?>">
+                          <input class="adding-post__input form__input" id="post-link" type="text" name="link" value="<?= getPostVal('link') ?? '' ?>">
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
                             <h3 class="form__error-title"><?= $input_names['link'] ?? '' ?></h3>
@@ -320,13 +334,16 @@
                       </div>
                       <?= $tags_input ?? '' ?>
                     </div>
+                    <?php if (!empty($errors)): ?>
                     <div class="form__invalid-block">
                       <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                       <ul class="form__invalid-list">
-                        <li class="form__invalid-item">Заголовок. Это поле должно быть заполнено.</li>
-                        <li class="form__invalid-item">Цитата. Она не должна превышать 70 знаков.</li>
+                      <?php foreach($errors as $input => $error): ?>
+                            <li class="form__invalid-item"><?= $input_names[$input] ?>. <?= $error ?></li>
+                        <?php endforeach; ?>
                       </ul>
                     </div>
+                    <?php endif; ?>
                   </div>
                   <div class="adding-post__buttons">
                     <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
