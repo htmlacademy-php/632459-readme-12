@@ -193,3 +193,12 @@ INSERT INTO comments(date_add, text, user_id, post_id) VALUES
   ("2022-03-09 15:12:08", "Интересно, кто автор", 7, 1),
   ("2022-01-15 16:12:00", "Купила себе всю серию книг «Песнь льда и пламени»", 7, 2);
 
+
+-- Обновление информации о фото
+
+UPDATE posts
+SET img = "img/rock-medium.jpg" WHERE id = 3;
+
+UPDATE posts
+SET img = "img/coast-medium.jpg" WHERE id = 4;
+

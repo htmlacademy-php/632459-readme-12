@@ -30,7 +30,7 @@
     function set_post_date(string $date, bool $short = false): array
 	{
         $current_date = date('Y-m-d H:i:s');
-				$time_title = date_format(date_create($date), 'd-m-Y H:i');
+		$time_title = date_format(date_create($date), 'd-m-Y H:i');
         $date_array = date_difference($current_date, $date);
         $delta_array = array_filter($date_array);
         $delta_value = array_key_first($delta_array);
@@ -54,11 +54,13 @@
         ];
     }
 
-    function form_sql_request(mysqli $link, string $request, array $params): mysqli_result {
+    function form_sql_request(mysqli $link, string $request, array $params, bool $get_data = true) {
         if ($params) {
             $stmt = db_get_prepare_stmt($link, $request, $params);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
+            $result = mysqli_stmt_execute($stmt);
+            if ($get_data) {
+                $result = mysqli_stmt_get_result($stmt);
+            }
         } else {
             $result = mysqli_query($link, $request);
         }
@@ -83,8 +85,8 @@
 
     function getValidationFunctionName(string $name) : string
     {
-				$name = snakeToCamel($name);
-				return "validate$name";
+        $name = snakeToCamel($name);
+        return "validate$name";
     }
 
     function validateForm(array $inputArray, array $validationRules, $dbConnection) : array {
@@ -116,6 +118,66 @@
         }
 
         return array_filter($errors);
+    }
+
+    function getHashtags($inputArray, $dbConnection, $newPostId) {
+        if (!empty($inputArray['tags'])) {
+            $tags = array_filter(explode(" ", $inputArray['tags']));
+            $tags_array = [];
+
+            foreach($tags as $tag) {
+                $request = 'SELECT id FROM hashtags WHERE hashtag_name = ?';
+                $res = form_sql_request($dbConnection, $request, [$tag]);
+                $result = mysqli_fetch_array($res)['id'];
+                if ($result) {
+                   array_push($tags_array, $result);
+                } else {
+                    $request = 'INSERT INTO hashtags SET hashtag_name = ?';
+                    $res = form_sql_request($dbConnection, $request, [$tag], false);
+                    $new_tag_id = mysqli_insert_id($dbConnection);
+                    array_push($tags_array, $new_tag_id);
+                }
+            }
+
+            foreach ($tags_array as $tag) {
+                $request = 'INSERT INTO post_tags SET post_id = ?, hashtag_id = ?';
+                $res = form_sql_request($dbConnection, $request, [$newPostId, $tag], false);
+            }
+        }
+
+        return null;
+    }
+
+    function getUploadedFile($inputArray) {
+        if (file_exists($inputArray['image']['tmp_name']) || is_uploaded_file($inputArray['image']['tmp_name'])) {
+            $tmp_name = $inputArray['image']['tmp_name'];
+            $path_info = pathinfo($inputArray['image']['name']);
+            $file_ext = $path_info['extension'];
+            $file_name = uniqid('', true) . '.' . $file_ext;
+            $file_path = 'uploads/';
+            move_uploaded_file($tmp_name, $file_path . $file_name);
+            return $file_path . $file_name;
+        }
+    }
+
+    function getUrlContent($inputArray) {
+        $path = 'uploads/';
+        $file = file_get_contents($inputArray['img_url']);
+        $file_type = getRemoteMimeType($inputArray['img_url']);
+        $file_type_array = explode('/', $file_type);
+        $file_ext = $file_type_array[1];
+        $file_name = uniqid('', true) . '.' . $file_ext;
+        file_put_contents($path . $file_name, $file);
+        return $path . $file_name;
+    }
+
+    function getTypeId($types, $filter_type) {
+        foreach ($types as $type) {
+
+            if($type['type'] === $filter_type) {
+               return $id = intval($type['id']);
+            }
+        }
     }
 
 	// Функции валидации
@@ -216,32 +278,37 @@
             $tmp_name = $inputArray[$field]['tmp_name'];
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $file_type = finfo_file($finfo, $tmp_name);
-            $path_info = pathinfo($inputArray[$field]['name']);
-            $file_ext = $path_info['extension'];
-            $file_name = uniqid('', true) . '.' . $file_ext;
 
             if ($file_type === "image/gif" || $file_type === "image/png" || $file_type === "image/jpeg") {
-
-                $file_path = 'uploads/';
-                move_uploaded_file($tmp_name, $file_path . $file_name);
-
                 return null;
-
             }
 
             return "Загрузите файл в формате gif, png или jpeg";
         }
 
-        if (!isset($inputArray[$field])) {
+        if (!isset($inputArray[$field]) || !file_exists($inputArray[$field]['tmp_name'])) {
             return null;
         }
 
-        return "Вы не загрузили файл";
+        return null;
     }
 
     function validateMin(array $inputArray, string $field, $dbConnection, $min): ?string {
         if (isset($inputArray[$field])) {
-            return strlen($inputArray[$field]) < $min ? "Введите минимум " . $min . " символов" : null;
+            $type = gettype($inputArray[$field]);
+
+            if ($type === 'string') {
+                return iconv_strlen($inputArray[$field]) < $min ? "Введите минимум " . $min . " символов" : null;
+            }
+
+            if ($type === 'integer') {
+                return $inputArray[$field] < $min ? 'Минимальное значение: ' . $min : null;
+            }
+
+            if ($type === 'array') {
+                return count($inputArray[$field]) < $min ? 'Минимальное количество элементов: ' . $min : null;
+            }
+
         }
 
         return null;
@@ -249,7 +316,20 @@
 
     function validateMax(array $inputArray, string $field, $dbConnection, $max): ?string {
         if (isset($inputArray[$field])) {
-            return strlen($inputArray[$field]) > $max ? "Максимальная длина " . $max . " символов" : null;
+            $type = gettype($inputArray[$field]);
+
+            if ($type === 'string') {
+                return iconv_strlen($inputArray[$field]) > $max ? "Максимальная длина " . $max . " символов" : null;
+            }
+
+            if ($type === 'integer') {
+                return $inputArray[$field] > $max ? 'Максимальное значение: ' . $min : null;
+            }
+
+            if ($type === 'array') {
+                return count($inputArray[$field]) > $max ? 'Максимальное количество элементов: ' . $max : null;
+            }
+
         }
 
         return null;
@@ -283,17 +363,21 @@
         return 'Ссылка должна быть корректной, файл должен быть в формате png, jpeg, gif';
     }
 
-    function validateRequiredUnless(array $inputArray, string $field, $dbConnection, $anotherFieldName) {
-        if (isset(($inputArray[$field])) && empty($inputArray[$field]) && empty($inputArray[$anotherFieldName])) {
-            return "Поле $field должно быть заполнено, если не заполнено $anotherFieldName";
-        }
+    function validateRequiredUnless(array $inputArray, string $field, $dbConnection, $firstFieldName, $secondFieldName): ?string {
+        if (isset($inputArray[$secondFieldName]['tmp_name'])) {
 
-        return null;
+            if (!file_exists($inputArray[$secondFieldName]['tmp_name']) && empty($inputArray[$firstFieldName])) {
+                $secondFieldName = "«Файл»";
+                $firstFieldName = "«Ссылка из интернета»";
+                return "Это поле должно быть заполнено, если не заполнено поле $firstFieldName";
+            }
+
+        }
+		return null;
     }
 
 
-    function getRemoteMimeType($url)
-    {
+    function getRemoteMimeType($url) {
         $url = filter_var($url, FILTER_VALIDATE_URL);
         if (!$url) {
             return null;

@@ -11,8 +11,8 @@
     $validate_rules = [
         'type' => 'required|in:quote,text,photo,video,link',
         'title' => 'required',
-        'image' => 'required_unless:img_url|uploaded_file',
-        'img_url' => 'required_unless:image|url|url_content',
+        'image' => 'required_unless:img_url,image|uploaded_file',
+        'img_url' => 'required_unless:image,img_url|url|url_content',
         'link' => 'required_if_value:type,link|url',
         'text' => 'required_if_value:type,text',
         'video' => 'required_if_value:type,video|url|video_url',

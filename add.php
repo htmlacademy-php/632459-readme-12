@@ -18,11 +18,93 @@
 
     $type = filter_input(INPUT_GET, 'type');
 
+    $type_id = getTypeId($types, $type);
+
     $errors = [];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inputArray = array_merge($_GET, $_POST, $_FILES);
         $errors = validateForm($inputArray, $validate_rules, $con);
+
+        if(empty($errors)) {
+
+            switch($type_id) {
+                case 1:
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text, cite_author) VALUES (NOW(), 1, 0, ?, ?, ?, ?)';
+                    $params =  [$type_id, $inputArray['title'], $inputArray['cite-text'], $inputArray['quote-author']];
+                    $result = form_sql_request($con, $sql_post, $params, false);
+
+                    if ($result) {
+                        $new_post_id = mysqli_insert_id($con);
+                        getHashtags($inputArray, $con, $new_post_id);
+                        header("Location: post.php?post=" . $new_post_id);
+                    }
+
+                    break;
+
+                case 2:
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text) VALUES (NOW(), 3, 0, ?, ?, ?)';
+                    $params =  [$type_id, $inputArray['title'], $inputArray['text']];
+
+                    $result = form_sql_request($con, $sql_post, $params, false);
+
+                    if ($result) {
+                        $new_post_id = mysqli_insert_id($con);
+                        getHashtags($inputArray, $con, $new_post_id);
+                        header("Location: post.php?post=" . $new_post_id);
+                    }
+
+                    break;
+
+                case 3:
+                    if (file_exists($inputArray['image']['tmp_name']) || is_uploaded_file($inputArray['image']['tmp_name'])) {
+                        $img_path = getUploadedFile($inputArray);
+                    } else {
+                        $img_path = getUrlContent($inputArray);
+                    }
+
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, img) VALUES (NOW(), 3, 0, ?, ?, ?)';
+                    $params =  [$type_id, $inputArray['title'], $img_path];
+
+                    $result = form_sql_request($con, $sql_post, $params, false);
+
+                    if ($result) {
+                        $new_post_id = mysqli_insert_id($con);
+                        getHashtags($inputArray, $con, $new_post_id);
+                        header("Location: post.php?post=" . $new_post_id);
+                    }
+
+                    break;
+
+                case 4:
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, video) VALUES (NOW(), 4, 0, ?, ?, ?)';
+                    $params =  [$type_id, $inputArray['title'], $inputArray['video']];
+
+                    $result = form_sql_request($con, $sql_post, $params, false);
+
+                    if ($result) {
+                        $new_post_id = mysqli_insert_id($con);
+                        getHashtags($inputArray, $con, $new_post_id);
+                        header("Location: post.php?post=" . $new_post_id);
+                    }
+
+                    break;
+
+                case 5:
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, link) VALUES (NOW(), 3, 0, ?, ?, ?)';
+                    $params =  [$type_id, $inputArray['title'], $inputArray['link']];
+
+                    $result = form_sql_request($con, $sql_post, $params, false);
+
+                    if ($result) {
+                        $new_post_id = mysqli_insert_id($con);
+                        getHashtags($inputArray, $con, $new_post_id);
+                        header("Location: post.php?post=" . $new_post_id);
+                    }
+
+                    break;
+            }
+        }
     }
 
     $title_input = include_template('title-input.php', [
