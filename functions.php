@@ -55,14 +55,15 @@
     }
 
     function form_sql_request(mysqli $link, string $request, array $params, bool $get_data = true) {
-        if ($params) {
-            $stmt = db_get_prepare_stmt($link, $request, $params);
-            $result = mysqli_stmt_execute($stmt);
-            if ($get_data) {
-                $result = mysqli_stmt_get_result($stmt);
-            }
-        } else {
-            $result = mysqli_query($link, $request);
+        if (!$params) {
+            return $result = mysqli_query($link, $request);
+        }
+
+        $stmt = db_get_prepare_stmt($link, $request, $params);
+        $result = mysqli_stmt_execute($stmt);
+
+        if ($get_data) {
+            $result = mysqli_stmt_get_result($stmt);
         }
 
         if (!$result) {
@@ -129,14 +130,13 @@
                 $request = 'SELECT id FROM hashtags WHERE hashtag_name = ?';
                 $res = form_sql_request($dbConnection, $request, [$tag]);
                 $result = mysqli_fetch_array($res)['id'];
-                if ($result) {
-                   array_push($tags_array, $result);
-                } else {
+                if (!$result) {
                     $request = 'INSERT INTO hashtags SET hashtag_name = ?';
                     $res = form_sql_request($dbConnection, $request, [$tag], false);
                     $new_tag_id = mysqli_insert_id($dbConnection);
                     array_push($tags_array, $new_tag_id);
                 }
+                array_push($tags_array, $result);
             }
 
             foreach ($tags_array as $tag) {
@@ -323,7 +323,7 @@
             }
 
             if ($type === 'integer') {
-                return $inputArray[$field] > $max ? 'Максимальное значение: ' . $min : null;
+                return $inputArray[$field] > $max ? 'Максимальное значение: ' . $max : null;
             }
 
             if ($type === 'array') {
