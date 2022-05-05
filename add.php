@@ -3,6 +3,12 @@
     require_once 'helpers.php';
     require_once 'functions.php';
 
+    define('TYPE_QUOTE', 'quote');
+    define('TYPE_TEXT', 'text');
+    define('TYPE_PHOTO', 'photo');
+    define('TYPE_VIDEO', 'video');
+    define('TYPE_LINK', 'link');
+
     [$is_auth, $user_name, $page_titles, $validate_rules, $input_names] = require('data.php');
     $con = require('init.php');
 
@@ -28,8 +34,8 @@
 
         if(empty($errors)) {
 
-            switch($type_id) {
-                case 1:
+            switch($type) {
+                case TYPE_QUOTE:
                     $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text, cite_author) VALUES (NOW(), 1, 0, ?, ?, ?, ?)';
                     $params =  [$type_id, $inputArray['title'], $inputArray['cite-text'], $inputArray['quote-author']];
                     $result = form_sql_request($con, $sql_post, $params, false);
@@ -42,7 +48,7 @@
 
                     break;
 
-                case 2:
+                case TYPE_TEXT:
                     $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text) VALUES (NOW(), 3, 0, ?, ?, ?)';
                     $params =  [$type_id, $inputArray['title'], $inputArray['text']];
 
@@ -56,7 +62,7 @@
 
                     break;
 
-                case 3:
+                case TYPE_PHOTO:
                     if (file_exists($inputArray['image']['tmp_name']) || is_uploaded_file($inputArray['image']['tmp_name'])) {
                         $img_path = getUploadedFile($inputArray);
                     } else {
@@ -76,7 +82,7 @@
 
                     break;
 
-                case 4:
+                case TYPE_VIDEO:
                     $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, video) VALUES (NOW(), 4, 0, ?, ?, ?)';
                     $params =  [$type_id, $inputArray['title'], $inputArray['video']];
 
@@ -90,7 +96,7 @@
 
                     break;
 
-                case 5:
+                case TYPE_LINK:
                     $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, link) VALUES (NOW(), 3, 0, ?, ?, ?)';
                     $params =  [$type_id, $inputArray['title'], $inputArray['link']];
 
