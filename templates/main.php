@@ -43,10 +43,10 @@
                         </li>
                         <?php foreach($types as $type): ?>
                         <li class="popular__filters-item filters__item">
-                            <a class="filters__button filters__button--<?= $type['type']; ?> button <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active' : '' ?>" href="/feed.php?tab=<?= $type['id']; ?>">
-                                <span class="visually-hidden"><?= $type['name']; ?></span>
+                            <a class="filters__button filters__button--<?= $type['type'] ?> button <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active' : '' ?>" href="/feed.php?tab=<?= $type['id'] ?>">
+                                <span class="visually-hidden"><?= $type['name'] ?></span>
                                 <svg class="filters__icon" width="22" height="18">
-                                    <use xlink:href="#icon-filter-<?= $type['type']; ?>"></use>
+                                    <use xlink:href="#icon-filter-<?= $type['type'] ?>"></use>
                                 </svg>
                             </a>
                         </li>
@@ -58,9 +58,9 @@
 
                 <?php foreach($popular_posts as $index => $post): ?>
                     <?php $date = generate_random_date($index); ?>
-                <article class="popular__post post <?= $post['class'] ?? ''; ?>">
+                <article class="popular__post post <?= $post['class'] ?? '' ?>">
                     <header class="post__header">
-                        <h2><a href="/post.php?post=<?= $post['id'] ?? ''; ?>"><?= htmlspecialchars($post['title'] ?? ''); ?></a></h2>
+                        <h2><a href="/post.php?post=<?= $post['id'] ?? '' ?>"><?= htmlspecialchars($post['title'] ?? '') ?></a></h2>
                     </header>
 
                     <div class="post__main">
@@ -68,35 +68,35 @@
 
                         case 'post-photo': ?>
                             <div class="post-photo__image-wrapper">
-                                <img src="img/<?= $post['img'] ?? ''; ?>" alt="Фото от пользователя" width="360" height="240">
+                                <img src="<?= $post['img'] ?? '' ?>" alt="Фото от пользователя" width="360" height="240">
                             </div>
                         <?php break ?>
 
                         <?php case 'post-quote': ?>
                             <blockquote>
                                 <p>
-                                    <?= htmlspecialchars($post['text'] ?? ''); ?>
+                                    <?= htmlspecialchars($post['text'] ?? '') ?>
                                 </p>
-                                <cite><?= htmlspecialchars($post['cite_author'] ?? ''); ?></cite>
+                                <cite><?= htmlspecialchars($post['cite_author'] ?? '') ?></cite>
                             </blockquote>
                         <?php break ?>
 
                         <?php case 'post-text': ?>
-                            <?= clip_post_text(htmlspecialchars($post['text'] ?? '')); ?>
+                            <?= clip_post_text(htmlspecialchars($post['text'] ?? '')) ?>
                         <?php break ?>
 
                         <?php case 'post-link': ?>
                             <div class="post-link__wrapper">
-                                <a class="post-link__external" href="http://<?= htmlspecialchars($post['link'] ?? ''); ?>" title="Перейти по ссылке">
+                                <a class="post-link__external" href="http://<?= htmlspecialchars($post['link'] ?? '') ?>" title="Перейти по ссылке">
                                     <div class="post-link__info-wrapper">
                                         <div class="post-link__icon-wrapper">
                                             <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
                                         </div>
                                         <div class="post-link__info">
-                                            <h3><?= htmlspecialchars($post['title'] ?? ''); ?></h3>
+                                            <h3><?= htmlspecialchars($post['title'] ?? '') ?></h3>
                                         </div>
                                     </div>
-                                    <span><?= htmlspecialchars($post['text'] ?? ''); ?></span>
+                                    <span><?= htmlspecialchars($post['text'] ?? '') ?></span>
                                 </a>
                             </div>
                         <?php break ?>
@@ -107,10 +107,10 @@
                         <div class="post__author">
                             <a class="post__author-link" href="#" title="Автор">
                                 <div class="post__avatar-wrapper">
-                                    <img class="post__author-avatar" src="img/<?= $post['avatar_path'] ?? ''; ?>" alt="Аватар пользователя">
+                                    <img class="post__author-avatar" src="img/<?= $post['avatar_path'] ?? '' ?>" alt="Аватар пользователя">
                                 </div>
                                 <div class="post__info">
-                                    <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? ''); ?></b>
+                                    <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? '') ?></b>
                                     <time class="post__time" title="<?= set_post_date($date)['time_title'] ?>" datetime="<?= $date ?>"><?= set_post_date($date)['date_ago'] ?></time>
                                 </div>
                             </a>
