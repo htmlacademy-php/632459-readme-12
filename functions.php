@@ -30,7 +30,7 @@
     function set_post_date(string $date, bool $short = false): array
 	{
         $current_date = date('Y-m-d H:i:s');
-		$time_title = date_format(date_create($date), 'd-m-Y H:i');
+				$time_title = date_format(date_create($date), 'd-m-Y H:i');
         $date_array = date_difference($current_date, $date);
         $delta_array = array_filter($date_array);
         $delta_value = array_key_first($delta_array);
@@ -148,10 +148,10 @@
         return null;
     }
 
-    function getUploadedFile($inputArray) {
-        if (file_exists($inputArray['image']['tmp_name']) || is_uploaded_file($inputArray['image']['tmp_name'])) {
-            $tmp_name = $inputArray['image']['tmp_name'];
-            $path_info = pathinfo($inputArray['image']['name']);
+    function getUploadedFile($inputArray, $field) {
+        if (file_exists($inputArray[$field]['tmp_name']) || is_uploaded_file($inputArray[$field]['tmp_name'])) {
+            $tmp_name = $inputArray[$field]['tmp_name'];
+            $path_info = pathinfo($inputArray[$field]['name']);
             $file_ext = $path_info['extension'];
             $file_name = uniqid('', true) . '.' . $file_ext;
             $file_path = 'uploads/';
@@ -195,10 +195,10 @@
             return null;
         }
 
-        $request = 'SELECT ' . $dbfield . ' FROM ' . $dbtable;
-        $rows = form_sql_request($dbConnection, $request);
+        $request = 'SELECT ' . $dbfield . ' FROM ' . $dbtable . ' WHERE ' . $dbfield . ' = ?';
+        $result = form_sql_request($dbConnection, $request, [$inputArray[$field]]);
 
-        return count($rows) > 0 ? null : 'Выбранного значения нет в базе';
+        return mysqli_num_rows($result) > 0 ? null : 'Выбранного значения нет в базе';
     }
 
     function validateUnique(array $inputArray, string $field, $dbConnection, $dbtable, $dbfield) : ?string {
@@ -206,10 +206,10 @@
              return null;
         }
 
-        $request = 'SELECT ' . $dbfield . ' FROM ' . $dbtable;
-        $rows = form_sql_request($dbConnection, $request);
+        $request = 'SELECT ' . $dbfield . ' FROM ' . $dbtable . ' WHERE ' . $dbfield . ' = ?';
+        $result = form_sql_request($dbConnection, $request, [$inputArray[$field]]);
 
-         return count($rows) > 0 ? 'Выбранное значение уже существует в базе' : null;
+        return mysqli_num_rows($result) > 0 ? 'Выбранное значение уже существует в базе' : null;
      }
 
     function validateString(array $inputArray, string $field): ?string {
@@ -237,7 +237,7 @@
 
     function validateEmail(array $inputArray, string $field): ?string {
         if(isset($inputArray[$field])) {
-            return filter_var($inputArray[$field], FILTER_VALIDATE_EMAIL) ? null : 'Некорректный email';
+            return filter_var($inputArray[$field], FILTER_VALIDATE_EMAIL) ? null : 'Введите корректный email';
         }
             return null;
     }
@@ -336,16 +336,18 @@
     }
 
     function validateRequiredIfValue(array $inputArray, string $field, $dbConnection, $value, ...$values): ?string {
-        if (!isset($inputArray[$value])) {
-             return "Поле $value должно быть заполнено";
-        }
+        if (isset($inputArray[$field])) {
+            if (empty($inputArray[$value])) {
+                return "Поле $value должно быть заполнено";
+           }
 
-        if (!in_array($inputArray[$value], $values)) {
-            return null;
-        }
+           if (!in_array($inputArray[$value], $values)) {
+               return null;
+           }
 
-        if (empty($inputArray[$field])) {
-            return "Это поле должно быть заполнено";
+           if (empty($inputArray[$field])) {
+               return "Это поле должно быть заполнено";
+           }
         }
 
         return null;
@@ -390,4 +392,14 @@
 
         # get the content type
         return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+    }
+
+    function validatePassword(array $inputArray, string $field, $dbConnection, $password, $repeat): ?string {
+            if (!empty($inputArray[$password]) && !empty($inputArray[$repeat])) {
+                if ($inputArray[$password] !== $inputArray[$repeat]) {
+                    return "Пароли должны совпадать";
+                }
+                return null;
+            }
+        return null;
     }

@@ -63,8 +63,10 @@
                     break;
 
                 case TYPE_PHOTO:
-                    if (file_exists($inputArray['image']['tmp_name']) || is_uploaded_file($inputArray['image']['tmp_name'])) {
-                        $img_path = getUploadedFile($inputArray);
+                    $file_field = 'image';
+
+                    if (file_exists($inputArray[$file_field]['tmp_name']) || is_uploaded_file($inputArray[$file_field]['tmp_name'])) {
+                        $img_path = getUploadedFile($inputArray, $file_field);
                     } else {
                         $img_path = getUrlContent($inputArray);
                     }
@@ -132,5 +134,3 @@
     ]);
 
     print($page_content);
-
-    return $errors;
