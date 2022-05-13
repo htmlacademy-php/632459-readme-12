@@ -22,6 +22,7 @@
                 micro blogging
             </p>
         </div>
+        <?php if ($is_auth === 1): ?>
         <form class="header__search-form form" action="#" method="get">
             <div class="header__search">
                 <label class="visually-hidden">Поиск</label>
@@ -36,7 +37,6 @@
         </form>
         <div class="header__nav-wrapper">
             <!-- здесь должен быть PHP код, который показывает следующий тег по условию -->
-            <?php if ($is_auth === 1): ?>
             <nav class="header__nav">
                 <ul class="header__my-nav">
                     <li class="header__my-page header__my-page--popular">
@@ -106,8 +106,18 @@
                         <a class="header__post-button button button--transparent" href="/add.php?type=text">Пост</a>
                     </li>
                 </ul>
-            </nav>
             <?php endif; ?>
+            <?php if ($is_auth === 0): ?>
+                <ul class="header__user-nav">
+                    <li class="header__authorization">
+                        <a class="header__user-button header__authorization-button button" href="login.html">Вход</a>
+                    </li>
+                    <li>
+                        <a class="header__user-button header__user-button--active header__register-button button" href="reg.php">Регистрация</a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+            </nav>
         </div>
     </div>
 </header>
@@ -168,8 +178,8 @@
         </div>
     </div>
 </footer>
-<script src="libs/dropzone.js"></script>
-<script src="js/dropzone-settings.js"></script>
+<!-- <script src="libs/dropzone.js"></script>
+<script src="js/dropzone-settings.js"></script> -->
 <script src="js/main.js"></script>
 </body>
 </html>

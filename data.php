@@ -5,7 +5,8 @@
 
     $page_titles = [
         'index' => 'readme: популярное',
-        'post' => 'readme: страница поста'
+        'post' => 'readme: страница поста',
+        'reg' => 'readme: регистрация'
     ];
 
     $validate_rules = [
@@ -21,7 +22,11 @@
         'tags' => 'tags',
         'email-reg' => 'required|email|unique:users, email',
         'email-auth' => 'required|email|exists:users,email',
-        'date' => 'date'
+        'date' => 'date',
+        'login' => 'required|string',
+        'password' => 'required|password:password,password-repeat',
+        'password-repeat'=> 'required|password:password,password-repeat',
+        'userpic-file' => 'uploaded_file'
     ];
 
     $input_names = [
@@ -33,7 +38,12 @@
         'link' => 'Ссылка',
         'cite-text' => 'Текст цитаты',
         'quote-author' => 'Автор цитаты',
-        'image' => ' Файл'
+        'image' => ' Файл',
+        'email-reg' => 'Электронная почта',
+        'login' => 'Логин',
+        'password'=> 'Пароль',
+        'password-repeat' => 'Повтор пароля',
+        'userpic-file' => 'Фото'
     ];
 
     return [$is_auth, $user_name, $page_titles, $validate_rules, $input_names];
