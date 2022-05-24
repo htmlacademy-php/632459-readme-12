@@ -6,7 +6,8 @@
     $page_titles = [
         'index' => 'readme: популярное',
         'post' => 'readme: страница поста',
-        'reg' => 'readme: регистрация'
+        'reg' => 'readme: регистрация',
+        'feed' => 'readme: моя лента'
     ];
 
     $validate_rules = [

@@ -37,13 +37,13 @@
                     <b class="popular__filters-caption filters__caption">Тип контента:</b>
                     <ul class="popular__filters-list filters__list">
                         <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                            <a class="filters__button filters__button--ellipse filters__button--all <?= !isset($_GET['tab']) || $_GET['tab'] === '' ? 'filters__button--active' : '' ?>" href="/feed.php?tab">
+                            <a class="filters__button filters__button--ellipse filters__button--all <?= !isset($_GET['tab']) || $_GET['tab'] === '' ? 'filters__button--active' : '' ?>" href="/popular.php?tab">
                                 <span>Все</span>
                             </a>
                         </li>
                         <?php foreach($types as $type): ?>
                         <li class="popular__filters-item filters__item">
-                            <a class="filters__button filters__button--<?= $type['type'] ?> button <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active' : '' ?>" href="/feed.php?tab=<?= $type['id'] ?>">
+                            <a class="filters__button filters__button--<?= $type['type'] ?> button <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active' : '' ?>" href="/popular.php?tab=<?= $type['id'] ?>">
                                 <span class="visually-hidden"><?= $type['name'] ?></span>
                                 <svg class="filters__icon" width="22" height="18">
                                     <use xlink:href="#icon-filter-<?= $type['type'] ?>"></use>
@@ -139,6 +139,10 @@
                     </footer>
                 </article>
                 <?php endforeach; ?>
+            </div>
+            <div class="popular__page-links">
+            <a class="popular__page-link popular__page-link--prev button button--gray" href="#">Предыдущая страница</a>
+            <a class="popular__page-link popular__page-link--next button button--gray" href="#">Следующая страница</a>
             </div>
         </div>
     </section>

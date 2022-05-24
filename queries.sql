@@ -76,7 +76,6 @@ INSERT INTO subscriptions(subscribe_id, follower_id) VALUES (1, 2);
 INSERT INTO subscriptions(subscribe_id, follower_id) VALUES
   (3, 2),
   (3, 4),
-  (9, 2),
   (9, 1),
   (1, 5),
   (1, 6),
