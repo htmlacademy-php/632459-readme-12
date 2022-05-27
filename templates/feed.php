@@ -118,7 +118,7 @@
                   </div>
                 <ul class="post__tags">
                     <?php foreach ($feed_hashtags[$post['id']] as $hashtag): ?>
-                    <li><a href="#">#<?= $hashtag['hashtag_name'] ?? '' ?></a></li>
+                    <li><a href="#">#<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 </footer>
