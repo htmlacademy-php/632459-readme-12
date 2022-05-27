@@ -85,6 +85,20 @@
                             <?= clip_post_text(htmlspecialchars($post['text'] ?? '')) ?>
                         <?php break ?>
 
+                        <?php case 'post-video': ?>
+                            <div class="post-video__block">
+                                <div class="post-video__preview">
+                                    <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
+                                </div>
+                                <a href="post-details.html" class="post-video__play-big button">
+                                    <svg class="post-video__play-big-icon" width="14" height="14">
+                                        <use xlink:href="#icon-video-play-big"></use>
+                                    </svg>
+                                    <span class="visually-hidden">Запустить проигрыватель</span>
+                                </a>
+                            </div>
+                        <?php break ?>
+
                         <?php case 'post-link': ?>
                             <div class="post-link__wrapper">
                                 <a class="post-link__external" href="http://<?= htmlspecialchars($post['link'] ?? '') ?>" title="Перейти по ссылке">

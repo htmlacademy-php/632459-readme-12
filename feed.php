@@ -47,17 +47,31 @@
 
     $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+    $feed_hashtags = [];
+
+    foreach ($posts as $post) {
+        $sql_hashtags = 'SELECT hashtag_name FROM posts p '
+        . 'JOIN post_tags pt ON p.id=pt.post_id '
+        . 'JOIN hashtags h ON pt.hashtag_id=h.id '
+        . 'WHERE p.id = ?';
+
+        $result = form_sql_request($con, $sql_hashtags, [$post['id']]);
+
+        $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        $feed_hashtags[$post['id']] = $hashtags;
+    }
+
     $page_content = include_template('feed.php', [
         'posts' => $posts,
         'types' => $types,
-        'tab' => $tab
+        'tab' => $tab,
+        'feed_hashtags' => $feed_hashtags
     ]);
 
     $layout_content = include_template('layout.php', [
         'content'   => $page_content,
-        'title'     => $page_titles['feed'],
-        'user_name' => $user_name,
-        'is_auth' => $is_auth
+        'title'     => $page_titles['feed']
     ]);
 
     print($layout_content);

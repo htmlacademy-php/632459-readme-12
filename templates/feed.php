@@ -116,6 +116,11 @@
                       <span class="visually-hidden">количество репостов</span>
                     </a>
                   </div>
+                <ul class="post__tags">
+                    <?php foreach ($feed_hashtags[$post['id']] as $hashtag): ?>
+                    <li><a href="#">#<?= $hashtag['hashtag_name'] ?? '' ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
                 </footer>
               </article>
               <?php endforeach; ?>
