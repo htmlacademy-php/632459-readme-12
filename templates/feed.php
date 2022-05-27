@@ -123,13 +123,13 @@
           </div>
           <ul class="feed__filters filters">
             <li class="feed__filters-item filters__item">
-              <a class="filters__button <?= !isset($_GET['tab']) || $_GET['tab'] === '' ? 'filters__button--active' : '' ?>" href="/feed.php?tab">
+              <a class="filters__button <?= !isset($_GET['tab']) || $_GET['tab'] === '' ? 'filters__button--active' : '' ?>" href="/feed.php?user=<?= $_SESSION['user']['id'] ?>&tab">
                 <span>Все</span>
               </a>
             </li>
             <?php foreach($types as $type): ?>
             <li class="feed__filters-item filters__item">
-              <a class="filters__button filters__button--<?= $type['type'] ?> button <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active' : '' ?>" href="/feed.php?tab=<?= $type['id'] ?>">
+              <a class="filters__button filters__button--<?= $type['type'] ?> button <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active' : '' ?>" href="/feed.php?user=<?= $_SESSION['user']['id']  ?>&tab=<?= $type['id'] ?>">
                 <span class="visually-hidden"><?= $type['name'] ?></span>
                 <svg class="filters__icon" width="22" height="18">
                   <use xlink:href="#icon-filter-<?= $type['type'] ?>"></use>

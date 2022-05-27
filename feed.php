@@ -3,6 +3,11 @@
     require_once 'helpers.php';
     require_once 'functions.php';
 
+    if (!$_SESSION['user']) {
+        header("Location: /");
+        exit();
+    }
+
     [$is_auth, $user_name, $page_titles] = require('data.php');
     $con = require('init.php');
 
@@ -12,7 +17,6 @@
         die();
     }
 
-    $user_id = 2;
     $params = [];
 
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
@@ -20,6 +24,7 @@
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $tab = filter_input(INPUT_GET, 'tab');
+    $user_id = filter_input(INPUT_GET, 'user');
 
     $sql_feed = 'SELECT p.*, type, class, login, avatar_path FROM subscriptions' .
     ' JOIN posts p ON p.user_id = subscribe_id' .

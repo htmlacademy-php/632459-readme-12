@@ -4,6 +4,10 @@
     require_once 'functions.php';
     require_once 'data.php';
 
+    if (!$_SESSION['user']) {
+        header("Location: /");
+    }
+
     $con = require('init.php');
     [$is_auth, $user_name, $page_titles] = require('data.php');
 
@@ -11,6 +15,10 @@
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);
         die();
+    }
+
+    if (!$_SESSION['user']) {
+        header("Location: /");
     }
 
     /* Данные о посте и пользователе */

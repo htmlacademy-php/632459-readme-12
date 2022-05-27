@@ -10,7 +10,27 @@
         die();
     }
 
-    header('Location: /feed.php');
+    $errors = [];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $inputArray = $_POST;
+        $errors = validateForm($inputArray, $validate_rules, $con);
+
+        if (empty($errors)) {
+            $sql_user = 'SELECT id, login, avatar_path FROM users WHERE email = ?';
+            $result = form_sql_request($con, $sql_user, [$inputArray['authorize-login']]);
+            $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+            $_SESSION['user'] = $user;
+            header("Location: /feed.php?user=" . $user['id']);
+        }
+    }
+
+    $page_content = include_template('anonim-layout.php', [
+        'errors' => $errors
+    ]);
+
+    print($page_content);
 
 
 

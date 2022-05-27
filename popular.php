@@ -3,6 +3,10 @@
     require_once 'helpers.php';
     require_once 'functions.php';
 
+    if (!$_SESSION['user']) {
+        header("Location: /");
+    }
+
     [$is_auth, $user_name, $page_titles] = require('data.php');
     $con = require('init.php');
 
@@ -47,8 +51,6 @@
     $layout_content = include_template('layout.php', [
         'content'   => $page_content,
         'title'     => $page_titles['index'],
-        'user_name' => $user_name,
-        'is_auth'   => $is_auth
     ]);
 
     print($layout_content);

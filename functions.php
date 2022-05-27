@@ -182,6 +182,12 @@
         }
     }
 
+    function getCurrentUrl() {
+        $url = $_SERVER['REQUEST_URI'];
+        $url = explode('?', $url);
+        return $url = $url[0];
+    }
+
 	// Функции валидации
 
     function validateRequired(array $inputArray, string $field): ?string {
@@ -403,5 +409,22 @@
                 }
                 return null;
             }
+        return null;
+    }
+
+    function validateVerify(array $inputArray, string $field, $dbConnection, $login, $dbtable, $dbfieldLogin, $dbfieldPassword): ?string {
+        if (isset($inputArray[$field])) {
+            if(!empty($inputArray[$login])) {
+                $request = 'SELECT ' . $dbfieldPassword . ' FROM ' . $dbtable . ' WHERE ' . $dbfieldLogin . ' = ?';
+                $result = form_sql_request($dbConnection, $request, [$inputArray[$login]]);
+
+                $password = mysqli_fetch_array($result, MYSQLI_ASSOC)['password'];
+                if (password_verify($inputArray[$field], $password)) {
+                    return null;
+                }
+                return "Пароль не совпадает";
+            }
+            return null;
+        }
         return null;
     }
