@@ -17,8 +17,6 @@
         die();
     }
 
-    $params = [];
-
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
     $result = form_sql_request($con, $sql_types, []);
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -30,17 +28,19 @@
     ' JOIN posts p ON p.user_id = subscribe_id' .
     ' JOIN users u ON p.user_id = u.id ' .
     ' JOIN content_types c ON content_type = c.id' .
-    ' WHERE follower_id = ' . $user_id .
+    ' WHERE follower_id = ?' .
     ' ORDER BY date_add DESC';
+
+    $params = [$user_id];
 
     if ($tab) {
         $sql_feed = 'SELECT p.*, type, class, login, avatar_path FROM subscriptions' .
         ' JOIN posts p ON p.user_id = subscribe_id' .
         ' JOIN users u ON p.user_id = u.id ' .
         ' JOIN content_types c ON content_type = c.id' .
-        ' WHERE follower_id = ' . $user_id . ' AND c.id = ?' .
+        ' WHERE follower_id = ?' . ' AND c.id = ?' .
         ' ORDER BY date_add DESC';
-        $params = [$tab];
+        $params = [$user_id, $tab];
     }
 
     $result = form_sql_request($con, $sql_feed, $params);
