@@ -3,6 +3,11 @@
     require_once 'helpers.php';
     require_once 'functions.php';
 
+    if (!$_SESSION['user']) {
+        header("Location: /");
+        exit();
+    }
+
     [$is_auth, $user_name, $page_titles] = require('data.php');
     $con = require('init.php');
 
@@ -17,38 +22,56 @@
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $tab = filter_input(INPUT_GET, 'tab');
+    $user_id = filter_input(INPUT_GET, 'user');
 
-    $sql_filter = 'SELECT posts.*, login, avatar_path, class, type FROM posts '
-        . 'JOIN users u ON user_id = u.id '
-        . 'JOIN content_types c ON content_type = c.id '
-        . 'ORDER BY show_count DESC';
+    $sql_feed = 'SELECT p.*, type, class, login, avatar_path FROM subscriptions' .
+    ' JOIN posts p ON p.user_id = subscribe_id' .
+    ' JOIN users u ON p.user_id = u.id ' .
+    ' JOIN content_types c ON content_type = c.id' .
+    ' WHERE follower_id = ?' .
+    ' ORDER BY date_add DESC';
 
-    $params = [];
+    $params = [$user_id];
 
     if ($tab) {
-        $sql_filter = 'SELECT posts.*, login, avatar_path, class, type FROM posts '
-        . 'JOIN users u ON user_id = u.id '
-        . 'JOIN content_types c ON content_type = c.id '
-        . 'WHERE c.id = ? '
-        . 'ORDER BY show_count DESC';
-        $params = [$tab];
+        $sql_feed = 'SELECT p.*, type, class, login, avatar_path FROM subscriptions' .
+        ' JOIN posts p ON p.user_id = subscribe_id' .
+        ' JOIN users u ON p.user_id = u.id ' .
+        ' JOIN content_types c ON content_type = c.id' .
+        ' WHERE follower_id = ?' . ' AND c.id = ?' .
+        ' ORDER BY date_add DESC';
+        $params = [$user_id, $tab];
     }
 
-    $result = form_sql_request($con, $sql_filter, $params);
+    $result = form_sql_request($con, $sql_feed, $params);
 
-    $popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    $page_content = include_template('main.php', [
-        'popular_posts' => $popular_posts,
-        'types'         => $types,
-        'tab'           => $tab
+    $feed_hashtags = [];
+
+    foreach ($posts as $post) {
+        $sql_hashtags = 'SELECT hashtag_name FROM posts p '
+        . 'JOIN post_tags pt ON p.id=pt.post_id '
+        . 'JOIN hashtags h ON pt.hashtag_id=h.id '
+        . 'WHERE p.id = ?';
+
+        $result = form_sql_request($con, $sql_hashtags, [$post['id']]);
+
+        $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        $feed_hashtags[$post['id']] = $hashtags;
+    }
+
+    $page_content = include_template('feed.php', [
+        'posts' => $posts,
+        'types' => $types,
+        'tab' => $tab,
+        'feed_hashtags' => $feed_hashtags
     ]);
 
     $layout_content = include_template('layout.php', [
         'content'   => $page_content,
-        'title'     => $page_titles['index'],
-        'user_name' => $user_name,
-        'is_auth'   => $is_auth
+        'title'     => $page_titles['feed']
     ]);
 
     print($layout_content);

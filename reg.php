@@ -32,7 +32,7 @@
             $result = form_sql_request($con, $sql, $params, false);
 
             if ($result) {
-                header("Location: main.html");
+                header("Location: /");
             }
         }
     }

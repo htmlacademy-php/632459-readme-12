@@ -16,12 +16,12 @@
         return "<p>" . $string . "</p>";
     }
 
-    function date_difference($date_1 , $date_2 , $differenceFormat = '%m %d %h %i'): array
+    function date_difference($date_1 , $date_2 , $differenceFormat = '%y %m %d %h %i'): array
     {
         $datetime1 = date_create($date_1);
         $datetime2 = date_create($date_2);
         $interval = date_diff($datetime1, $datetime2);
-				$date_intervals = ['months', 'days', 'hours', 'minutes'];
+		$date_intervals = ['years', 'months', 'days', 'hours', 'minutes'];
         $date_diff_values = explode(" ", $interval->format($differenceFormat));
 
 		return array_combine($date_intervals, $date_diff_values);
@@ -30,7 +30,7 @@
     function set_post_date(string $date, bool $short = false): array
 	{
         $current_date = date('Y-m-d H:i:s');
-				$time_title = date_format(date_create($date), 'd-m-Y H:i');
+		$time_title = date_format(date_create($date), 'd-m-Y H:i');
         $date_array = date_difference($current_date, $date);
         $delta_array = array_filter($date_array);
         $delta_value = array_key_first($delta_array);
@@ -43,9 +43,11 @@
         } else if ($delta_value === 'days' && $delta_key < 7) {
             $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' день', ' дня', ' дней') . ' назад') : $delta_key . ' д назад';
         } else if ($delta_value === 'days' && $delta_key >= 7) {
-						$date_ago = !$short ? (round(($delta_key / 7)) . get_noun_plural_form(round($delta_key / 7), ' неделя', ' недели', ' недель') . ' назад') : round(($delta_key / 7)) . ' нед назад';
-				} else {
+			$date_ago = !$short ? (round(($delta_key / 7)) . get_noun_plural_form(round($delta_key / 7), ' неделя', ' недели', ' недель') . ' назад') : round(($delta_key / 7)) . ' нед назад';
+		} else if ($delta_value === 'months') {
             $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' месяц', ' месяца', ' месяцев') . ' назад') : $delta_key . ' мес назад';
+        } else {
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' год', ' года', ' лет') . ' назад') : $delta_key . ' г назад';
         }
 
         return [
@@ -178,6 +180,12 @@
                return $id = intval($type['id']);
             }
         }
+    }
+
+    function getCurrentUrl() {
+        $url = $_SERVER['REQUEST_URI'];
+        $url = explode('?', $url);
+        return $url = $url[0];
     }
 
 	// Функции валидации
@@ -401,5 +409,22 @@
                 }
                 return null;
             }
+        return null;
+    }
+
+    function validateVerify(array $inputArray, string $field, $dbConnection, $login, $dbtable, $dbfieldLogin, $dbfieldPassword): ?string {
+        if (isset($inputArray[$field])) {
+            if(!empty($inputArray[$login])) {
+                $request = 'SELECT ' . $dbfieldPassword . ' FROM ' . $dbtable . ' WHERE ' . $dbfieldLogin . ' = ?';
+                $result = form_sql_request($dbConnection, $request, [$inputArray[$login]]);
+
+                $password = mysqli_fetch_array($result, MYSQLI_ASSOC)['password'];
+                if (password_verify($inputArray[$field], $password)) {
+                    return null;
+                }
+                return "Пароль не совпадает";
+            }
+            return null;
+        }
         return null;
     }

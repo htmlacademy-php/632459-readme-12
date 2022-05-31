@@ -1,6 +1,6 @@
 <main class="page__main page__main--publication">
   <div class="container">
-    <h1 class="page__title page__title--publication"><?= $post['title'] ?></h1>
+    <h1 class="page__title page__title--publication"><?= htmlspecialchars($post['title'] ?? '') ?></h1>
     <section class="post-details">
       <h2 class="visually-hidden">Публикация</h2>
       <div class="post-details__wrapper post-photo">
@@ -37,7 +37,7 @@
           </div>
           <ul class="post__tags">
             <?php foreach ($hashtags as $hashtag): ?>
-            <li><a href="#">#<?= $hashtag['hashtag_name'] ?? '' ?></a></li>
+            <li><a href="#">#<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?></a></li>
             <?php endforeach; ?>
           </ul>
           <div class="comments">
@@ -62,18 +62,18 @@
                 <li class="comments__item user">
                   <div class="comments__avatar">
                     <a class="user__avatar-link" href="#">
-                      <img class="comments__picture" src="img/<?= $comment['avatar_path'] ?? '' ?>" alt="Аватар пользователя">
+                      <img class="comments__picture" src="img/<?= htmlspecialchars($comment['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
                     </a>
                   </div>
                   <div class="comments__info">
                     <div class="comments__name-wrapper">
                       <a class="comments__user-name" href="#">
-                        <span><?= $comment['login'] ?? '' ?></span>
+                        <span><?= htmlspecialchars($comment['login'] ?? '') ?></span>
                       </a>
                       <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>"><?= set_post_date($comment['date_add'], true)['date_ago'] ?? '' ?></time>
                     </div>
                     <p class="comments__text">
-                      <?= $comment['text'] ?? '' ?>
+                      <?= htmlspecialchars($comment['text'] ?? '') ?>
                     </p>
                   </div>
                 </li>
@@ -90,12 +90,12 @@
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
               <a class="post-details__avatar-link user__avatar-link" href="#">
-                <img class="post-details__picture user__picture" src="img/<?= $post['avatar_path'] ?>" alt="Аватар пользователя">
+                <img class="post-details__picture user__picture" src="img/<?= htmlspecialchars($post['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">
               <a class="post-details__name user__name" href="#">
-                <span><?= $post['login'] ?></span>
+                <span><?= htmlspecialchars($post['login'] ?? '') ?></span>
               </a>
               <time class="post-details__time user__time" datetime="2014-03-20">5 лет на сайте</time>
             </div>

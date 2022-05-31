@@ -6,7 +6,8 @@
     $page_titles = [
         'index' => 'readme: популярное',
         'post' => 'readme: страница поста',
-        'reg' => 'readme: регистрация'
+        'reg' => 'readme: регистрация',
+        'feed' => 'readme: моя лента'
     ];
 
     $validate_rules = [
@@ -26,7 +27,9 @@
         'login' => 'required|string',
         'password' => 'required|password:password,password-repeat',
         'password-repeat'=> 'required|password:password,password-repeat',
-        'userpic-file' => 'uploaded_file'
+        'userpic-file' => 'uploaded_file',
+        'authorize-login' => 'required|email|exists:users,email',
+        'authorize-password' => 'required|verify:authorize-login,users,email,password'
     ];
 
     $input_names = [
