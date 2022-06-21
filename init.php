@@ -6,7 +6,7 @@
     $con = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
     mysqli_set_charset($con, "utf8");
 
-    if (!isset($_SESSION['user'])) {
+    if(session_id() == '' || !isset($_SESSION) || session_status() === PHP_SESSION_NONE) {
         session_start();
     }
 
