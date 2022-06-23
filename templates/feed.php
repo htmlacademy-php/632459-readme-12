@@ -7,7 +7,7 @@
           <h2 class="visually-hidden">Лента</h2>
           <div class="feed__main-wrapper">
             <div class="feed__wrapper">
-            <?php foreach($posts as $post): ?>
+            <?php foreach($posts as $index => $post): ?>
               <article class="feed__post post <?= $post['class'] ?? '' ?>">
                 <header class="post__header post__author">
                   <a class="post__author-link" href="#" title="Автор">
@@ -98,14 +98,14 @@
                       <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                         <use xlink:href="#icon-heart-active"></use>
                       </svg>
-                      <span>250</span>
+                      <span><?= $feed_likes[$index] ?? '' ?></span>
                       <span class="visually-hidden">количество лайков</span>
                     </a>
                     <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                       <svg class="post__indicator-icon" width="19" height="17">
                         <use xlink:href="#icon-comment"></use>
                       </svg>
-                      <span>25</span>
+                      <span><?= $feed_comments[$index] ?? '' ?></span>
                       <span class="visually-hidden">количество комментариев</span>
                     </a>
                     <a class="post__indicator post__indicator--repost button" href="#" title="Репост">

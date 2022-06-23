@@ -47,11 +47,29 @@
     $result = form_sql_request($con, $sql_filter, $params);
 
     $popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $popular_comments = [];
+    $popular_likes = [];
+
+    foreach ($popular_posts as $post) {
+        $sql_comments = 'SELECT COUNT(id) AS total FROM comments '
+        . 'WHERE post_id = '. $post['id'];
+        $result = form_sql_request($con, $sql_comments, []);
+        $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        array_push($popular_comments, $comments[0]['total']);
+
+        $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
+        . 'WHERE like_post_id = '. $post['id'];
+        $result = form_sql_request($con, $sql_likes, []);
+        $likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        array_push($popular_likes, $likes[0]['total']);
+    }
 
     $page_content = include_template('popular.php', [
         'popular_posts' => $popular_posts,
         'types'         => $types,
-        'tab'           => $tab
+        'tab'           => $tab,
+        'popular_comments' => $popular_comments,
+        'popular_likes' => $popular_likes
     ]);
 
     $layout_content = include_template('layout.php', [

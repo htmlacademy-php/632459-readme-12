@@ -53,6 +53,9 @@
     $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $feed_hashtags = [];
+    $feed_comments = [];
+    $feed_likes = [];
+
 
     foreach ($posts as $post) {
         $sql_hashtags = 'SELECT hashtag_name FROM posts p '
@@ -61,17 +64,29 @@
         . 'WHERE p.id = ?';
 
         $result = form_sql_request($con, $sql_hashtags, [$post['id']]);
-
         $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
         $feed_hashtags[$post['id']] = $hashtags;
+
+        $sql_comments = 'SELECT COUNT(id) AS total FROM comments '
+        . 'WHERE post_id = '. $post['id'];
+        $result = form_sql_request($con, $sql_comments, []);
+        $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        array_push($feed_comments, $comments[0]['total']);
+
+        $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
+        . 'WHERE like_post_id = '. $post['id'];
+        $result = form_sql_request($con, $sql_likes, []);
+        $likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        array_push($feed_likes, $likes[0]['total']);
     }
 
     $page_content = include_template('feed.php', [
         'posts' => $posts,
         'types' => $types,
         'tab' => $tab,
-        'feed_hashtags' => $feed_hashtags
+        'feed_hashtags' => $feed_hashtags,
+        'feed_comments' => $feed_comments,
+        'feed_likes' => $feed_likes
     ]);
 
     $layout_content = include_template('layout.php', [
