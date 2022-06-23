@@ -34,7 +34,7 @@
 
                     <?php case 'text': ?>
                     <h2><a href="#"><?= $post['title'] ?? '' ?></a></h2>
-                        <?= clip_post_text(htmlspecialchars($post['text'] ?? '')) ?>
+                        <p><?= htmlspecialchars($post['text'] ?? '') ?></p>
                     <?php break; ?>
 
                     <?php case 'photo': ?>

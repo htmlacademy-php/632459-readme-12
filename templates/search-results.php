@@ -38,7 +38,7 @@
                 <?php break; ?>
 
                 <?php case 'text': ?>
-                    <?= clip_post_text(htmlspecialchars($post['text'] ?? '')) ?>
+                    <p><?= htmlspecialchars($post['text'] ?? '') ?></p>
                 <?php break; ?>
 
                 <?php case 'photo': ?>

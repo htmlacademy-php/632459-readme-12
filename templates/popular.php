@@ -82,7 +82,7 @@
                         <?php break ?>
 
                         <?php case 'post-text': ?>
-                            <?= clip_post_text(htmlspecialchars($post['text'] ?? '')) ?>
+                            <p><?= clip_post_text(htmlspecialchars($post['text'] ?? ''), $post['id']) ?></p>
                         <?php break ?>
 
                         <?php case 'post-video': ?>
