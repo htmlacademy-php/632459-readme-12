@@ -89,3 +89,7 @@ ADD name VARCHAR(255);
 
 ALTER TABLE content_types
 ADD priority INT UNSIGNED;
+
+-- Создание индекса полнотекстового поиска
+
+CREATE FULLTEXT INDEX post_ft_search ON posts(title, text);

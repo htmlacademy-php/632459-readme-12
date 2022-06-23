@@ -5,6 +5,7 @@
 
     if (!$_SESSION['user']) {
         header("Location: /");
+        exit();
     }
 
     [$is_auth, $user_name, $page_titles] = require('data.php');
@@ -14,6 +15,11 @@
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);
         die();
+    }
+
+    $search_query = filter_input(INPUT_GET, 'search');
+    if (!empty($search_query)) {
+        header("Location: /search.php?search=$search_query");
     }
 
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';

@@ -7,7 +7,8 @@
         'index' => 'readme: популярное',
         'post' => 'readme: страница поста',
         'reg' => 'readme: регистрация',
-        'feed' => 'readme: моя лента'
+        'feed' => 'readme: моя лента',
+        'search_results'=> 'readme: результаты поиска'
     ];
 
     $validate_rules = [

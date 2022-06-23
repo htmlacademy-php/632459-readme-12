@@ -17,6 +17,11 @@
         die();
     }
 
+    $search_query = filter_input(INPUT_GET, 'search');
+    if (!empty($search_query)) {
+        header("Location: /search.php?search=$search_query");
+    }
+
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
     $result = form_sql_request($con, $sql_types, []);
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
