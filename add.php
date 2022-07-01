@@ -9,6 +9,11 @@
     define('TYPE_VIDEO', 'video');
     define('TYPE_LINK', 'link');
 
+    if (!$_SESSION['user']) {
+        header("Location: /");
+        exit();
+    }
+
     [$is_auth, $user_name, $page_titles, $validate_rules, $input_names] = require('data.php');
     $con = require('init.php');
 
@@ -16,6 +21,11 @@
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);
         die();
+    }
+
+    $search_query = filter_input(INPUT_GET, 'search');
+    if (!empty($search_query)) {
+        header("Location: /search.php?search=$search_query");
     }
 
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';

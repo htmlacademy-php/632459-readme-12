@@ -82,7 +82,7 @@
                         <?php break ?>
 
                         <?php case 'post-text': ?>
-                            <?= clip_post_text(htmlspecialchars($post['text'] ?? '')) ?>
+                            <p><?= clip_post_text(htmlspecialchars($post['text'] ?? ''), $post['id']) ?></p>
                         <?php break ?>
 
                         <?php case 'post-video': ?>
@@ -138,14 +138,14 @@
                                     <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                                         <use xlink:href="#icon-heart-active"></use>
                                     </svg>
-                                    <span>0</span>
+                                    <span><?= $popular_likes[$index] ?? '' ?></span>
                                     <span class="visually-hidden">количество лайков</span>
                                 </a>
                                 <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                                     <svg class="post__indicator-icon" width="19" height="17">
                                         <use xlink:href="#icon-comment"></use>
                                     </svg>
-                                    <span>0</span>
+                                    <span><?= $popular_comments[$index] ?? '' ?></span>
                                     <span class="visually-hidden">количество комментариев</span>
                                 </a>
                             </div>

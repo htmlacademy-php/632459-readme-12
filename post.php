@@ -6,6 +6,7 @@
 
     if (!$_SESSION['user']) {
         header("Location: /");
+        exit();
     }
 
     $con = require('init.php');
@@ -19,6 +20,11 @@
 
     if (!$_SESSION['user']) {
         header("Location: /");
+    }
+
+    $search_query = filter_input(INPUT_GET, 'search');
+    if (!empty($search_query)) {
+        header("Location: /search.php?search=$search_query");
     }
 
     /* Данные о посте и пользователе */
