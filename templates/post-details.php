@@ -62,7 +62,7 @@
                 <li class="comments__item user">
                   <div class="comments__avatar">
                     <a class="user__avatar-link" href="#">
-                      <img class="comments__picture" src="img/<?= htmlspecialchars($comment['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
+                      <img class="comments__picture" src="<?= htmlspecialchars($comment['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
                     </a>
                   </div>
                   <div class="comments__info">
@@ -70,7 +70,7 @@
                       <a class="comments__user-name" href="#">
                         <span><?= htmlspecialchars($comment['login'] ?? '') ?></span>
                       </a>
-                      <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>"><?= set_post_date($comment['date_add'], true)['date_ago'] ?? '' ?></time>
+                      <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>"><?= set_date($comment['date_add'], true)['date_ago'] ?? '' ?>назад</time>
                     </div>
                     <p class="comments__text">
                       <?= htmlspecialchars($comment['text'] ?? '') ?>
@@ -90,14 +90,14 @@
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
               <a class="post-details__avatar-link user__avatar-link" href="#">
-                <img class="post-details__picture user__picture" src="img/<?= htmlspecialchars($post['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
+                <img class="post-details__picture user__picture" src="<?= htmlspecialchars($post['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">
               <a class="post-details__name user__name" href="#">
                 <span><?= htmlspecialchars($post['login'] ?? '') ?></span>
               </a>
-              <time class="post-details__time user__time" datetime="2014-03-20">5 лет на сайте</time>
+              <time class="post-details__time user__time" datetime="<?= $post['dt_reg'] ?? '' ?>"><?= set_date($post['dt_reg'])['date_ago'] ?? '' ?>на сайте</time>
             </div>
           </div>
           <div class="post-details__rating user__rating">

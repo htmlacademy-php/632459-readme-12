@@ -119,13 +119,13 @@
                     </div>
                     <footer class="post__footer">
                         <div class="post__author">
-                            <a class="post__author-link" href="#" title="Автор">
+                            <a class="post__author-link" href="/profile.php?user=<?= $post['user_id'] ?? '' ?>" title="Автор">
                                 <div class="post__avatar-wrapper">
-                                    <img class="post__author-avatar" src="img/<?= $post['avatar_path'] ?? '' ?>" alt="Аватар пользователя">
+                                    <img class="post__author-avatar" src="<?= $post['avatar_path'] ?? '' ?>" alt="Аватар пользователя">
                                 </div>
                                 <div class="post__info">
                                     <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? '') ?></b>
-                                    <time class="post__time" title="<?= set_post_date($date)['time_title'] ?>" datetime="<?= $date ?>"><?= set_post_date($date)['date_ago'] ?></time>
+                                    <time class="post__time" title="<?= set_date($date)['time_title'] ?? '' ?>" datetime="<?= $date ?>"><?= set_date($date)['date_ago'] ?? '' ?>назад</time>
                                 </div>
                             </a>
                         </div>

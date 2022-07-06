@@ -20,7 +20,7 @@
                 </div>
                 <div class="post__info">
                     <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? '') ?></b>
-                    <span class="post__time"><?= set_post_date($post['date_add'])['date_ago'] ?? '' ?></span>
+                    <span class="post__time"><?= set_date($post['date_add'])['date_ago'] ?? '' ?>назад</span>
                 </div>
                 </a>
             </header>

@@ -201,3 +201,21 @@ SET img = "img/rock-medium.jpg" WHERE id = 3;
 UPDATE posts
 SET img = "img/coast-medium.jpg" WHERE id = 4;
 
+UPDATE users
+SET avatar_path = "img/userpic.jpg" WHERE id = 1 OR id = 2 OR id = 4;
+
+UPDATE users
+SET avatar_path = "img/userpic-larisa-small.jpg" WHERE id = 3;
+
+UPDATE users
+SET avatar_path = "img/userpic-mark.jpg" WHERE id = 5 OR id = 6;
+
+UPDATE users
+SET avatar_path = "img/userpic-elvira.jpg" WHERE id = 7;
+
+UPDATE users
+SET avatar_path = "img/userpic-tanya.jpg" WHERE id = 8;
+
+UPDATE users
+SET avatar_path = "img/userpic-petro.jpg" WHERE id = 9;
+

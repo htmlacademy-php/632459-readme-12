@@ -27,7 +27,7 @@
 		return array_combine($date_intervals, $date_diff_values);
     }
 
-    function set_post_date(string $date, bool $short = false): array
+    function set_date(string $date, bool $short = false): array
 	{
         $current_date = date('Y-m-d H:i:s');
 		$time_title = date_format(date_create($date), 'd-m-Y H:i');
@@ -37,17 +37,17 @@
         $delta_key = $delta_array[$delta_value];
 
         if ($delta_value === 'minutes') {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' минута', ' минуты', ' минут') . ' назад') : $delta_key . ' мин назад';
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' минута ', ' минуты ', ' минут ')) : $delta_key . ' мин ';
         } else if ($delta_value === 'hours') {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' час', ' часа', ' часов') . ' назад') : $delta_key . ' ч назад';
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' час ', ' часа ', ' часов ')) : $delta_key . ' ч ';
         } else if ($delta_value === 'days' && $delta_key < 7) {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' день', ' дня', ' дней') . ' назад') : $delta_key . ' д назад';
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' день ', ' дня ', ' дней ')) : $delta_key . ' д ';
         } else if ($delta_value === 'days' && $delta_key >= 7) {
-			$date_ago = !$short ? (round(($delta_key / 7)) . get_noun_plural_form(round($delta_key / 7), ' неделя', ' недели', ' недель') . ' назад') : round(($delta_key / 7)) . ' нед назад';
+			$date_ago = !$short ? (round(($delta_key / 7)) . get_noun_plural_form(round($delta_key / 7), ' неделя ', ' недели ', ' недель ')) : round(($delta_key / 7)) . ' нед ';
 		} else if ($delta_value === 'months') {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' месяц', ' месяца', ' месяцев') . ' назад') : $delta_key . ' мес назад';
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' месяц ', ' месяца ', ' месяцев ')) : $delta_key . ' мес ';
         } else {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' год', ' года', ' лет') . ' назад') : $delta_key . ' г назад';
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' год ', ' года ', ' лет ')) : $delta_key . ' г ';
         }
 
         return [

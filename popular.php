@@ -74,7 +74,7 @@
 
     $layout_content = include_template('layout.php', [
         'content'   => $page_content,
-        'title'     => $page_titles['index'],
+        'title'     => $page_titles['index']
     ]);
 
     print($layout_content);

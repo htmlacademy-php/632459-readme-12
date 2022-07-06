@@ -30,7 +30,7 @@
     /* Данные о посте и пользователе */
     $post_id = filter_input(INPUT_GET, 'post', FILTER_VALIDATE_INT);
 
-    $sql_posts = 'SELECT posts.*, type, login, avatar_path FROM posts '
+    $sql_posts = 'SELECT posts.*, type, login, avatar_path, dt_reg FROM posts '
     . 'JOIN content_types c ON content_type = c.id '
     . 'JOIN users u ON user_id = u.id '
     . 'WHERE posts.id = ?';
