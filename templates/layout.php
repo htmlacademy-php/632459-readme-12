@@ -58,7 +58,7 @@
                     <li class="header__profile">
                         <a class="header__profile-link" href="/profile.php?user=<?= $_SESSION['user']['id'] ?? '' ?>">
                             <div class="header__avatar-wrapper">
-                                <img class="header__profile-avatar" src="<?= $_SESSION['user']['avatar_path'] ?? 'img/userpic-medium.jpg' ?>" alt="Аватар профиля">
+                                <img class="header__profile-avatar" src="<?= $_SESSION['user']['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар профиля">
                             </div>
                             <div class="header__profile-name">
                                 <span>

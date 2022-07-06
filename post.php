@@ -80,7 +80,7 @@
 
     /* Данные о комментариях и авторах */
 
-    $sql_comments = 'SELECT date_add, text, login, avatar_path FROM comments c '
+    $sql_comments = 'SELECT date_add, text, login, avatar_path, user_id FROM comments c '
     . 'JOIN users u ON u.id=c.user_id '
     . 'WHERE c.post_id = ?';
 

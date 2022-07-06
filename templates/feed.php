@@ -10,7 +10,7 @@
             <?php foreach($posts as $index => $post): ?>
               <article class="feed__post post <?= $post['class'] ?? '' ?>">
                 <header class="post__header post__author">
-                  <a class="post__author-link" href="#" title="Автор">
+                  <a class="post__author-link" href="/profile.php?user=<?= $post['user_id'] ?? '' ?>" title="Автор">
                     <div class="post__avatar-wrapper">
                       <img class="post__author-avatar" src="<?= htmlspecialchars($post['avatar_path'] ?? '') ?>" alt="Аватар пользователя" width="60" height="60">
                     </div>
@@ -33,12 +33,12 @@
                     <?php break; ?>
 
                     <?php case 'text': ?>
-                    <h2><a href="#"><?= $post['title'] ?? '' ?></a></h2>
+                    <h2><a href="/post.php?post=<?= $post['id'] ?? '' ?>"><?= $post['title'] ?? '' ?></a></h2>
                         <p><?= htmlspecialchars($post['text'] ?? '') ?></p>
                     <?php break; ?>
 
                     <?php case 'photo': ?>
-                        <h2><a href="#"><?= $post['title'] ?? '' ?></a></h2>
+                        <h2><a href="/post.php?post=<?= $post['id'] ?? '' ?>"><?= $post['title'] ?? '' ?></a></h2>
                         <div class="post-photo__image-wrapper">
                             <img src="<?= htmlspecialchars($post['img'] ?? '') ?>" alt="Фото от пользователя" width="760" height="396">
                         </div>
@@ -118,7 +118,7 @@
                   </div>
                 <ul class="post__tags">
                     <?php foreach ($feed_hashtags[$post['id']] as $hashtag): ?>
-                    <li><a href="#">#<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?></a></li>
+                    <li><a href="/search.php?search=%23<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?>">#<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 </footer>

@@ -16,7 +16,7 @@
         </p>
         <div class="search__links">
             <a class="search__popular-link button button--main" href="/popular.php">Популярное</a>
-            <a class="search__back-link" href="<?= htmlspecialchars($_SERVER['HTTP_REFERER']) ?? '#'?>">Вернуться назад</a>
+            <a class="search__back-link" href="<?= htmlspecialchars($_SERVER['HTTP_REFERER']) ?? ''?>">Вернуться назад</a>
         </div>
         </div>
     </div>

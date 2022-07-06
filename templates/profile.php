@@ -50,7 +50,7 @@
             <?php foreach($posts as $index => $post): ?>
             <article class="profile__post post <?= $post['class'] ?? '' ?>">
                 <header class="post__header">
-                <h2><a href="#"><?= $post['title'] ?? '' ?></a></h2>
+                <h2><a href="/post.php?post=<?= $post['id'] ?? '' ?>"><?= $post['title'] ?? '' ?></a></h2>
                 </header>
                 <div class="post__main">
                 <?php switch($post['type']):
@@ -138,11 +138,11 @@
                         <span class="visually-hidden">количество репостов</span>
                     </a>
                     </div>
-                    <time class="post__time" datetime="2019-01-30T23:41">15 минут назад</time>
+                    <time class="post__time" title="<?= set_date($post['date_add'])['time_title'] ?? '' ?>" datetime="<?= $post['date_add'] ?>"><?= set_date($post['date_add'])['date_ago'] ?? '' ?> назад</time>
                 </div>
                 <ul class="post__tags">
                     <?php foreach ($post_hashtags[$post['id']] as $hashtag): ?>
-                    <li><a href="#">#<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?></a></li>
+                    <li><a href="/search.php?search=%23<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?>">#<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 </footer>
