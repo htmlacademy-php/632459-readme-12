@@ -31,6 +31,7 @@
     $sql_filter = 'SELECT posts.*, login, avatar_path, class, type FROM posts '
         . 'JOIN users u ON user_id = u.id '
         . 'JOIN content_types c ON content_type = c.id '
+        . 'WHERE repost IS NULL '
         . 'ORDER BY show_count DESC';
 
     $params = [];
@@ -39,7 +40,7 @@
         $sql_filter = 'SELECT posts.*, login, avatar_path, class, type FROM posts '
         . 'JOIN users u ON user_id = u.id '
         . 'JOIN content_types c ON content_type = c.id '
-        . 'WHERE c.id = ? '
+        . 'WHERE c.id = ? AND repost IS NULL '
         . 'ORDER BY show_count DESC';
         $params = [$tab];
     }

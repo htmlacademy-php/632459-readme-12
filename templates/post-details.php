@@ -25,11 +25,11 @@
                 <span><?= $comments_amount['total'] ?? '' ?></span>
                 <span class="visually-hidden">количество комментариев</span>
               </a>
-              <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
+              <a class="post__indicator post__indicator--repost button" href="/repost.php?post=<?= $post['id'] ?? '' ?>" title="Репост">
                 <svg class="post__indicator-icon" width="19" height="17">
                   <use xlink:href="#icon-repost"></use>
                 </svg>
-                <span>5</span>
+                <span>0</span>
                 <span class="visually-hidden">количество репостов</span>
               </a>
             </div>
@@ -62,7 +62,7 @@
                 <li class="comments__item user">
                   <div class="comments__avatar">
                     <a class="user__avatar-link" href="/profile.php?user=<?= $comment['user_id'] ?? '' ?>">
-                      <img class="comments__picture" src="<?= htmlspecialchars($comment['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
+                      <img class="comments__picture" src="<?= htmlspecialchars($comment['avatar_path'] ?? 'img/userpic-tanya.jpg') ?>" alt="Аватар пользователя">
                     </a>
                   </div>
                   <div class="comments__info">
@@ -79,10 +79,6 @@
                 </li>
                 <?php endforeach; ?>
               </ul>
-              <a class="comments__more-link" href="#">
-                <span>Показать все комментарии</span>
-                <sup class="comments__amount">45</sup>
-              </a>
             </div>
           </div>
         </div>
@@ -90,7 +86,7 @@
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
               <a class="post-details__avatar-link user__avatar-link" href="/profile.php?user=<?= $post['user_id'] ?? '' ?>">
-                <img class="post-details__picture user__picture" src="<?= htmlspecialchars($post['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
+                <img class="post-details__picture user__picture" src="<?= htmlspecialchars($post['avatar_path'] ?? 'img/userpic-tanya.jpg') ?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">

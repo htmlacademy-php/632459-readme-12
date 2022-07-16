@@ -219,3 +219,5 @@ SET avatar_path = "img/userpic-tanya.jpg" WHERE id = 8;
 UPDATE users
 SET avatar_path = "img/userpic-petro.jpg" WHERE id = 9;
 
+
+

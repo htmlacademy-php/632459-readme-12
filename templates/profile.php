@@ -22,10 +22,13 @@
             <span class="profile__rating-text user__rating-text"><?= get_noun_plural_form($subscribers['total'], 'подписчик', 'подписчика', 'подписчиков') ?? '' ?></span>
             </p>
         </div>
+        <form action="/subscribe.php?user=<?= $user['id'] ?>" method="get">
         <div class="profile__user-buttons user__buttons">
-            <button class="profile__user-button user__button user__button--subscription button button--main" type="button">Подписаться</button>
+            <button class="profile__user-button user__button user__button--subscription button button--main" type="submit"><?= $is_subscribe ? 'Отписаться' : 'Подписаться' ?></button>
+            <input class="visually-hidden" type="text" name="user" value="<?= $user['id'] ?? '' ?>">
             <a class="profile__user-button user__button user__button--writing button button--green" href="#">Сообщение</a>
         </div>
+        </form>
         </div>
     </div>
     <div class="profile__tabs-wrapper tabs">
@@ -130,11 +133,11 @@
                         <span><?= $post_likes[$index] ?? '' ?></span>
                         <span class="visually-hidden">количество лайков</span>
                     </a>
-                    <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
+                    <a class="post__indicator post__indicator--repost button" href="/repost.php?post=<?= $post['id'] ?? '' ?>" title="Репост">
                         <svg class="post__indicator-icon" width="19" height="17">
                         <use xlink:href="#icon-repost"></use>
                         </svg>
-                        <span>5</span>
+                        <span>0</span>
                         <span class="visually-hidden">количество репостов</span>
                     </a>
                     </div>
@@ -147,7 +150,7 @@
                 </ul>
                 </footer>
                 <div class="comments">
-                <a class="comments__button button" href="#">Показать комментарии</a>
+                <a class="comments__button button" href="/post.php?post=<?= $post['id'] ?>">Показать комментарии</a>
                 </div>
             </article>
             <?php endforeach; ?>

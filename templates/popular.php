@@ -121,7 +121,7 @@
                         <div class="post__author">
                             <a class="post__author-link" href="/profile.php?user=<?= $post['user_id'] ?? '' ?>" title="Автор">
                                 <div class="post__avatar-wrapper">
-                                    <img class="post__author-avatar" src="<?= $post['avatar_path'] ?? '' ?>" alt="Аватар пользователя">
+                                    <img class="post__author-avatar" src="<?= $post['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя">
                                 </div>
                                 <div class="post__info">
                                     <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? '') ?></b>

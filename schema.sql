@@ -93,3 +93,11 @@ ADD priority INT UNSIGNED;
 -- Создание индекса полнотекстового поиска
 
 CREATE FULLTEXT INDEX post_ft_search ON posts(title, text);
+
+-- Добавление колонки «репост»
+
+ALTER TABLE posts
+ADD repost VARCHAR(255);
+
+ALTER TABLE posts
+ADD original_author VARCHAR(255);

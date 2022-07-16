@@ -6,6 +6,10 @@
     [$is_auth, $user_name, $page_titles, $validate_rules, $input_names] = require('data.php');
     $con = require('init.php');
 
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
+
     if (!$con) {
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);
@@ -14,7 +18,7 @@
 
     $user_id = filter_input(INPUT_GET, 'user');
 
-    $sql_user = 'SELECT dt_reg, login, avatar_path FROM users '
+    $sql_user = 'SELECT id, dt_reg, login, avatar_path FROM users '
     . 'WHERE id = ?';
 
     $result = form_sql_request($con, $sql_user, [$user_id]);
@@ -34,6 +38,15 @@
     $result = form_sql_request($con, $sql_publications, [$user_id]);
 
     $publications = mysqli_fetch_array($result);
+
+    $is_subscribe = false;
+
+    $sql_subscribe = 'SELECT subscribe_id FROM subscriptions WHERE subscribe_id = ? AND follower_id = ?';
+    $result = form_sql_request($con, $sql_subscribe, [$user_id, $_SESSION['user']['id']]);
+
+    if (mysqli_num_rows($result)) {
+        $is_subscribe = true;
+    }
 
     $sql_posts = 'SELECT posts.*, type, class FROM posts' .
     ' JOIN content_types c ON content_type = c.id' .
@@ -71,6 +84,7 @@
         'posts' => $posts,
         'post_likes' => $post_likes,
         'post_hashtags' => $post_hashtags,
+        'is_subscribe' => $is_subscribe
     ]);
 
     $layout_content = include_template('layout.php', [
