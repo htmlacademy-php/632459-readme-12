@@ -6,10 +6,6 @@
     [$is_auth, $user_name, $page_titles, $validate_rules, $input_names] = require('data.php');
     $con = require('init.php');
 
-    ini_set('display_errors', '1');
-    ini_set('display_startup_errors', '1');
-    error_reporting(E_ALL);
-
     if (!$con) {
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);
@@ -77,6 +73,10 @@
         array_push($post_likes, $likes[0]['total']);
     }
 
+    $sql_reposts = 'SELECT id, (SELECT COUNT(*) FROM posts p WHERE p.parent_id = posts.id GROUP BY p.parent_id) AS repost_count FROM posts';
+    $result = form_sql_request($con, $sql_reposts, []);
+    $reposts = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
     $page_content = include_template('profile.php', [
         'user' => $user,
         'subscribers' => $subscribers,
@@ -84,7 +84,8 @@
         'posts' => $posts,
         'post_likes' => $post_likes,
         'post_hashtags' => $post_hashtags,
-        'is_subscribe' => $is_subscribe
+        'is_subscribe' => $is_subscribe,
+        'reposts' => $reposts
     ]);
 
     $layout_content = include_template('layout.php', [

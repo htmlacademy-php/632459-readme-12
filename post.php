@@ -39,6 +39,10 @@
 
     $post = mysqli_fetch_array($result);
 
+    $sql_reposts = 'SELECT COUNT(*) as COUNT FROM posts WHERE parent_id = ?';
+    $result = form_sql_request($con, $sql_reposts, [$post_id]);
+    $reposts = mysqli_fetch_array($result);
+
     /* Подсчет подписчиков пользователя */
     $sql_subscribers = 'SELECT COUNT(follower_id) AS total FROM subscriptions '
     . 'JOIN posts p ON p.user_id = subscribe_id '
@@ -144,7 +148,8 @@
             'likes' => $likes,
             'hashtags' => $hashtags,
             'comments' => $comments,
-            'comments_amount' => $comments_amount
+            'comments_amount' => $comments_amount,
+            'reposts' => $reposts
         ]);
 
         $layout_content = include_template('layout.php', [

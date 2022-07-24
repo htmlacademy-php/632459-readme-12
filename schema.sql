@@ -101,3 +101,6 @@ ADD repost VARCHAR(255);
 
 ALTER TABLE posts
 ADD original_author VARCHAR(255);
+
+ALTER TABLE posts
+ADD parent_id INT UNSIGNED;

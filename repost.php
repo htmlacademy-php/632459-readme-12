@@ -20,8 +20,20 @@
     if (mysqli_num_rows($result)) {
         $post = mysqli_fetch_array($result);
         $sql_repost = 'INSERT INTO posts SET date_add = NOW(), title = ?, text = ?, cite_author = ?, img = ?, video = ?, link = ?, show_count = '
-        . '?, content_type = ?, user_id = ?, repost = true, original_author = ?';
-        form_sql_request($con, $sql_repost, [$post['title'], $post['text'], $post['cite_author'], $post['img'], $post['video'], $post['link'], $post['show_count'], $post['content_type'], $_SESSION['user']['id'], $post['user_id']], false);
+        . '?, content_type = ?, user_id = ?, repost = true, original_author = ?, parent_id = ?';
+        form_sql_request($con, $sql_repost, [
+            $post['title'],
+            $post['text'],
+            $post['cite_author'],
+            $post['img'],
+            $post['video'],
+            $post['link'],
+            $post['show_count'],
+            $post['content_type'],
+            $_SESSION['user']['id'],
+            $post['user_id'],
+            $post['id']],
+            false);
     }
 
     header("Location: /profile.php?user=" . $_SESSION['user']['id']);
