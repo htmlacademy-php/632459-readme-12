@@ -83,6 +83,16 @@
         return $_POST[$name] ?? "";
     }
 
+    function getPaginationPages(string $items_count, int $page_items, string $cur_page):array {
+        $pages_count = ceil($items_count / $page_items);
+        $offset = ($cur_page - 1) * $page_items;
+        return [
+            'pages' => range(1, $pages_count),
+            'pages_count' => $pages_count,
+            'offset' => $offset
+        ];
+    }
+
     function snakeToCamel($input)
     {
         return ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $input))));

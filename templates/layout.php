@@ -39,7 +39,7 @@
             <nav class="header__nav">
                 <ul class="header__my-nav">
                     <li class="header__my-page header__my-page--popular">
-                        <a class="header__page-link <?= getCurrentUrl() === '/popular.php' ? 'header__page-link--active' : '' ?>" href="<?= getCurrentUrl() === '/popular.php' ? '#' : '/popular.php' ?>" title="Популярный контент">
+                        <a class="header__page-link <?= getCurrentUrl() === '/popular.php' ? 'header__page-link--active' : '' ?>" href="<?= getCurrentUrl() === '/popular.php' ? '#' : '/popular.php?page=1' ?>" title="Популярный контент">
                             <span class="visually-hidden">Популярный контент</span>
                         </a>
                     </li>
