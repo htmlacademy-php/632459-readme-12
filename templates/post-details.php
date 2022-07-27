@@ -33,7 +33,7 @@
                 <span class="visually-hidden">количество репостов</span>
               </a>
             </div>
-            <span class="post__view"><?= $post['show_count'] ?> просмотров</span>
+            <span class="post__view"><?= $post['show_count'] ?> <?= get_noun_plural_form($post['show_count'], 'просмотр', 'просмотра', 'просмотровgit') ?></span>
           </div>
           <ul class="post__tags">
             <?php foreach ($hashtags as $hashtag): ?>

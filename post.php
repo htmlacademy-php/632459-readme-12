@@ -101,6 +101,11 @@
 
     $comments_amount = mysqli_fetch_array($result);
 
+    /* Увеличение количества просмотров */
+
+    $sql_show_count = 'UPDATE posts SET show_count = show_count + 1 WHERE id = ?';
+    form_sql_request($con, $sql_show_count, [$post_id], false);
+
     /* Подключение шаблонов */
 
     switch ($post['type']) {
