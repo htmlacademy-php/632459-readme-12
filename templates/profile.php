@@ -53,6 +53,19 @@
             <?php foreach($posts as $index => $post): ?>
             <article class="profile__post post <?= $post['class'] ?? '' ?>">
                 <header class="post__header">
+                    <?php if ($post['repost']): ?>
+                        <div class="post__author">
+                        <a class="post__author-link" href="#" title="Автор">
+                        <div class="post__avatar-wrapper post__avatar-wrapper--repost">
+                        <img class="post__author-avatar" src="<?= $repost_info[$post['id']]['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя">
+                        </div>
+                        <div class="post__info">
+                        <b class="post__author-name">Репост: <?= $repost_info[$post['id']]['login'] ?? '' ?></b>
+                        <time class="post__time" datetime="<?= $post['date_add'] ?? '' ?>"><?= set_date($post['date_add'])['date_ago'] . ' назад' ?? ''  ?></time>
+                        </div>
+                      </a>
+                    </div>
+                    <?php endif; ?>
                 <h2><a href="/post.php?post=<?= $post['id'] ?? '' ?>"><?= $post['title'] ?? '' ?></a></h2>
                 </header>
                 <div class="post__main">
@@ -123,7 +136,7 @@
                 <footer class="post__footer">
                 <div class="post__indicators">
                     <div class="post__buttons">
-                    <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
+                    <a class="post__indicator post__indicator--likes button" href="/like.php?post=<?= $post['id'] ?? '' ?>" title="Лайк">
                         <svg class="post__indicator-icon" width="20" height="17">
                         <use xlink:href="#icon-heart"></use>
                         </svg>

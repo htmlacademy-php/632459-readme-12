@@ -8,7 +8,7 @@
          <?= $post_main ?>
           <div class="post__indicators">
             <div class="post__buttons">
-              <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
+              <a class="post__indicator post__indicator--likes button" href="/like.php?post=<?= $post['id'] ?? '' ?>" title="Лайк">
                 <svg class="post__indicator-icon" width="20" height="17">
                   <use xlink:href="#icon-heart"></use>
                 </svg>

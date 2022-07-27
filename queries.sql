@@ -105,7 +105,7 @@ SET name = "Ссылка", priority = 5 WHERE id = 5;
 -- Добавление пользователей
 
 INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
-  ("2021-03-11 16:10:00", "lara@mail.ru", "Лариса", "123", "userpic-larisa-small.jpg"),
+  ("2021-03-11 16:10:00", "lara@mail.ru", "Лариса", "123", "userpic-larisa.jpg"),
   ("2020-11-01 13:15:10", "vlad777@mail.ru", "Владик", "456", "userpic.jpg"),
   ("2021-11-24 23:55:00", "v_ivanov@gmail.com", "Виктор", "11111", "userpic-mark.jpg");
 

@@ -44,10 +44,10 @@
         $is_subscribe = true;
     }
 
-    $sql_posts = 'SELECT posts.*, type, class FROM posts' .
-    ' JOIN content_types c ON content_type = c.id' .
-    ' WHERE user_id = ?' .
-    ' ORDER BY date_add DESC';
+    $sql_posts = 'SELECT posts.*, type, class FROM posts'
+    . ' JOIN content_types c ON content_type = c.id'
+    . ' WHERE user_id = ?'
+    . ' ORDER BY date_add DESC';
 
     $result = form_sql_request($con, $sql_posts, [$user_id]);
 
@@ -55,12 +55,14 @@
 
     $post_hashtags = [];
     $post_likes = [];
+    $repost_info = [];
 
     foreach ($posts as $post) {
         $sql_hashtags = 'SELECT hashtag_name FROM posts p '
         . 'JOIN post_tags pt ON p.id=pt.post_id '
         . 'JOIN hashtags h ON pt.hashtag_id=h.id '
-        . 'WHERE p.id = ?';
+        . 'WHERE p.id = ? '
+        . 'ORDER BY date_add DESC';
 
         $result = form_sql_request($con, $sql_hashtags, [$post['id']]);
         $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -71,7 +73,19 @@
         $result = form_sql_request($con, $sql_likes, []);
         $likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
         array_push($post_likes, $likes[0]['total']);
+
+        if ($post['repost']) {
+            $sql_post_author = 'SELECT p.id, login, avatar_path FROM posts p '
+            . 'JOIN users u ON p.original_author = u.id '
+            . 'WHERE u.id = ?';
+            $result = form_sql_request($con, $sql_post_author, [$post['original_author']]);
+
+            $repost = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            $repost_info[$post['id']] = $repost[0];
+        }
     }
+
+
 
     $sql_reposts = 'SELECT id, (SELECT COUNT(*) FROM posts p WHERE p.parent_id = posts.id GROUP BY p.parent_id) AS repost_count FROM posts';
     $result = form_sql_request($con, $sql_reposts, []);
@@ -85,7 +99,8 @@
         'post_likes' => $post_likes,
         'post_hashtags' => $post_hashtags,
         'is_subscribe' => $is_subscribe,
-        'reposts' => $reposts
+        'reposts' => $reposts,
+        'repost_info' => $repost_info
     ]);
 
     $layout_content = include_template('layout.php', [
