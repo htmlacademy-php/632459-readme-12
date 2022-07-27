@@ -57,7 +57,6 @@
             <div class="popular__posts">
 
                 <?php foreach($popular_posts as $index => $post): ?>
-                    <?php $date = generate_random_date($index); ?>
                 <article class="popular__post post <?= $post['class'] ?? '' ?>">
                     <header class="post__header">
                         <h2><a href="/post.php?post=<?= $post['id'] ?? '' ?>"><?= htmlspecialchars($post['title'] ?? '') ?></a></h2>
@@ -125,7 +124,7 @@
                                 </div>
                                 <div class="post__info">
                                     <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? '') ?></b>
-                                    <time class="post__time" title="<?= set_date($date)['time_title'] ?? '' ?>" datetime="<?= $date ?>"><?= set_date($date)['date_ago'] ?? '' ?>назад</time>
+                                    <time class="post__time" title="<?= set_date($post['date_add'])['time_title'] ?? '' ?>" datetime="<?= $post['date_add'] ?>"><?= set_date($post['date_add'])['date_ago'] ?? '' ?>назад</time>
                                 </div>
                             </a>
                         </div>
