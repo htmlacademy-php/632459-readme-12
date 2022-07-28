@@ -64,13 +64,13 @@
                 <?php foreach ($comments as $comment): ?>
                 <li class="comments__item user">
                   <div class="comments__avatar">
-                    <a class="user__avatar-link" href="/profile.php?user=<?= $comment['user_id'] ?? '' ?>">
+                    <a class="user__avatar-link" href="/profile.php?user=<?= $comment['user_id'] . '&tab=posts' ?? '' ?>">
                       <img class="comments__picture" src="<?= htmlspecialchars($comment['avatar_path'] ?? 'img/userpic-tanya.jpg') ?>" alt="Аватар пользователя">
                     </a>
                   </div>
                   <div class="comments__info">
                     <div class="comments__name-wrapper">
-                      <a class="comments__user-name" href="/profile.php?user=<?= $comment['user_id'] ?? '' ?>">
+                      <a class="comments__user-name" href="/profile.php?user=<?= $comment['user_id'] . '&tab=posts' ?? '' ?>">
                         <span><?= htmlspecialchars($comment['login'] ?? '') ?></span>
                       </a>
                       <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>"><?= set_date($comment['date_add'], true)['date_ago'] ?? '' ?>назад</time>
@@ -88,12 +88,12 @@
         <div class="post-details__user user">
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
-              <a class="post-details__avatar-link user__avatar-link" href="/profile.php?user=<?= $post['user_id'] ?? '' ?>">
+              <a class="post-details__avatar-link user__avatar-link" href="/profile.php?user=<?= $post['user_id'] . '&tab=posts' ?? '' ?>">
                 <img class="post-details__picture user__picture" src="<?= htmlspecialchars($post['avatar_path'] ?? 'img/userpic-tanya.jpg') ?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">
-              <a class="post-details__name user__name" href="/profile.php?user=<?= $post['user_id'] ?? '' ?>">
+              <a class="post-details__name user__name" href="/profile.php?user=<?= $post['user_id'] . '&tab=posts' ?? '' ?>">
                 <span><?= htmlspecialchars($post['login'] ?? '') ?></span>
               </a>
               <time class="post-details__time user__time" datetime="<?= $post['dt_reg'] ?? '' ?>"><?= set_date($post['dt_reg'])['date_ago'] ?? '' ?>на сайте</time>

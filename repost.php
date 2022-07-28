@@ -36,7 +36,7 @@
             false);
     }
 
-    header("Location: /profile.php?user=" . $_SESSION['user']['id']);
+    header("Location: /profile.php?user=" . $_SESSION['user']['id'] . '&tab=posts');
 
 
 

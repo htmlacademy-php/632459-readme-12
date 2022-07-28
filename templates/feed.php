@@ -10,7 +10,7 @@
             <?php foreach($posts as $index => $post): ?>
               <article class="feed__post post <?= $post['class'] ?? '' ?>">
                 <header class="post__header post__author">
-                  <a class="post__author-link" href="/profile.php?user=<?= $post['user_id'] ?? '' ?>" title="Автор">
+                  <a class="post__author-link" href="/profile.php?user=<?= $post['user_id'] . '&tab=posts' ?? '' ?>" title="Автор">
                     <div class="post__avatar-wrapper">
                       <img class="post__author-avatar" src="<?= htmlspecialchars($post['avatar_path'] ?? '') ?>" alt="Аватар пользователя" width="60" height="60">
                     </div>

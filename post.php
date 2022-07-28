@@ -121,7 +121,7 @@
             if (mysqli_num_rows($result) > 0) {
                 $sql_add_comment = 'INSERT INTO comments (date_add, text, user_id, post_id) VALUES (NOW(), ?, ?, ?)';
                 form_sql_request($con, $sql_add_comment, [$inputArray['comment'], $_SESSION['user']['id'], $post_id], false);
-                header("Location: profile.php?user=" . $post['user_id']);
+                header("Location: profile.php?user=" . $post['user_id'] . "&tab=posts");
             }
 
         }

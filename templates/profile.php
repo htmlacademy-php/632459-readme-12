@@ -37,18 +37,18 @@
             <b class="profile__tabs-caption filters__caption">Показать:</b>
             <ul class="profile__tabs-list filters__list tabs__list">
             <li class="profile__tabs-item filters__item">
-                <a class="profile__tabs-link filters__button filters__button--active tabs__item tabs__item--active button">Посты</a>
+                <a href="profile.php?user=<?= $_GET['user'] ?>&tab=posts" class="profile__tabs-link filters__button <?= $_GET['tab'] === 'posts' ? 'filters__button--active tabs__item--active' : '' ?> tabs__item button">Посты</a>
             </li>
             <li class="profile__tabs-item filters__item">
-                <a class="profile__tabs-link filters__button tabs__item button" href="#">Лайки</a>
+                <a class="profile__tabs-link filters__button <?= $_GET['tab'] === 'likes' ? 'filters__button--active tabs__item--active' : '' ?> tabs__item button" href="profile.php?user=<?= $_GET['user'] ?>&tab=likes">Лайки</a>
             </li>
             <li class="profile__tabs-item filters__item">
-                <a class="profile__tabs-link filters__button tabs__item button" href="#">Подписки</a>
+                <a class="profile__tabs-link filters__button <?= $_GET['tab'] === 'subs' ? 'filters__button--active tabs__item--active' : '' ?> tabs__item button" href="profile.php?user=<?= $_GET['user'] ?>&tab=subs">Подписки</a>
             </li>
             </ul>
         </div>
         <div class="profile__tab-content">
-            <section class="profile__posts tabs__content tabs__content--active">
+            <section class="profile__posts tabs__content <?= $_GET['tab'] === 'posts' ? 'tabs__content--active' : '' ?>">
             <h2 class="visually-hidden">Публикации</h2>
             <?php foreach($posts as $index => $post): ?>
             <article class="profile__post post <?= $post['class'] ?? '' ?>">
@@ -169,7 +169,7 @@
             <?php endforeach; ?>
             </section>
 
-            <section class="profile__likes tabs__content">
+            <section class="profile__likes tabs__content <?= $_GET['tab'] === 'likes' ? 'tabs__content--active' : '' ?>">
             <h2 class="visually-hidden">Лайки</h2>
             <ul class="profile__likes-list">
                 <li class="post-mini post-mini--photo post user">
@@ -310,7 +310,7 @@
             </ul>
             </section>
 
-            <section class="profile__subscriptions tabs__content">
+            <section class="profile__subscriptions tabs__content <?= $_GET['tab'] === 'subs' ? 'tabs__content--active' : '' ?>">
             <h2 class="visually-hidden">Подписки</h2>
             <ul class="profile__subscriptions-list">
                 <li class="post-mini post-mini--photo post user">

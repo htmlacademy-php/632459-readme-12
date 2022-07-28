@@ -56,7 +56,7 @@
                 </ul>
                 <ul class="header__user-nav">
                     <li class="header__profile">
-                        <a class="header__profile-link" href="/profile.php?user=<?= $_SESSION['user']['id'] ?? '' ?>">
+                        <a class="header__profile-link" href="/profile.php?user=<?= $_SESSION['user']['id'] . '&tab=posts' ?? '' ?>">
                             <div class="header__avatar-wrapper">
                                 <img class="header__profile-avatar" src="<?= $_SESSION['user']['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар профиля">
                             </div>
@@ -73,7 +73,7 @@
                             <div class="header__profile-tooltip">
                                 <ul class="header__profile-nav">
                                     <li class="header__profile-nav-item">
-                                        <a class="header__profile-nav-link" href="profile.php?user=<?= $_SESSION['user']['id'] ?? '' ?>">
+                                        <a class="header__profile-nav-link" href="profile.php?user=<?= $_SESSION['user']['id'] . '&tab=posts' ?? '' ?>">
                           <span class="header__profile-nav-text">
                             Мой профиль
                           </span>

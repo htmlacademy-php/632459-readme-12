@@ -26,13 +26,13 @@
         if (!$is_subscribe) {
             $sql_subscribe = 'INSERT INTO subscriptions(subscribe_id, follower_id) VALUES(?, ' . $_SESSION['user']['id'] . ')';
             $result = form_sql_request($con, $sql_subscribe, [$user_id], false);
-            header("Location: profile.php?user=" . $user_id);
+            header("Location: profile.php?user=" . $user_id . "&tab=posts");
             exit();
         }
 
         $sql_subscribe = 'DELETE FROM subscriptions WHERE subscribe_id = ? AND follower_id = ?';
         $result = form_sql_request($con, $sql_subscribe, [$user_id, $_SESSION['user']['id']]);
-        header("Location: profile.php?user=" . $user_id);
+        header("Location: profile.php?user=" . $user_id . "&tab=posts");
     }
 
 
