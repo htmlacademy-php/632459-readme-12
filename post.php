@@ -106,6 +106,27 @@
     $sql_show_count = 'UPDATE posts SET show_count = show_count + 1 WHERE id = ?';
     form_sql_request($con, $sql_show_count, [$post_id], false);
 
+    /* Добавление комментария */
+
+    $errors = [];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $inputArray = $_POST;
+        $errors = validateForm($inputArray, $validate_rules, $con);
+
+        if(empty($errors)) {
+            $sql_post_exists = 'SELECT id FROM posts WHERE id = ?';
+            $result = form_sql_request($con, $sql_post_exists, [$inputArray['post']]);
+
+            if (mysqli_num_rows($result) > 0) {
+                $sql_add_comment = 'INSERT INTO comments (date_add, text, user_id, post_id) VALUES (NOW(), ?, ?, ?)';
+                form_sql_request($con, $sql_add_comment, [$inputArray['comment'], $_SESSION['user']['id'], $post_id], false);
+                header("Location: profile.php?user=" . $post['user_id']);
+            }
+
+        }
+    }
+
     /* Подключение шаблонов */
 
     switch ($post['type']) {
@@ -154,7 +175,8 @@
             'hashtags' => $hashtags,
             'comments' => $comments,
             'comments_amount' => $comments_amount,
-            'reposts' => $reposts
+            'reposts' => $reposts,
+            'errors' => $errors
         ]);
 
         $layout_content = include_template('layout.php', [

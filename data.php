@@ -31,7 +31,8 @@
         'password-repeat'=> 'required|password:password,password-repeat',
         'userpic-file' => 'uploaded_file',
         'authorize-login' => 'required|email|exists:users,email',
-        'authorize-password' => 'required|verify:authorize-login,users,email,password'
+        'authorize-password' => 'required|verify:authorize-login,users,email,password',
+        'comment' => 'required|min:4'
     ];
 
     $input_names = [

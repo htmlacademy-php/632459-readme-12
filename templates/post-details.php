@@ -33,7 +33,7 @@
                 <span class="visually-hidden">количество репостов</span>
               </a>
             </div>
-            <span class="post__view"><?= $post['show_count'] ?> <?= get_noun_plural_form($post['show_count'], 'просмотр', 'просмотра', 'просмотровgit') ?></span>
+            <span class="post__view"><?= $post['show_count'] ?> <?= get_noun_plural_form($post['show_count'], ' просмотр', ' просмотра', ' просмотров') ?></span>
           </div>
           <ul class="post__tags">
             <?php foreach ($hashtags as $hashtag): ?>
@@ -43,16 +43,19 @@
           <div class="comments">
             <form class="comments__form form" action="#" method="post">
               <div class="comments__my-avatar">
-                <img class="comments__picture" src="img/userpic-medium.jpg" alt="Аватар пользователя">
+                <img class="comments__picture" src="<?= $_SESSION['user']['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя">
               </div>
-              <div class="form__input-section form__input-section--error">
-                <textarea class="comments__textarea form__textarea form__input" placeholder="Ваш комментарий"></textarea>
+              <div class="form__input-section <?= $errors ? 'form__input-section--error' : '' ?>">
+                <textarea class="comments__textarea form__textarea form__input" name="comment" value="<?= getPostVal('comment') ?? '' ?>" placeholder="Ваш комментарий"><?= getPostVal('comment') ?? '' ?></textarea>
+                <input class="visually-hidden" name="post" value="<?= $post['id'] ?? '' ?>">
                 <label class="visually-hidden">Ваш комментарий</label>
                 <button class="form__error-button button" type="button">!</button>
+                <?php if ($errors && $errors['comment']): ?>
                 <div class="form__error-text">
                   <h3 class="form__error-title">Ошибка валидации</h3>
-                  <p class="form__error-desc">Это поле обязательно к заполнению</p>
+                  <p class="form__error-desc"><?= $errors['comment'] ?? '' ?></p>
                 </div>
+                <?php endif; ?>
               </div>
               <button class="comments__submit button button--green" type="submit">Отправить</button>
             </form>
