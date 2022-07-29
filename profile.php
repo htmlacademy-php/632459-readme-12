@@ -93,7 +93,7 @@
     . 'JOIN posts p ON p.id = l.like_post_id '
     . 'JOIN content_types c ON content_type = c.id '
     . 'JOIN users u ON u.id = l.like_user_id '
-    . 'WHERE p.user_id = ?';
+    . 'WHERE p.user_id = ? ORDER BY l.like_date DESC';
 
     $result = form_sql_request($con, $sql_profile_likes, [$user['id']]);
     $profile_likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
