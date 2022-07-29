@@ -56,7 +56,6 @@
     $feed_comments = [];
     $feed_likes = [];
 
-
     foreach ($posts as $post) {
         $sql_hashtags = 'SELECT hashtag_name FROM posts p '
         . 'JOIN post_tags pt ON p.id=pt.post_id '
@@ -80,13 +79,18 @@
         array_push($feed_likes, $likes[0]['total']);
     }
 
+    $sql_reposts = 'SELECT id, (SELECT COUNT(*) FROM posts p WHERE p.parent_id = posts.id GROUP BY p.parent_id) AS repost_count FROM posts';
+    $result = form_sql_request($con, $sql_reposts, []);
+    $reposts = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
     $page_content = include_template('feed.php', [
         'posts' => $posts,
         'types' => $types,
         'tab' => $tab,
         'feed_hashtags' => $feed_hashtags,
         'feed_comments' => $feed_comments,
-        'feed_likes' => $feed_likes
+        'feed_likes' => $feed_likes,
+        'reposts' => $reposts,
     ]);
 
     $layout_content = include_template('layout.php', [

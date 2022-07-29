@@ -20,7 +20,7 @@
         $page_content = include_template('no-results.php', [
             'search_text' => $search_text,
         ]);
-        
+
         $layout_content = include_template('layout.php', [
             'content'   => $page_content,
             'title'     => $page_titles['search_results']
@@ -45,7 +45,7 @@
         . 'JOIN content_types ct ON content_type = ct.id '
         . 'JOIN post_tags pt ON posts.id=pt.post_id '
         . 'JOIN hashtags h ON pt.hashtag_id=h.id '
-        . 'WHERE hashtag_name = ?';
+        . 'WHERE hashtag_name = ? ORDER BY date_add DESC';
 
         $result = form_sql_request($con, $sql_posts, [$hashtag]);
     }

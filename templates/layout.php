@@ -39,7 +39,7 @@
             <nav class="header__nav">
                 <ul class="header__my-nav">
                     <li class="header__my-page header__my-page--popular">
-                        <a class="header__page-link <?= getCurrentUrl() === '/popular.php' ? 'header__page-link--active' : '' ?>" href="<?= getCurrentUrl() === '/popular.php' ? '#' : '/popular.php' ?>" title="Популярный контент">
+                        <a class="header__page-link <?= getCurrentUrl() === '/popular.php' ? 'header__page-link--active' : '' ?>" href="<?= getCurrentUrl() === '/popular.php' ? '#' : '/popular.php?page=1' ?>" title="Популярный контент">
                             <span class="visually-hidden">Популярный контент</span>
                         </a>
                     </li>
@@ -56,9 +56,9 @@
                 </ul>
                 <ul class="header__user-nav">
                     <li class="header__profile">
-                        <a class="header__profile-link" href="#">
+                        <a class="header__profile-link" href="/profile.php?user=<?= $_SESSION['user']['id'] . '&tab=posts' ?? '' ?>">
                             <div class="header__avatar-wrapper">
-                                <img class="header__profile-avatar" src="<?= $_SESSION['user']['avatar_path'] ?? 'img/userpic-medium.jpg' ?>" alt="Аватар профиля">
+                                <img class="header__profile-avatar" src="<?= $_SESSION['user']['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар профиля">
                             </div>
                             <div class="header__profile-name">
                                 <span>
@@ -73,7 +73,7 @@
                             <div class="header__profile-tooltip">
                                 <ul class="header__profile-nav">
                                     <li class="header__profile-nav-item">
-                                        <a class="header__profile-nav-link" href="#">
+                                        <a class="header__profile-nav-link" href="profile.php?user=<?= $_SESSION['user']['id'] . '&tab=posts' ?? '' ?>">
                           <span class="header__profile-nav-text">
                             Мой профиль
                           </span>

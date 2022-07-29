@@ -69,10 +69,11 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 
 CREATE TABLE IF NOT EXISTS likes (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	user_id INT UNSIGNED,
-	post_id INT UNSIGNED,
-  CONSTRAINT like_user_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT like_post_fk FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE ON UPDATE CASCADE
+	like_user_id INT UNSIGNED,
+	like_post_id INT UNSIGNED,
+  like_date DATETIME NOT NULL,
+  CONSTRAINT like_user_fk FOREIGN KEY (like_user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT like_post_fk FOREIGN KEY (like_post_id) REFERENCES posts (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS post_tags (
@@ -93,3 +94,14 @@ ADD priority INT UNSIGNED;
 -- Создание индекса полнотекстового поиска
 
 CREATE FULLTEXT INDEX post_ft_search ON posts(title, text);
+
+-- Добавление колонки «репост»
+
+ALTER TABLE posts
+ADD repost VARCHAR(255);
+
+ALTER TABLE posts
+ADD original_author VARCHAR(255);
+
+ALTER TABLE posts
+ADD parent_id INT UNSIGNED;

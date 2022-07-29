@@ -50,25 +50,25 @@ WHERE post_id = 2;
 
 -- Добавление лайка к посту
 
-INSERT INTO likes(like_user_id, like_post_id) VALUES (1, 2);
+INSERT INTO likes(like_user_id, like_post_id, like_date) VALUES (1, 2, "2022-02-22 14:14:36");
 INSERT INTO likes(like_user_id, like_post_id) VALUES
-(1, 3),
-(1, 4),
-(1, 5),
-(2, 1),
-(2, 3),
-(2, 4),
-(3, 4),
-(3, 5),
-(5, 1),
-(5, 2),
-(7, 1),
-(7, 2),
-(7, 5),
-(8, 1),
-(9, 1),
-(9, 3),
-(9, 5);
+(1, 3, "2022-03-22 14:00:30"),
+(1, 4, "2022-02-22 13:14:36"),
+(1, 5, "2022-02-28 14:15:30"),
+(2, 1, "2022-05-22 12:34:36"),
+(2, 3, "2022-02-22 14:33:46"),
+(2, 4, "2022-02-22 08:14:56"),
+(3, 4, "2021-03-22 14:14:15"),
+(3, 5, "2022-02-16 06:14:36"),
+(5, 1, "2022-02-05 14:14:16"),
+(5, 2, "2022-04-07 14:35:36"),
+(7, 1, "2022-02-22 14:14:36"),
+(7, 2, "2022-02-11 14:16:36"),
+(7, 5, "2022-02-22 14:14:16"),
+(8, 1, "2022-02-11 14:14:36"),
+(9, 1, "2021-11-22 09:44:36"),
+(9, 3, "2021-02-22 14:48:36"),
+(9, 5, "2020-10-14 14:14:36");
 
 -- Подписка на пользователя
 
@@ -105,7 +105,7 @@ SET name = "Ссылка", priority = 5 WHERE id = 5;
 -- Добавление пользователей
 
 INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
-  ("2021-03-11 16:10:00", "lara@mail.ru", "Лариса", "123", "userpic-larisa-small.jpg"),
+  ("2021-03-11 16:10:00", "lara@mail.ru", "Лариса", "123", "userpic-larisa.jpg"),
   ("2020-11-01 13:15:10", "vlad777@mail.ru", "Владик", "456", "userpic.jpg"),
   ("2021-11-24 23:55:00", "v_ivanov@gmail.com", "Виктор", "11111", "userpic-mark.jpg");
 
@@ -200,4 +200,24 @@ SET img = "img/rock-medium.jpg" WHERE id = 3;
 
 UPDATE posts
 SET img = "img/coast-medium.jpg" WHERE id = 4;
+
+UPDATE users
+SET avatar_path = "img/userpic.jpg" WHERE id = 1 OR id = 2 OR id = 4;
+
+UPDATE users
+SET avatar_path = "img/userpic-larisa-small.jpg" WHERE id = 3;
+
+UPDATE users
+SET avatar_path = "img/userpic-mark.jpg" WHERE id = 5 OR id = 6;
+
+UPDATE users
+SET avatar_path = "img/userpic-elvira.jpg" WHERE id = 7;
+
+UPDATE users
+SET avatar_path = "img/userpic-tanya.jpg" WHERE id = 8;
+
+UPDATE users
+SET avatar_path = "img/userpic-petro.jpg" WHERE id = 9;
+
+
 

@@ -37,13 +37,13 @@
                     <b class="popular__filters-caption filters__caption">Тип контента:</b>
                     <ul class="popular__filters-list filters__list">
                         <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                            <a class="filters__button filters__button--ellipse filters__button--all <?= !isset($_GET['tab']) || $_GET['tab'] === '' ? 'filters__button--active' : '' ?>" href="/popular.php?tab">
+                            <a class="filters__button filters__button--ellipse filters__button--all <?= !isset($_GET['tab']) || $_GET['tab'] === '' ? 'filters__button--active' : '' ?>" href="/popular.php?page=1&tab">
                                 <span>Все</span>
                             </a>
                         </li>
                         <?php foreach($types as $type): ?>
                         <li class="popular__filters-item filters__item">
-                            <a class="filters__button filters__button--<?= $type['type'] ?> button <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active' : '' ?>" href="/popular.php?tab=<?= $type['id'] ?>">
+                            <a class="filters__button filters__button--<?= $type['type'] ?> button <?= isset($_GET['tab']) && $_GET['tab'] === $type['id'] ? 'filters__button--active' : '' ?>" href="/popular.php?page=1&tab=<?= $type['id'] ?>">
                                 <span class="visually-hidden"><?= $type['name'] ?></span>
                                 <svg class="filters__icon" width="22" height="18">
                                     <use xlink:href="#icon-filter-<?= $type['type'] ?>"></use>
@@ -57,7 +57,6 @@
             <div class="popular__posts">
 
                 <?php foreach($popular_posts as $index => $post): ?>
-                    <?php $date = generate_random_date($index); ?>
                 <article class="popular__post post <?= $post['class'] ?? '' ?>">
                     <header class="post__header">
                         <h2><a href="/post.php?post=<?= $post['id'] ?? '' ?>"><?= htmlspecialchars($post['title'] ?? '') ?></a></h2>
@@ -119,19 +118,19 @@
                     </div>
                     <footer class="post__footer">
                         <div class="post__author">
-                            <a class="post__author-link" href="#" title="Автор">
+                            <a class="post__author-link" href="/profile.php?user=<?= $post['user_id'] . '&tab=posts' ?? '' ?>" title="Автор">
                                 <div class="post__avatar-wrapper">
-                                    <img class="post__author-avatar" src="img/<?= $post['avatar_path'] ?? '' ?>" alt="Аватар пользователя">
+                                    <img class="post__author-avatar" src="<?= $post['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя">
                                 </div>
                                 <div class="post__info">
                                     <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? '') ?></b>
-                                    <time class="post__time" title="<?= set_post_date($date)['time_title'] ?>" datetime="<?= $date ?>"><?= set_post_date($date)['date_ago'] ?></time>
+                                    <time class="post__time" title="<?= set_date($post['date_add'])['time_title'] ?? '' ?>" datetime="<?= $post['date_add'] ?>"><?= set_date($post['date_add'])['date_ago'] ?? '' ?>назад</time>
                                 </div>
                             </a>
                         </div>
                         <div class="post__indicators">
                             <div class="post__buttons">
-                                <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
+                                <a class="post__indicator post__indicator--likes button" href="/like.php?post=<?= $post['id'] ?? '' ?>" title="Лайк">
                                     <svg class="post__indicator-icon" width="20" height="17">
                                         <use xlink:href="#icon-heart"></use>
                                     </svg>
@@ -154,9 +153,11 @@
                 </article>
                 <?php endforeach; ?>
             </div>
+            <?php if ($pages_count > 1): ?>
             <div class="popular__page-links">
-            <a class="popular__page-link popular__page-link--prev button button--gray" href="#">Предыдущая страница</a>
-            <a class="popular__page-link popular__page-link--next button button--gray" href="#">Следующая страница</a>
+            <a class="popular__page-link button button--gray popular__page-link--prev" href="<?= $cur_page > 1 ? '/popular.php?page=' . ($cur_page - 1) : '#' ?>">Предыдущая страница</a>
+            <a class="popular__page-link button button--gray popular__page-link--next" href="<?= $cur_page < $pages_count ? '/popular.php?page=' . ($cur_page + 1) : '#' ?>">Следующая страница</a>
             </div>
+            <?php endif; ?>
         </div>
     </section>

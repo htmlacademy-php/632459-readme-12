@@ -125,7 +125,7 @@
                 <a class="footer__page-link" href="<?= '/feed.php?user=' . $_SESSION['user']['id'] ?>">Моя лента</a>
               </li>
               <li class="footer__my-page footer__my-page--popular">
-                <a class="footer__page-link" href="/popular.php">Популярный контент</a>
+                <a class="footer__page-link" href="/popular.php?page=1">Популярный контент</a>
               </li>
               <li class="footer__my-page footer__my-page--messages">
                 <a class="footer__page-link" href="messages.html">Личные сообщения</a>
