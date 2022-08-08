@@ -40,7 +40,7 @@
     $sql_subscribe = 'SELECT subscribe_id FROM subscriptions WHERE subscribe_id = ? AND follower_id = ?';
     $result = form_sql_request($con, $sql_subscribe, [$user_id, $_SESSION['user']['id']]);
 
-    if (mysqli_num_rows($result)) {
+    if (mysqli_num_rows($result) > 0) {
         $is_subscribe = true;
     }
 
@@ -127,7 +127,7 @@
         $sql_subscribed = 'SELECT subscribe_id FROM subscriptions WHERE subscribe_id = ? AND follower_id = ?';
         $result = form_sql_request($con, $sql_subscribed, [$subscriber['id'], $_SESSION['user']['id']]);
 
-        if (mysqli_num_rows($result)) {
+        if (mysqli_num_rows($result) > 0) {
             array_push($is_subscribed, true);
         }
 

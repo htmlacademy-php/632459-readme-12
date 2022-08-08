@@ -117,14 +117,14 @@
         if(empty($errors)) {
             $sql_post_exists = 'SELECT id FROM posts WHERE id = ?';
             $result = form_sql_request($con, $sql_post_exists, [$inputArray['post']]);
-
-            if (mysqli_num_rows($result) > 0) {
-                $sql_add_comment = 'INSERT INTO comments (date_add, text, user_id, post_id) VALUES (NOW(), ?, ?, ?)';
-                form_sql_request($con, $sql_add_comment, [$inputArray['comment'], $_SESSION['user']['id'], $post_id], false);
-                header("Location: profile.php?user=" . $post['user_id'] . "&tab=posts");
-            }
-
         }
+
+        if (mysqli_num_rows($result) > 0) {
+            $sql_add_comment = 'INSERT INTO comments (date_add, text, user_id, post_id) VALUES (NOW(), ?, ?, ?)';
+            form_sql_request($con, $sql_add_comment, [$inputArray['comment'], $_SESSION['user']['id'], $post_id], false);
+            header("Location: profile.php?user=" . $post['user_id'] . "&tab=posts");
+        }
+
     }
 
     /* Подключение шаблонов */
