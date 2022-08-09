@@ -22,7 +22,7 @@ INSERT INTO posts
   SET date_add = "2020-03-08 11:11:00", title = "Моя мечта", img = "coast-medium.jpg", show_count = 229, user_id = "2", content_type = "3";
 
 INSERT INTO posts
-  SET date_add = "2021-05-17 17:20:20", title = "Лучшие курсы", text = "Лучшие курсы", link = "www.htmlacademy.ru", show_count = 500, user_id = "1", content_type = "5";
+  SET date_add = "2021-05-17 17:20:20", title = "Лучшие курсы", text = "Лучшие курсы", link = "https://www.htmlacademy.ru", show_count = 500, user_id = "1", content_type = "5";
 
 INSERT INTO comments(date_add, text, user_id, post_id) VALUES
   ("2022-02-22 14:14:36", "Сколько же еще ждать «Ветра Зимы»...", 1, 2),
