@@ -176,7 +176,7 @@
                 <li class="post-mini post-mini--<?= $like['type'] ?? '' ?> post user">
                 <div class="post-mini__user-info user__info">
                     <div class="post-mini__avatar user__avatar">
-                    <a class="user__avatar-link" href="/profile.php?user=<?= $like['id'] ?> . '&tab=posts'">
+                    <a class="user__avatar-link" href="/profile.php?user=<?= $like['id'] . '&tab=posts' ?>">
                         <img class="post-mini__picture user__picture" src="<?= $like['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя">
                     </a>
                     </div>
@@ -241,7 +241,7 @@
             <section class="profile__subscriptions tabs__content <?= $_GET['tab'] === 'subs' ? 'tabs__content--active' : '' ?>">
             <h2 class="visually-hidden">Подписки</h2>
             <ul class="profile__subscriptions-list">
-                <?php foreach($profile_subs as $index => $subscribe): ?>
+                <?php foreach($profile_subs as $subscribe): ?>
                 <li class="post-mini post-mini--photo post user">
                 <div class="post-mini__user-info user__info">
                     <div class="post-mini__avatar user__avatar">
@@ -268,8 +268,8 @@
                 </div>
                 <div class="post-mini__user-buttons user__buttons">
                 <form action="/subscribe.php?user=<?= $subscribe['id'] ?? '' ?>" method="get">
-                <input class="visually-hidden" type="text" name="user" value="<?= $subscribe['id'] ?? '' ?>">
-                    <button class="post-mini__user-button user__button user__button--subscription button button--main" type="submit">Отписаться</button>
+                <input class="visually-hidden" type="text" name="user" value="<?= $subscribe['subscribe_id'] ?? '' ?>">
+                    <button class="post-mini__user-button user__button user__button--subscription button button--main" type="submit"><?= $subscribe['is_sub'] ? 'Отписаться' : 'Подписаться' ?></button>
                 </form>
                 </div>
                 </li>

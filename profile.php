@@ -99,14 +99,15 @@
     $profile_likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $sql_profile_subscribes = 'SELECT s.subscribe_id, u.id, login, avatar_path, dt_reg, '
-        . '(select count(follower.follower_id) from subscriptions as follower where follower.subscribe_id = s.subscribe_id) as subscription_count, '
-        . '(select count(post.user_id) from posts as post where post.user_id = s.subscribe_id) as posts_count '
+        . '(SELECT COUNT(follower.follower_id) FROM subscriptions AS follower WHERE follower.subscribe_id = s.subscribe_id) AS subscription_count, '
+        . '(SELECT COUNT(post.user_id) FROM posts AS post WHERE post.user_id = s.subscribe_id) AS posts_count, '
+        . '(SELECT follower.follower_id from subscriptions as follower where follower.follower_id = ? and subscribe_id = s.subscribe_id) as is_sub '
         . 'FROM subscriptions s '
         . 'JOIN users u ON u.id = s.subscribe_id '
         . 'JOIN posts p ON p.user_id = u.id '
         . 'WHERE follower_id = ? GROUP BY s.subscribe_id';
 
-    $result = form_sql_request($con, $sql_profile_subscribes, ['18']);
+    $result = form_sql_request($con, $sql_profile_subscribes, [$_SESSION['user']['id'], $user_id]);
     $profile_subs = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $page_content = include_template('profile.php', [
