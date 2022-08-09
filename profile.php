@@ -98,41 +98,16 @@
     $result = form_sql_request($con, $sql_profile_likes, [$user['id']]);
     $profile_likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    $sql_profile_subscribes = 'SELECT s.*, u.id, login, avatar_path, dt_reg FROM subscriptions s '
-    . 'JOIN users u ON u.id = s.subscribe_id '
-    . 'WHERE follower_id = ?';
+    $sql_profile_subscribes = 'SELECT s.subscribe_id, u.id, login, avatar_path, dt_reg, '
+        . '(select count(follower.follower_id) from subscriptions as follower where follower.subscribe_id = s.subscribe_id) as subscription_count, '
+        . '(select count(post.user_id) from posts as post where post.user_id = s.subscribe_id) as posts_count '
+        . 'FROM subscriptions s '
+        . 'JOIN users u ON u.id = s.subscribe_id '
+        . 'JOIN posts p ON p.user_id = u.id '
+        . 'WHERE follower_id = ? GROUP BY s.subscribe_id';
 
-    $result = form_sql_request($con, $sql_profile_subscribes, [$user['id']]);
+    $result = form_sql_request($con, $sql_profile_subscribes, ['18']);
     $profile_subs = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    $followers_posts = [];
-    $followers_subs = [];
-    $is_subscribed = [];
-
-    foreach ($profile_subs as $index => $subscriber) {
-        $sql_follower_subs = 'SELECT COUNT(follower_id) AS total FROM subscriptions '
-        . 'WHERE subscribe_id = ?';
-
-        $result = form_sql_request($con, $sql_follower_subs, [$subscriber['id']]);
-        $fol_subs = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($followers_subs, $fol_subs[0]['total']);
-
-        $sql_follower_posts = 'SELECT COUNT(id) AS total FROM posts '
-        . 'WHERE user_id = ?';
-
-        $result = form_sql_request($con, $sql_follower_posts, [$subscriber['id']]);
-        $fol_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($followers_posts, $fol_posts[0]['total']);
-
-        $sql_subscribed = 'SELECT subscribe_id FROM subscriptions WHERE subscribe_id = ? AND follower_id = ?';
-        $result = form_sql_request($con, $sql_subscribed, [$subscriber['id'], $_SESSION['user']['id']]);
-
-        if (mysqli_num_rows($result) > 0) {
-            array_push($is_subscribed, true);
-        }
-
-        array_push($is_subscribed, false);
-    }
 
     $page_content = include_template('profile.php', [
         'user' => $user,
@@ -145,10 +120,7 @@
         'reposts' => $reposts,
         'repost_info' => $repost_info,
         'profile_likes' => $profile_likes,
-        'profile_subs' => $profile_subs,
-        'followers_subs' => $followers_subs,
-        'followers_posts' => $followers_posts,
-        'is_subscribed' => $is_subscribed
+        'profile_subs' => $profile_subs
     ]);
 
     $layout_content = include_template('layout.php', [

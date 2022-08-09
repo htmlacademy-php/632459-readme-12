@@ -258,18 +258,18 @@
                 </div>
                 <div class="post-mini__rating user__rating">
                     <p class="post-mini__rating-item user__rating-item user__rating-item--publications">
-                    <span class="post-mini__rating-amount user__rating-amount"><?= $followers_posts[$index] ?? '' ?></span>
-                    <span class="post-mini__rating-text user__rating-text"><?= get_noun_plural_form($followers_posts[$index], ' публикация', ' публикации', ' публикаций') ?></span>
+                    <span class="post-mini__rating-amount user__rating-amount"><?= $subscribe['posts_count'] ?? '' ?></span>
+                    <span class="post-mini__rating-text user__rating-text"><?= get_noun_plural_form($subscribe['posts_count'], ' публикация', ' публикации', ' публикаций') ?></span>
                     </p>
                     <p class="post-mini__rating-item user__rating-item user__rating-item--subscribers">
-                    <span class="post-mini__rating-amount user__rating-amount"><?= $followers_subs[$index] ?? '' ?></span>
-                    <span class="post-mini__rating-text user__rating-text"><?= get_noun_plural_form($followers_subs[$index], ' подписчик', ' подписчика', ' подписчиков') ?></span>
+                    <span class="post-mini__rating-amount user__rating-amount"><?= $subscribe['subscription_count'] ?? '' ?></span>
+                    <span class="post-mini__rating-text user__rating-text"><?= get_noun_plural_form($subscribe['subscription_count'], ' подписчик', ' подписчика', ' подписчиков') ?></span>
                     </p>
                 </div>
                 <div class="post-mini__user-buttons user__buttons">
                 <form action="/subscribe.php?user=<?= $subscribe['id'] ?? '' ?>" method="get">
                 <input class="visually-hidden" type="text" name="user" value="<?= $subscribe['id'] ?? '' ?>">
-                    <button class="post-mini__user-button user__button user__button--subscription button button--main" type="submit"><?= $is_subscribed[$index] ? 'Отписаться' : 'Подписаться' ?></button>
+                    <button class="post-mini__user-button user__button user__button--subscription button button--main" type="submit">Отписаться</button>
                 </form>
                 </div>
                 </li>
