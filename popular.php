@@ -40,10 +40,13 @@
 
     $tab = filter_input(INPUT_GET, 'tab');
 
-    $sql_filter = 'SELECT posts.*, login, avatar_path, class, type FROM posts '
+    $sql_filter = 'SELECT posts.*, login, avatar_path, class, type, '
+    . '(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
+    . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count FROM posts '
         . 'JOIN users u ON user_id = u.id '
+        . 'JOIN comments com ON com.post_id = (posts.id OR NULL) '
         . 'JOIN content_types c ON content_type = c.id '
-        . 'WHERE repost IS NULL '
+        . 'WHERE repost IS NULL GROUP BY posts.id '
         . 'ORDER BY show_count DESC LIMIT ' . $page_items . ' OFFSET ' . $offset;
 
     $params = [];
@@ -59,40 +62,26 @@
         $pages_count = $pagination_info['pages_count'];
         $offset = $pagination_info['offset'];
 
-        $sql_filter = 'SELECT posts.*, login, avatar_path, class, type FROM posts '
-        . 'JOIN users u ON user_id = u.id '
-        . 'JOIN content_types c ON content_type = c.id '
-        . 'WHERE c.id = ? AND repost IS NULL '
-        . 'ORDER BY show_count DESC LIMIT ' . $page_items . ' OFFSET ' . $offset;
+        $sql_filter = 'SELECT posts.*, login, avatar_path, class, type, '
+        . '(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
+        . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count FROM posts '
+            . 'JOIN users u ON user_id = u.id '
+            . 'JOIN content_types c ON content_type = c.id '
+            . 'JOIN comments com ON com.post_id = (posts.id OR NULL) '
+            . 'WHERE c.id = ? AND repost IS NULL GROUP BY posts.id '
+            . 'ORDER BY show_count DESC LIMIT ' . $page_items . ' OFFSET ' . $offset;
+            
         $params = [$tab];
     }
 
     $result = form_sql_request($con, $sql_filter, $params);
 
     $popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    $popular_comments = [];
-    $popular_likes = [];
-
-    foreach ($popular_posts as $post) {
-        $sql_comments = 'SELECT COUNT(id) AS total FROM comments '
-        . 'WHERE post_id = '. $post['id'];
-        $result = form_sql_request($con, $sql_comments, []);
-        $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($popular_comments, $comments[0]['total']);
-
-        $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
-        . 'WHERE like_post_id = '. $post['id'];
-        $result = form_sql_request($con, $sql_likes, []);
-        $likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($popular_likes, $likes[0]['total']);
-    }
 
     $page_content = include_template('popular.php', [
         'popular_posts' => $popular_posts,
         'types'         => $types,
         'tab'           => $tab,
-        'popular_comments' => $popular_comments,
-        'popular_likes' => $popular_likes,
         'pages_count' => $pages_count,
         'cur_page' => $cur_page,
         'pages' => $pages

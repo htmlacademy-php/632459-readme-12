@@ -143,7 +143,7 @@
                         <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                         <use xlink:href="#icon-heart-active"></use>
                         </svg>
-                        <span><?= $post_likes[$index] ?? '' ?></span>
+                        <span><?= $post['likes_count'] ?? '' ?></span>
                         <span class="visually-hidden">количество лайков</span>
                     </a>
                     <a class="post__indicator post__indicator--repost button" href="/repost.php?post=<?= $post['id'] ?? '' ?>" title="Репост">

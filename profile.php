@@ -12,6 +12,11 @@
         die();
     }
 
+    $search_query = filter_input(INPUT_GET, 'search');
+    if (!empty($search_query)) {
+        header("Location: /search.php?search=$search_query");
+    }
+
     $user_id = filter_input(INPUT_GET, 'user');
 
     $sql_user = 'SELECT id, dt_reg, login, avatar_path FROM users '
@@ -44,9 +49,11 @@
         $is_subscribe = true;
     }
 
-    $sql_posts = 'SELECT posts.*, type, class FROM posts'
-    . ' JOIN content_types c ON content_type = c.id'
-    . ' WHERE user_id = ?'
+    $sql_posts = 'SELECT posts.*, type, class, '
+    . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count '
+    . ' FROM posts '
+    . ' JOIN content_types c ON content_type = c.id '
+    . ' WHERE user_id = ? GROUP BY posts.id'
     . ' ORDER BY date_add DESC';
 
     $result = form_sql_request($con, $sql_posts, [$user_id]);
@@ -67,12 +74,6 @@
         $result = form_sql_request($con, $sql_hashtags, [$post['id']]);
         $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
         $post_hashtags[$post['id']] = $hashtags;
-
-        $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
-        . 'WHERE like_post_id = '. $post['id'];
-        $result = form_sql_request($con, $sql_likes, []);
-        $likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($post_likes, $likes[0]['total']);
 
         if ($post['repost']) {
             $sql_post_author = 'SELECT p.id, login, avatar_path FROM posts p '
