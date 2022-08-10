@@ -12,7 +12,7 @@
                 <header class="post__header post__author">
                   <a class="post__author-link" href="/profile.php?user=<?= $post['user_id'] . '&tab=posts' ?? '' ?>" title="Автор">
                     <div class="post__avatar-wrapper">
-                      <img class="post__author-avatar" src="<?= htmlspecialchars($post['avatar_path'] ?? '') ?>" alt="Аватар пользователя" width="60" height="60">
+                      <img class="post__author-avatar" src="<?= htmlspecialchars($post['avatar_path'] ?? 'img/userpic-tanya.jpg') ?>" alt="Аватар пользователя" width="60" height="60">
                     </div>
                     <div class="post__info">
                       <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? '') ?></b>
@@ -117,8 +117,8 @@
                     </a>
                   </div>
                 <ul class="post__tags">
-                    <?php foreach ($feed_hashtags[$post['id']] as $hashtag): ?>
-                    <li><a href="/search.php?search=%23<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?>">#<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?></a></li>
+                    <?php foreach ($post['tags'] as $tag): ?>
+                    <li><a href="/search.php?search=%23<?= htmlspecialchars($tag ?? '') ?>">#<?= htmlspecialchars($tag ?? '') ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 </footer>

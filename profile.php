@@ -74,9 +74,9 @@
 
         $post_ids_res = implode(",", $post_ids);
 
-        $sql_hashtags = 'SELECT h.id, post_id, hashtag_name FROM post_tags
-            JOIN hashtags h ON hashtag_id = post_tags.hashtag_id
-            WHERE post_id IN (' . $post_ids_res . ')';
+        $sql_hashtags = 'SELECT post_id, hashtag_name FROM post_tags
+            JOIN hashtags h ON h.id = post_tags.hashtag_id
+            WHERE post_id IN (' . $post_ids_res . ') GROUP BY post_id, hashtag_name';
 
         $result = form_sql_request($con, $sql_hashtags, []);
         $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
