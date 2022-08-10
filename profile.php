@@ -51,40 +51,39 @@
 
     $sql_posts = 'SELECT posts.*, type, class, '
     . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count '
-    . ' FROM posts '
-    . ' JOIN content_types c ON content_type = c.id '
-    . ' WHERE user_id = ? GROUP BY posts.id'
-    . ' ORDER BY date_add DESC';
+    . 'FROM posts '
+    . 'JOIN content_types c ON content_type = c.id '
+    . 'WHERE user_id = ? GROUP BY posts.id '
+    . 'ORDER BY date_add DESC';
 
     $result = form_sql_request($con, $sql_posts, [$user_id]);
-
     $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    $post_hashtags = [];
-    $post_likes = [];
-    $repost_info = [];
+    $post_ids = array_reduce($posts, function($carry, $post) {
+        $carry[] = $post['id'];
+        return $carry;
+    }, []);
 
-    foreach ($posts as $post) {
-        $sql_hashtags = 'SELECT hashtag_name FROM posts p '
-        . 'JOIN post_tags pt ON p.id=pt.post_id '
-        . 'JOIN hashtags h ON pt.hashtag_id=h.id '
-        . 'WHERE p.id = ? '
-        . 'ORDER BY date_add DESC';
+    $post_ids_res = implode(",", $post_ids);
 
-        $result = form_sql_request($con, $sql_hashtags, [$post['id']]);
-        $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        $post_hashtags[$post['id']] = $hashtags;
+    $sql_hashtags = 'SELECT h.id, post_id, hashtag_name FROM post_tags
+        JOIN hashtags h ON hashtag_id = h.id
+        WHERE post_id IN (' . $post_ids_res . ')';
+    $result = form_sql_request($con, $sql_hashtags, []);
+    $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-        if ($post['repost']) {
-            $sql_post_author = 'SELECT p.id, login, avatar_path FROM posts p '
-            . 'JOIN users u ON p.original_author = u.id '
-            . 'WHERE u.id = ?';
-            $result = form_sql_request($con, $sql_post_author, [$post['original_author']]);
+    $tags_to_posts = [];
 
-            $repost = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            $repost_info[$post['id']] = $repost[0];
-        }
+    foreach ($hashtags as $hashtag) {
+        array_push($tags_to_posts, $hashtag);
     }
+
+    foreach ($posts as $i => $post) {
+        $post['tags'] = $tags_to_posts[$i][$post['id']] ?? [];
+        $posts[$i] = $post;
+    }
+
+    var_dump($tags_to_posts);
 
     $sql_reposts = 'SELECT id, (SELECT COUNT(*) FROM posts p WHERE p.parent_id = posts.id GROUP BY p.parent_id) AS repost_count FROM posts';
     $result = form_sql_request($con, $sql_reposts, []);
@@ -116,13 +115,11 @@
         'subscribers' => $subscribers,
         'publications' => $publications,
         'posts' => $posts,
-        'post_likes' => $post_likes,
-        'post_hashtags' => $post_hashtags,
         'is_subscribe' => $is_subscribe,
         'reposts' => $reposts,
-        'repost_info' => $repost_info,
         'profile_likes' => $profile_likes,
-        'profile_subs' => $profile_subs
+        'profile_subs' => $profile_subs,
+        'tags_to_posts' => $tags_to_posts
     ]);
 
     $layout_content = include_template('layout.php', [

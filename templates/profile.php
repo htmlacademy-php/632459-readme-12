@@ -55,12 +55,12 @@
                 <header class="post__header">
                     <?php if ($post['repost']): ?>
                         <div class="post__author">
-                        <a class="post__author-link" href="#" title="Автор">
+                        <a class="post__author-link" href="/profile.php?user=<?= $post['original_author'] . '&tab=posts' ?? '' ?>" title="Автор">
                         <div class="post__avatar-wrapper post__avatar-wrapper--repost">
-                        <img class="post__author-avatar" src="<?= $repost_info[$post['id']]['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя">
+                        <img class="post__author-avatar" src="<?= $post['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя">
                         </div>
                         <div class="post__info">
-                        <b class="post__author-name">Репост: <?= $repost_info[$post['id']]['login'] ?? '' ?></b>
+                        <b class="post__author-name">Репост: <?= $post['login'] ?? '' ?></b>
                         <time class="post__time" datetime="<?= $post['date_add'] ?? '' ?>"><?= set_date($post['date_add'])['date_ago'] . ' назад' ?? ''  ?></time>
                         </div>
                       </a>
@@ -157,8 +157,8 @@
                     <time class="post__time" title="<?= set_date($post['date_add'])['time_title'] ?? '' ?>" datetime="<?= $post['date_add'] ?>"><?= set_date($post['date_add'])['date_ago'] ?? '' ?> назад</time>
                 </div>
                 <ul class="post__tags">
-                    <?php foreach ($post_hashtags[$post['id']] as $hashtag): ?>
-                    <li><a href="/search.php?search=%23<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?>">#<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?></a></li>
+                    <?php foreach ($post['tags'] as $tag): ?>
+                    <li><a href="/search.php?search=%23<?= htmlspecialchars($tag ?? '') ?>">#<?= htmlspecialchars($tag ?? '') ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 </footer>
