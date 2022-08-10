@@ -61,7 +61,7 @@
           <h2 class="visually-hidden">Авторизация</h2>
           <form class="authorization__form form" action="#" method="post">
             <div class="authorization__input-wrapper form__input-wrapper">
-            <div class="form__input-section <?= $errors['authorize-login'] ? 'form__input-section--error' : ''?>">
+            <div class="form__input-section <?= $errors['authorize-login'] ?? null ? 'form__input-section--error' : ''?>">
               <input class="authorization__input authorization__input--login form__input" type="text" name="authorize-login" value="<?= getPostVal('authorize-login') ?? '' ?>" placeholder="Логин">
               <svg class="form__input-icon" width="19" height="18">
                 <use xlink:href="#icon-input-user"></use>
@@ -72,7 +72,7 @@
 
             </div>
             <div class="authorization__input-wrapper form__input-wrapper">
-            <div class="form__input-section <?= $errors['authorize-password'] ? 'form__input-section--error' : ''?>">
+            <div class="form__input-section <?= $errors['authorize-password'] ?? null ? 'form__input-section--error' : '' ?>">
               <input class="authorization__input authorization__input--password form__input" type="password" name="authorize-password" value="<?= getPostVal('authorize-password') ?? '' ?>" placeholder="Пароль">
               <svg class="form__input-icon" width="16" height="20">
                 <use xlink:href="#icon-input-password"></use>

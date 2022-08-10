@@ -17,6 +17,11 @@
         header("Location: /search.php?search=$search_query");
     }
 
+    if (!isset($_SESSION['user'])) {
+        header('Location: /');
+        die();
+    }
+
     $user_id = filter_input(INPUT_GET, 'user');
 
     $sql_user = 'SELECT id, dt_reg, login, avatar_path FROM users '
@@ -67,23 +72,23 @@
     $post_ids_res = implode(",", $post_ids);
 
     $sql_hashtags = 'SELECT h.id, post_id, hashtag_name FROM post_tags
-        JOIN hashtags h ON hashtag_id = h.id
-        WHERE post_id IN (' . $post_ids_res . ')';
+        JOIN hashtags h ON hashtag_id = post_tags.hashtag_id
+        WHERE post_id IN (' . $post_ids_res . ')
+        ';
+
     $result = form_sql_request($con, $sql_hashtags, []);
     $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $tags_to_posts = [];
 
     foreach ($hashtags as $hashtag) {
-        array_push($tags_to_posts, $hashtag);
+        $tags_to_posts[$hashtag['post_id']][] = $hashtag['hashtag_name'];
     }
 
     foreach ($posts as $i => $post) {
-        $post['tags'] = $tags_to_posts[$i][$post['id']] ?? [];
+        $post['tags'] = $tags_to_posts[$post['id']] ?? [];
         $posts[$i] = $post;
     }
-
-    var_dump($tags_to_posts);
 
     $sql_reposts = 'SELECT id, (SELECT COUNT(*) FROM posts p WHERE p.parent_id = posts.id GROUP BY p.parent_id) AS repost_count FROM posts';
     $result = form_sql_request($con, $sql_reposts, []);

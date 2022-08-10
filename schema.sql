@@ -78,7 +78,8 @@ CREATE TABLE IF NOT EXISTS likes (
 
 CREATE TABLE IF NOT EXISTS post_tags (
   post_id INT UNSIGNED,
-  hashtag_id INT UNSIGNED
+  hashtag_id INT UNSIGNED,
+  UNIQUE KEY `unique_post_hashtag` (post_id, hashtag_id)
 );
 
 CREATE INDEX user_login ON users(login);
