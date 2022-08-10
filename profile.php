@@ -64,30 +64,31 @@
     $result = form_sql_request($con, $sql_posts, [$user_id]);
     $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    $post_ids = array_reduce($posts, function($carry, $post) {
-        $carry[] = $post['id'];
-        return $carry;
-    }, []);
-
-    $post_ids_res = implode(",", $post_ids);
-
-    $sql_hashtags = 'SELECT h.id, post_id, hashtag_name FROM post_tags
-        JOIN hashtags h ON hashtag_id = post_tags.hashtag_id
-        WHERE post_id IN (' . $post_ids_res . ')
-        ';
-
-    $result = form_sql_request($con, $sql_hashtags, []);
-    $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
     $tags_to_posts = [];
 
-    foreach ($hashtags as $hashtag) {
-        $tags_to_posts[$hashtag['post_id']][] = $hashtag['hashtag_name'];
-    }
+    if (!empty($posts)) {
+        $post_ids = array_reduce($posts, function($carry, $post) {
+            $carry[] = $post['id'];
+            return $carry;
+        }, []);
 
-    foreach ($posts as $i => $post) {
-        $post['tags'] = $tags_to_posts[$post['id']] ?? [];
-        $posts[$i] = $post;
+        $post_ids_res = implode(",", $post_ids);
+
+        $sql_hashtags = 'SELECT h.id, post_id, hashtag_name FROM post_tags
+            JOIN hashtags h ON hashtag_id = post_tags.hashtag_id
+            WHERE post_id IN (' . $post_ids_res . ')';
+
+        $result = form_sql_request($con, $sql_hashtags, []);
+        $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        foreach ($hashtags as $hashtag) {
+            $tags_to_posts[$hashtag['post_id']][] = $hashtag['hashtag_name'];
+        }
+
+        foreach ($posts as $i => $post) {
+            $post['tags'] = $tags_to_posts[$post['id']] ?? [];
+            $posts[$i] = $post;
+        }
     }
 
     $sql_reposts = 'SELECT id, (SELECT COUNT(*) FROM posts p WHERE p.parent_id = posts.id GROUP BY p.parent_id) AS repost_count FROM posts';

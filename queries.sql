@@ -48,6 +48,19 @@ SELECT comments.*, login FROM comments
 JOIN users u ON user_id = u.id
 WHERE post_id = 2;
 
+-- Добавление пользователей
+
+INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
+  ("2021-03-11 16:10:00", "lara@mail.ru", "Лариса", "123", "userpic-larisa.jpg"),
+  ("2020-11-01 13:15:10", "vlad777@mail.ru", "Владик", "456", "userpic.jpg"),
+  ("2021-11-24 23:55:00", "v_ivanov@gmail.com", "Виктор", "11111", "userpic-mark.jpg");
+
+INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
+  ("2018-09-09 15:00:01", "markopolo@mail.ru", "Марк Смолов", "f00fcf", "userpic-mark.jpg"),
+  ("2017-03-09 13:07:07", "elvira1987@mail.ru", "Эльвира Хайпулинова", "135el", "userpic-elvira.jpg"),
+  ("2022-01-14 22:15:00", "firsovatanyua@gmail.com", "Таня Фирсова", "awesome", "userpic-tanya.jpg"),
+  ("2021-01-29 23:23:20", "petr-demin@mail.ru", "Петр Демин", "wasd!;", "userpic-petro.jpg");
+
 -- Добавление лайка к посту
 
 INSERT INTO likes(like_user_id, like_post_id, like_date) VALUES (1, 2, "2022-02-22 14:14:36");
@@ -100,20 +113,6 @@ SET name = "Видео", priority = 2 WHERE id = 4;
 
 UPDATE content_types
 SET name = "Ссылка", priority = 5 WHERE id = 5;
-
-
--- Добавление пользователей
-
-INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
-  ("2021-03-11 16:10:00", "lara@mail.ru", "Лариса", "123", "userpic-larisa.jpg"),
-  ("2020-11-01 13:15:10", "vlad777@mail.ru", "Владик", "456", "userpic.jpg"),
-  ("2021-11-24 23:55:00", "v_ivanov@gmail.com", "Виктор", "11111", "userpic-mark.jpg");
-
-INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
-  ("2018-09-09 15:00:01", "markopolo@mail.ru", "Марк Смолов", "f00fcf", "userpic-mark.jpg"),
-  ("2017-03-09 13:07:07", "elvira1987@mail.ru", "Эльвира Хайпулинова", "135el", "userpic-elvira.jpg"),
-  ("2022-01-14 22:15:00", "firsovatanyua@gmail.com", "Таня Фирсова", "awesome", "userpic-tanya.jpg"),
-  ("2021-01-29 23:23:20", "petr-demin@mail.ru", "Петр Демин", "wasd!;", "userpic-petro.jpg");
 
 UPDATE users
 SET login = "Лариса Роговая" WHERE id = 3;
