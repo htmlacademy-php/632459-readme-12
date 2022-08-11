@@ -63,8 +63,8 @@ INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
 
 -- Добавление лайка к посту
 
-INSERT INTO likes(like_user_id, like_post_id, like_date) VALUES (1, 2, "2022-02-22 14:14:36");
-INSERT INTO likes(like_user_id, like_post_id, like_date) VALUES
+INSERT INTO likes(user_id, post_id, date) VALUES (1, 2, "2022-02-22 14:14:36");
+INSERT INTO likes(user_id, post_id, date) VALUES
 (1, 3, "2022-03-22 14:00:30"),
 (1, 4, "2022-02-22 13:14:36"),
 (1, 5, "2022-02-28 14:15:30"),
@@ -136,7 +136,7 @@ SET user_id = 3 WHERE id = 5;
 
 -- Добавление хэштегов
 
-INSERT INTO hashtags(hashtag_name) VALUES
+INSERT INTO hashtags(name) VALUES
   ('шикарный вид'),
   ('globe'),
   ('landscape'),

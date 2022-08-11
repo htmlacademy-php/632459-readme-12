@@ -31,7 +31,7 @@
 
     $sql_posts = 'SELECT posts.*, login, avatar_path, class, type, '
     . '(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
-    . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count '
+    . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = posts.id) AS likes_count '
         . 'FROM posts JOIN users u ON user_id = u.id '
         . 'JOIN content_types ct ON content_type = ct.id '
         . 'LEFT JOIN comments com ON com.post_id = posts.id '
@@ -44,13 +44,13 @@
 
         $sql_posts = 'SELECT posts.*, login, avatar_path, class, type, '
         . '(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
-        . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count '
+        . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = posts.id) AS likes_count '
             . 'FROM posts JOIN users u ON user_id = u.id '
             . 'JOIN content_types ct ON content_type = ct.id '
             . 'LEFT JOIN comments com ON com.post_id = posts.id '
             . 'JOIN post_tags pt ON posts.id=pt.post_id '
             . 'JOIN hashtags h ON pt.hashtag_id=h.id '
-            . 'WHERE hashtag_name = ? AND posts.repost IS NULL GROUP BY posts.id ORDER BY date_add DESC';
+            . 'WHERE h.name = ? AND posts.repost IS NULL GROUP BY posts.id ORDER BY date_add DESC';
 
         $result = form_sql_request($con, $sql_posts, [$hashtag]);
     }

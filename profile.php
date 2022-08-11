@@ -54,7 +54,7 @@
     }
 
     $sql_posts = 'SELECT posts.*, type, class, original_author, login, avatar_path, '
-    . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count '
+    . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = posts.id) AS likes_count '
     . 'FROM posts '
     . 'LEFT JOIN users u ON u.id = original_author '
     . 'JOIN content_types c ON content_type = c.id '
@@ -74,15 +74,15 @@
 
         $post_ids_res = implode(",", $post_ids);
 
-        $sql_hashtags = 'SELECT post_id, hashtag_name FROM post_tags
+        $sql_hashtags = 'SELECT post_id, h.name FROM post_tags
             JOIN hashtags h ON h.id = post_tags.hashtag_id
-            WHERE post_id IN (' . $post_ids_res . ') GROUP BY post_id, hashtag_name';
+            WHERE post_id IN (' . $post_ids_res . ') GROUP BY post_id, h.name';
 
         $result = form_sql_request($con, $sql_hashtags, []);
         $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         foreach ($hashtags as $hashtag) {
-            $tags_to_posts[$hashtag['post_id']][] = $hashtag['hashtag_name'];
+            $tags_to_posts[$hashtag['post_id']][] = $hashtag['name'];
         }
 
         foreach ($posts as $i => $post) {
@@ -96,10 +96,10 @@
     $reposts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $sql_profile_likes = 'SELECT l.*, img, type, name, u.id, login, avatar_path FROM likes l '
-    . 'JOIN posts p ON p.id = l.like_post_id '
+    . 'JOIN posts p ON p.id = l.post_id '
     . 'JOIN content_types c ON content_type = c.id '
-    . 'JOIN users u ON u.id = l.like_user_id '
-    . 'WHERE p.user_id = ? ORDER BY l.like_date DESC';
+    . 'JOIN users u ON u.id = l.user_id '
+    . 'WHERE p.user_id = ? ORDER BY l.date DESC';
 
     $result = form_sql_request($con, $sql_profile_likes, [$user['id']]);
     $profile_likes = mysqli_fetch_all($result, MYSQLI_ASSOC);

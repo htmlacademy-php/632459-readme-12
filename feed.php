@@ -31,7 +31,7 @@
 
     $sql_feed = 'SELECT p.*, type, class, login, avatar_path,
     (SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = p.id) AS comments_count,
-    (SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = p.id) AS likes_count
+    (SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = p.id) AS likes_count
         FROM subscriptions
         JOIN posts p ON p.user_id = subscribe_id
         JOIN users u ON p.user_id = u.id
@@ -46,7 +46,7 @@
     if ($tab) {
     $sql_feed = 'SELECT p.*, type, class, login, avatar_path,
     (SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = p.id) AS comments_count,
-    (SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = p.id) AS likes_count
+    (SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = p.id) AS likes_count
         FROM subscriptions
         JOIN posts p ON p.user_id = subscribe_id
         JOIN users u ON p.user_id = u.id
@@ -73,15 +73,15 @@
 
         $post_ids_res = implode(",", $post_ids);
 
-        $sql_hashtags = 'SELECT post_id, hashtag_name FROM post_tags
+        $sql_hashtags = 'SELECT post_id, h.name FROM post_tags
             JOIN hashtags h ON h.id = post_tags.hashtag_id
-            WHERE post_id IN (' . $post_ids_res . ') GROUP BY post_id, hashtag_name';
+            WHERE post_id IN (' . $post_ids_res . ') GROUP BY post_id, h.name';
 
         $result = form_sql_request($con, $sql_hashtags, []);
         $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         foreach ($hashtags as $hashtag) {
-            $tags_to_posts[$hashtag['post_id']][] = $hashtag['hashtag_name'];
+            $tags_to_posts[$hashtag['post_id']][] = $hashtag['name'];
         }
 
         foreach ($posts as $i => $post) {

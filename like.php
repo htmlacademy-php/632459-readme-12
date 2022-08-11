@@ -16,7 +16,7 @@
     $result = form_sql_request($con, $sql_post_id, [$post_id]);
 
     if (mysqli_num_rows($result) > 0) {
-        $sql_like = 'INSERT INTO likes (like_user_id, like_post_id, like_date) VALUES (?, ?, NOW())';
+        $sql_like = 'INSERT INTO likes (user_id, post_id, date) VALUES (?, ?, NOW())';
         form_sql_request($con, $sql_like, [$_SESSION['user']['id'], $post_id], false);
     }
 

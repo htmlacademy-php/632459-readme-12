@@ -186,12 +186,12 @@
                     </a>
                     <div class="post-mini__action">
                         <span class="post-mini__activity user__additional">Лайкнул вашу публикацию</span>
-                        <time class="post-mini__time user__additional" datetime="<?= $like['like_date'] ?? '' ?>"><?= set_date($like['like_date'])['date_ago'] ?? '' ?> назад</time>
+                        <time class="post-mini__time user__additional" datetime="<?= $like['date'] ?? '' ?>"><?= set_date($like['date'])['date_ago'] ?? '' ?> назад</time>
                     </div>
                     </div>
                 </div>
                 <div class="post-mini__preview">
-                    <a class="post-mini__link" href="/post.php?post=<?= $like['like_post_id'] ?>" title="Перейти на публикацию">
+                    <a class="post-mini__link" href="/post.php?post=<?= $like['post_id'] ?>" title="Перейти на публикацию">
 
                     <?php switch($post['type']):
                         case 'photo': ?>

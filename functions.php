@@ -141,11 +141,11 @@
             $tags_array = [];
 
             foreach($tags as $tag) {
-                $request = 'SELECT id FROM hashtags WHERE hashtag_name = ?';
+                $request = 'SELECT id FROM hashtags WHERE name = ?';
                 $res = form_sql_request($dbConnection, $request, [$tag]);
                 $result = mysqli_fetch_array($res)['id'];
                 if (!$result) {
-                    $request = 'INSERT INTO hashtags SET hashtag_name = ?';
+                    $request = 'INSERT INTO hashtags SET name = ?';
                     $res = form_sql_request($dbConnection, $request, [$tag], false);
                     $new_tag_id = mysqli_insert_id($dbConnection);
                     array_push($tags_array, $new_tag_id);

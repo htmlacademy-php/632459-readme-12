@@ -64,7 +64,7 @@
     /* Подсчет лайков поста */
 
     $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
-    . 'WHERE like_post_id = ?';
+    . 'WHERE post_id = ?';
 
     $result = form_sql_request($con, $sql_likes, [$post_id]);
 
@@ -72,7 +72,7 @@
 
     /* Хэштеги к посту */
 
-    $sql_hashtags = 'SELECT hashtag_name FROM posts p '
+    $sql_hashtags = 'SELECT h.name FROM posts p '
     . 'JOIN post_tags pt ON p.id=pt.post_id '
     . 'JOIN hashtags h ON pt.hashtag_id=h.id '
     . 'WHERE p.id = ?';
