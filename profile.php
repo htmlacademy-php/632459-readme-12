@@ -53,9 +53,10 @@
         $is_subscribe = true;
     }
 
-    $sql_posts = 'SELECT posts.*, type, class, '
+    $sql_posts = 'SELECT posts.*, type, class, original_author, login, avatar_path, '
     . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count '
     . 'FROM posts '
+    . 'LEFT JOIN users u ON u.id = original_author '
     . 'JOIN content_types c ON content_type = c.id '
     . 'WHERE user_id = ? GROUP BY posts.id '
     . 'ORDER BY date_add DESC';
