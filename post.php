@@ -9,7 +9,6 @@
         exit();
     }
 
-    $con = require('init.php');
     [$is_auth, $user_name, $page_titles] = require('data.php');
 
     if (!$con) {

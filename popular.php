@@ -9,7 +9,6 @@
     }
 
     [$is_auth, $user_name, $page_titles] = require('data.php');
-    $con = require('init.php');
 
     if (!$con) {
         $error = mysqli_connect_error();
@@ -70,7 +69,7 @@
             . 'JOIN comments com ON com.post_id = (posts.id OR NULL) '
             . 'WHERE c.id = ? AND repost IS NULL GROUP BY posts.id '
             . 'ORDER BY show_count DESC LIMIT ' . $page_items . ' OFFSET ' . $offset;
-            
+
         $params = [$tab];
     }
 

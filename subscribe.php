@@ -3,8 +3,6 @@
     require_once 'helpers.php';
     require_once 'functions.php';
 
-    $con = require('init.php');
-
     if (!$con) {
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);

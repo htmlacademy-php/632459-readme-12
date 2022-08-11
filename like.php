@@ -4,8 +4,6 @@
     require_once 'functions.php';
     require_once 'data.php';
 
-    $con = require('init.php');
-
     if (!$con) {
         $error = mysqli_connect_error();
         print("Ошибка подключения: " . $error);
