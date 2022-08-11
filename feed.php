@@ -35,7 +35,7 @@
         FROM subscriptions
         JOIN posts p ON p.user_id = subscribe_id
         JOIN users u ON p.user_id = u.id
-        JOIN comments com ON com.post_id = (p.id OR NULL)
+        LEFT JOIN comments com ON com.post_id = p.id
         JOIN content_types c ON content_type = c.id
         WHERE follower_id = ?
         GROUP BY p.id
@@ -50,7 +50,7 @@
         FROM subscriptions
         JOIN posts p ON p.user_id = subscribe_id
         JOIN users u ON p.user_id = u.id
-        JOIN comments com ON com.post_id = (p.id OR NULL)
+        LEFT JOIN comments com ON com.post_id = p.id
         JOIN content_types c ON content_type = c.id
         WHERE follower_id = ? AND c.id = ?
         GROUP BY p.id

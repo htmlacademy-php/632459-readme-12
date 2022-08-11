@@ -34,8 +34,8 @@
     . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count '
         . 'FROM posts JOIN users u ON user_id = u.id '
         . 'JOIN content_types ct ON content_type = ct.id '
-        . 'JOIN comments com ON com.post_id = (posts.id OR NULL) '
-        . 'WHERE MATCH(posts.title,posts.text) AGAINST(?) GROUP BY posts.id';
+        . 'LEFT JOIN comments com ON com.post_id = posts.id '
+        . 'WHERE MATCH(posts.title,posts.text) AGAINST(?) AND posts.repost IS NULL GROUP BY posts.id ORDER BY date_add DESC';
 
         $result = form_sql_request($con, $sql_posts, [$search_text]);
 
@@ -47,10 +47,10 @@
         . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count '
             . 'FROM posts JOIN users u ON user_id = u.id '
             . 'JOIN content_types ct ON content_type = ct.id '
-            . 'JOIN comments com ON com.post_id = (posts.id OR NULL) '
+            . 'LEFT JOIN comments com ON com.post_id = posts.id '
             . 'JOIN post_tags pt ON posts.id=pt.post_id '
             . 'JOIN hashtags h ON pt.hashtag_id=h.id '
-            . 'WHERE hashtag_name = ? GROUP BY posts.id ORDER BY date_add DESC';
+            . 'WHERE hashtag_name = ? AND posts.repost IS NULL GROUP BY posts.id ORDER BY date_add DESC';
 
         $result = form_sql_request($con, $sql_posts, [$hashtag]);
     }

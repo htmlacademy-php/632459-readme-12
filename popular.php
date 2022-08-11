@@ -43,7 +43,7 @@
     . '(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
     . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count FROM posts '
         . 'JOIN users u ON user_id = u.id '
-        . 'JOIN comments com ON com.post_id = (posts.id OR NULL) '
+        . 'LEFT JOIN comments com ON com.post_id = posts.id '
         . 'JOIN content_types c ON content_type = c.id '
         . 'WHERE repost IS NULL GROUP BY posts.id '
         . 'ORDER BY show_count DESC LIMIT ' . $page_items . ' OFFSET ' . $offset;
@@ -66,7 +66,7 @@
         . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.like_post_id = posts.id) AS likes_count FROM posts '
             . 'JOIN users u ON user_id = u.id '
             . 'JOIN content_types c ON content_type = c.id '
-            . 'JOIN comments com ON com.post_id = (posts.id OR NULL) '
+            . 'LEFT JOIN comments com ON com.post_id = posts.id '
             . 'WHERE c.id = ? AND repost IS NULL GROUP BY posts.id '
             . 'ORDER BY show_count DESC LIMIT ' . $page_items . ' OFFSET ' . $offset;
 
