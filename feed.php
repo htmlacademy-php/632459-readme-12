@@ -29,22 +29,33 @@
     $tab = filter_input(INPUT_GET, 'tab');
     $user_id = filter_input(INPUT_GET, 'user');
 
-    $sql_feed = 'SELECT p.*, type, class, login, avatar_path FROM subscriptions' .
-    ' JOIN posts p ON p.user_id = subscribe_id' .
-    ' JOIN users u ON p.user_id = u.id ' .
-    ' JOIN content_types c ON content_type = c.id' .
-    ' WHERE follower_id = ?' .
-    ' ORDER BY date_add DESC';
+    $sql_feed = 'SELECT p.*, type, class, login, avatar_path,
+    (SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = p.id) AS comments_count,
+    (SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = p.id) AS likes_count
+        FROM subscriptions
+        JOIN posts p ON p.user_id = subscribe_id
+        JOIN users u ON p.user_id = u.id
+        LEFT JOIN comments com ON com.post_id = p.id
+        JOIN content_types c ON content_type = c.id
+        WHERE follower_id = ?
+        GROUP BY p.id
+        ORDER BY date_add DESC';
 
     $params = [$user_id];
 
     if ($tab) {
-        $sql_feed = 'SELECT p.*, type, class, login, avatar_path FROM subscriptions' .
-        ' JOIN posts p ON p.user_id = subscribe_id' .
-        ' JOIN users u ON p.user_id = u.id ' .
-        ' JOIN content_types c ON content_type = c.id' .
-        ' WHERE follower_id = ?' . ' AND c.id = ?' .
-        ' ORDER BY date_add DESC';
+    $sql_feed = 'SELECT p.*, type, class, login, avatar_path,
+    (SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = p.id) AS comments_count,
+    (SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = p.id) AS likes_count
+        FROM subscriptions
+        JOIN posts p ON p.user_id = subscribe_id
+        JOIN users u ON p.user_id = u.id
+        LEFT JOIN comments com ON com.post_id = p.id
+        JOIN content_types c ON content_type = c.id
+        WHERE follower_id = ? AND c.id = ?
+        GROUP BY p.id
+        ORDER BY date_add DESC';
+
         $params = [$user_id, $tab];
     }
 
@@ -52,41 +63,43 @@
 
     $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    $feed_hashtags = [];
-    $feed_comments = [];
-    $feed_likes = [];
+    $tags_to_posts = [];
 
+    if (!empty($posts)) {
+        $post_ids = array_reduce($posts, function($carry, $post) {
+            $carry[] = $post['id'];
+            return $carry;
+        }, []);
 
-    foreach ($posts as $post) {
-        $sql_hashtags = 'SELECT hashtag_name FROM posts p '
-        . 'JOIN post_tags pt ON p.id=pt.post_id '
-        . 'JOIN hashtags h ON pt.hashtag_id=h.id '
-        . 'WHERE p.id = ?';
+        $post_ids_res = implode(",", $post_ids);
 
-        $result = form_sql_request($con, $sql_hashtags, [$post['id']]);
+        $sql_hashtags = 'SELECT post_id, h.name FROM post_tags
+            JOIN hashtags h ON h.id = post_tags.hashtag_id
+            WHERE post_id IN (' . $post_ids_res . ') GROUP BY post_id, h.name';
+
+        $result = form_sql_request($con, $sql_hashtags, []);
         $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        $feed_hashtags[$post['id']] = $hashtags;
 
-        $sql_comments = 'SELECT COUNT(id) AS total FROM comments '
-        . 'WHERE post_id = '. $post['id'];
-        $result = form_sql_request($con, $sql_comments, []);
-        $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($feed_comments, $comments[0]['total']);
+        foreach ($hashtags as $hashtag) {
+            $tags_to_posts[$hashtag['post_id']][] = $hashtag['name'];
+        }
 
-        $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
-        . 'WHERE like_post_id = '. $post['id'];
-        $result = form_sql_request($con, $sql_likes, []);
-        $likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($feed_likes, $likes[0]['total']);
+        foreach ($posts as $i => $post) {
+            $post['tags'] = $tags_to_posts[$post['id']] ?? [];
+            $posts[$i] = $post;
+        }
     }
+
+    $sql_reposts = 'SELECT id, (SELECT COUNT(*) FROM posts p WHERE p.parent_id = posts.id GROUP BY p.parent_id) AS repost_count FROM posts';
+    $result = form_sql_request($con, $sql_reposts, []);
+    $reposts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $page_content = include_template('feed.php', [
         'posts' => $posts,
         'types' => $types,
         'tab' => $tab,
-        'feed_hashtags' => $feed_hashtags,
-        'feed_comments' => $feed_comments,
-        'feed_likes' => $feed_likes
+        'reposts' => $reposts,
+        'tags_to_posts' => $tags_to_posts
     ]);
 
     $layout_content = include_template('layout.php', [

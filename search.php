@@ -4,7 +4,6 @@
     require_once 'functions.php';
 
     [$is_auth, $user_name, $page_titles, $validate_rules, $input_names] = require('data.php');
-    $con = require('init.php');
 
     if (!$con) {
         $error = mysqli_connect_error();
@@ -20,7 +19,7 @@
         $page_content = include_template('no-results.php', [
             'search_text' => $search_text,
         ]);
-        
+
         $layout_content = include_template('layout.php', [
             'content'   => $page_content,
             'title'     => $page_titles['search_results']
@@ -30,49 +29,37 @@
         return;
     }
 
-    $sql_posts = 'SELECT posts.*, login, avatar_path, class, type FROM posts '
-        . 'JOIN users u ON user_id = u.id '
+    $sql_posts = 'SELECT posts.*, login, avatar_path, class, type, '
+    . '(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
+    . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = posts.id) AS likes_count '
+        . 'FROM posts JOIN users u ON user_id = u.id '
         . 'JOIN content_types ct ON content_type = ct.id '
-        . 'WHERE MATCH(title,text) AGAINST(?)';
+        . 'LEFT JOIN comments com ON com.post_id = posts.id '
+        . 'WHERE MATCH(posts.title,posts.text) AGAINST(?) AND posts.repost IS NULL GROUP BY posts.id ORDER BY date_add DESC';
 
         $result = form_sql_request($con, $sql_posts, [$search_text]);
 
     if (substr($search_text, 0, 1) === "#") {
         $hashtag = substr($search_text, 1, strlen($search_text) - 1);
 
-        $sql_posts = 'SELECT posts.*, login, avatar_path, class, type FROM posts '
-        . 'JOIN users u ON user_id = u.id '
-        . 'JOIN content_types ct ON content_type = ct.id '
-        . 'JOIN post_tags pt ON posts.id=pt.post_id '
-        . 'JOIN hashtags h ON pt.hashtag_id=h.id '
-        . 'WHERE hashtag_name = ?';
+        $sql_posts = 'SELECT posts.*, login, avatar_path, class, type, '
+        . '(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
+        . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = posts.id) AS likes_count '
+            . 'FROM posts JOIN users u ON user_id = u.id '
+            . 'JOIN content_types ct ON content_type = ct.id '
+            . 'LEFT JOIN comments com ON com.post_id = posts.id '
+            . 'JOIN post_tags pt ON posts.id=pt.post_id '
+            . 'JOIN hashtags h ON pt.hashtag_id=h.id '
+            . 'WHERE h.name = ? AND posts.repost IS NULL GROUP BY posts.id ORDER BY date_add DESC';
 
         $result = form_sql_request($con, $sql_posts, [$hashtag]);
     }
 
     $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    $post_comments = [];
-    $post_likes = [];
-
-    foreach ($posts as $post) {
-        $sql_comments = 'SELECT COUNT(id) AS total FROM comments '
-        . 'WHERE post_id = '. $post['id'];
-        $result = form_sql_request($con, $sql_comments, []);
-        $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($post_comments, $comments[0]['total']);
-
-        $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
-        . 'WHERE like_post_id = '. $post['id'];
-        $result = form_sql_request($con, $sql_likes, []);
-        $likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($post_likes, $likes[0]['total']);
-    }
 
     $page_content = include_template('search-results.php', [
         'search_text' => $search_text,
-        'posts' => $posts,
-        'post_comments' => $post_comments,
-        'post_likes' => $post_likes
+        'posts' => $posts
     ]);
 
     if (empty($posts)) {

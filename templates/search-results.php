@@ -14,18 +14,18 @@
             <?php foreach ($posts as $index => $post): ?>
             <article class="search__post post <?= $post['class'] ?? '' ?>">
             <header class="post__header post__author">
-                <a class="post__author-link" href="#" title="Автор">
+                <a class="post__author-link" href="/profile.php?user=<?= $post['user_id'] . '&tab=posts' ?? '' ?>" title="Автор">
                 <div class="post__avatar-wrapper">
-                    <img class="post__author-avatar" src="img/<?= $post['avatar_path'] ?? '' ?>" alt="Аватар пользователя" width="60" height="60">
+                    <img class="post__author-avatar" src="<?= $post['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя" width="60" height="60">
                 </div>
                 <div class="post__info">
                     <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? '') ?></b>
-                    <span class="post__time"><?= set_post_date($post['date_add'])['date_ago'] ?? '' ?></span>
+                    <span class="post__time"><?= set_date($post['date_add'])['date_ago'] ?? '' ?>назад</span>
                 </div>
                 </a>
             </header>
             <div class="post__main">
-            <h2><a href="#"><?= htmlspecialchars($post['title'] ?? '') ?></a></h2>
+            <h2><a href="/post.php?post=<?= $post['id'] ?? '' ?>"><?= htmlspecialchars($post['title'] ?? '') ?></a></h2>
             <?php switch($post['type']):
 
                 case 'quote': ?>
@@ -92,21 +92,21 @@
             </div>
             <footer class="post__footer post__indicators">
                 <div class="post__buttons">
-                <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
+                <a class="post__indicator post__indicator--likes button" href="/like.php?post=<?= $post['id'] ?? '' ?>" title="Лайк">
                     <svg class="post__indicator-icon" width="20" height="17">
                     <use xlink:href="#icon-heart"></use>
                     </svg>
                     <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                     <use xlink:href="#icon-heart-active"></use>
                     </svg>
-                    <span><?= $post_likes[$index] ?? '' ?></span>
+                    <span><?= $post['likes_count'] ?? '' ?></span>
                     <span class="visually-hidden">количество лайков</span>
                 </a>
                 <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                     <svg class="post__indicator-icon" width="19" height="17">
                     <use xlink:href="#icon-comment"></use>
                     </svg>
-                    <span><?= $post_comments[$index] ?? '' ?></span>
+                    <span><?= $post['comments_count'] ?? '' ?></span>
                     <span class="visually-hidden">количество комментариев</span>
                 </a>
                 </div>

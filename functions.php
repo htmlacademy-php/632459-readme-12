@@ -16,38 +16,40 @@
         return "<p>" . $string . "</p>";
     }
 
-    function date_difference($date_1 , $date_2 , $differenceFormat = '%y %m %d %h %i'): array
+    function date_difference($date_1 , $date_2 , $differenceFormat = '%y %m %d %h %i %s'): array
     {
         $datetime1 = date_create($date_1);
         $datetime2 = date_create($date_2);
         $interval = date_diff($datetime1, $datetime2);
-		$date_intervals = ['years', 'months', 'days', 'hours', 'minutes'];
+		$date_intervals = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'];
         $date_diff_values = explode(" ", $interval->format($differenceFormat));
 
 		return array_combine($date_intervals, $date_diff_values);
     }
 
-    function set_post_date(string $date, bool $short = false): array
+    function set_date(string $date, bool $short = false): array
 	{
         $current_date = date('Y-m-d H:i:s');
-		$time_title = date_format(date_create($date), 'd-m-Y H:i');
+				$time_title = date_format(date_create($date), 'd-m-Y H:i');
         $date_array = date_difference($current_date, $date);
         $delta_array = array_filter($date_array);
         $delta_value = array_key_first($delta_array);
         $delta_key = $delta_array[$delta_value];
 
-        if ($delta_value === 'minutes') {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' минута', ' минуты', ' минут') . ' назад') : $delta_key . ' мин назад';
+        if ($delta_value === 'seconds') {
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' секунда ', ' секунды ', ' секунд ')) : $delta_key . ' с ';
+        } else if ($delta_value === 'minutes') {
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' минута ', ' минуты ', ' минут ')) : $delta_key . ' мин ';
         } else if ($delta_value === 'hours') {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' час', ' часа', ' часов') . ' назад') : $delta_key . ' ч назад';
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' час ', ' часа ', ' часов ')) : $delta_key . ' ч ';
         } else if ($delta_value === 'days' && $delta_key < 7) {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' день', ' дня', ' дней') . ' назад') : $delta_key . ' д назад';
-        } else if ($delta_value === 'days' && $delta_key >= 7) {
-			$date_ago = !$short ? (round(($delta_key / 7)) . get_noun_plural_form(round($delta_key / 7), ' неделя', ' недели', ' недель') . ' назад') : round(($delta_key / 7)) . ' нед назад';
-		} else if ($delta_value === 'months') {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' месяц', ' месяца', ' месяцев') . ' назад') : $delta_key . ' мес назад';
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' день ', ' дня ', ' дней ')) : $delta_key . ' д ';
+				} else if ($delta_value === 'days' && $delta_key >= 7) {
+					$date_ago = !$short ? (round(($delta_key / 7)) . get_noun_plural_form(round($delta_key / 7), ' неделя ', ' недели ', ' недель ')) : round(($delta_key / 7)) . ' нед ';
+				} else if ($delta_value === 'months') {
+							$date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' месяц ', ' месяца ', ' месяцев ')) : $delta_key . ' мес ';
         } else {
-            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' год', ' года', ' лет') . ' назад') : $delta_key . ' г назад';
+            $date_ago = !$short ? ($delta_key . get_noun_plural_form($delta_key, ' год ', ' года ', ' лет ')) : $delta_key . ' г ';
         }
 
         return [
@@ -79,6 +81,16 @@
 
     function getPostVal($name) {
         return $_POST[$name] ?? "";
+    }
+
+    function getPaginationPages(string $items_count, int $page_items, string $cur_page):array {
+        $pages_count = ceil($items_count / $page_items);
+        $offset = ($cur_page - 1) * $page_items;
+        return [
+            'pages' => range(1, $pages_count),
+            'pages_count' => $pages_count,
+            'offset' => $offset
+        ];
     }
 
     function snakeToCamel($input)
@@ -129,11 +141,11 @@
             $tags_array = [];
 
             foreach($tags as $tag) {
-                $request = 'SELECT id FROM hashtags WHERE hashtag_name = ?';
+                $request = 'SELECT id FROM hashtags WHERE name = ?';
                 $res = form_sql_request($dbConnection, $request, [$tag]);
                 $result = mysqli_fetch_array($res)['id'];
                 if (!$result) {
-                    $request = 'INSERT INTO hashtags SET hashtag_name = ?';
+                    $request = 'INSERT INTO hashtags SET name = ?';
                     $res = form_sql_request($dbConnection, $request, [$tag], false);
                     $new_tag_id = mysqli_insert_id($dbConnection);
                     array_push($tags_array, $new_tag_id);

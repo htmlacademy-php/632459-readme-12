@@ -8,7 +8,7 @@
          <?= $post_main ?>
           <div class="post__indicators">
             <div class="post__buttons">
-              <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
+              <a class="post__indicator post__indicator--likes button" href="/like.php?post=<?= $post['id'] ?? '' ?>" title="Лайк">
                 <svg class="post__indicator-icon" width="20" height="17">
                   <use xlink:href="#icon-heart"></use>
                 </svg>
@@ -25,34 +25,37 @@
                 <span><?= $comments_amount['total'] ?? '' ?></span>
                 <span class="visually-hidden">количество комментариев</span>
               </a>
-              <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
+              <a class="post__indicator post__indicator--repost button" href="/repost.php?post=<?= $post['id'] ?? '' ?>" title="Репост">
                 <svg class="post__indicator-icon" width="19" height="17">
                   <use xlink:href="#icon-repost"></use>
                 </svg>
-                <span>5</span>
+                <span><?= $reposts[0] ?></span>
                 <span class="visually-hidden">количество репостов</span>
               </a>
             </div>
-            <span class="post__view"><?= $post['show_count'] ?> просмотров</span>
+            <span class="post__view"><?= $post['show_count'] ?> <?= get_noun_plural_form($post['show_count'], ' просмотр', ' просмотра', ' просмотров') ?></span>
           </div>
           <ul class="post__tags">
             <?php foreach ($hashtags as $hashtag): ?>
-            <li><a href="/search.php?search=%23<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?>">#<?= htmlspecialchars($hashtag['hashtag_name'] ?? '') ?></a></li>
+            <li><a href="/search.php?search=%23<?= htmlspecialchars($hashtag['name'] ?? '') ?>">#<?= htmlspecialchars($hashtag['name'] ?? '') ?></a></li>
             <?php endforeach; ?>
           </ul>
           <div class="comments">
             <form class="comments__form form" action="#" method="post">
               <div class="comments__my-avatar">
-                <img class="comments__picture" src="img/userpic-medium.jpg" alt="Аватар пользователя">
+                <img class="comments__picture" src="<?= $_SESSION['user']['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя">
               </div>
-              <div class="form__input-section form__input-section--error">
-                <textarea class="comments__textarea form__textarea form__input" placeholder="Ваш комментарий"></textarea>
+              <div class="form__input-section <?= $errors ? 'form__input-section--error' : '' ?>">
+                <textarea class="comments__textarea form__textarea form__input" name="comment" value="<?= getPostVal('comment') ?? '' ?>" placeholder="Ваш комментарий"><?= getPostVal('comment') ?? '' ?></textarea>
+                <input class="visually-hidden" name="post" value="<?= $post['id'] ?? '' ?>">
                 <label class="visually-hidden">Ваш комментарий</label>
                 <button class="form__error-button button" type="button">!</button>
+                <?php if ($errors && $errors['comment']): ?>
                 <div class="form__error-text">
                   <h3 class="form__error-title">Ошибка валидации</h3>
-                  <p class="form__error-desc">Это поле обязательно к заполнению</p>
+                  <p class="form__error-desc"><?= $errors['comment'] ?? '' ?></p>
                 </div>
+                <?php endif; ?>
               </div>
               <button class="comments__submit button button--green" type="submit">Отправить</button>
             </form>
@@ -61,16 +64,16 @@
                 <?php foreach ($comments as $comment): ?>
                 <li class="comments__item user">
                   <div class="comments__avatar">
-                    <a class="user__avatar-link" href="#">
-                      <img class="comments__picture" src="img/<?= htmlspecialchars($comment['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
+                    <a class="user__avatar-link" href="/profile.php?user=<?= $comment['user_id'] . '&tab=posts' ?? '' ?>">
+                      <img class="comments__picture" src="<?= htmlspecialchars($comment['avatar_path'] ?? 'img/userpic-tanya.jpg') ?>" alt="Аватар пользователя">
                     </a>
                   </div>
                   <div class="comments__info">
                     <div class="comments__name-wrapper">
-                      <a class="comments__user-name" href="#">
+                      <a class="comments__user-name" href="/profile.php?user=<?= $comment['user_id'] . '&tab=posts' ?? '' ?>">
                         <span><?= htmlspecialchars($comment['login'] ?? '') ?></span>
                       </a>
-                      <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>"><?= set_post_date($comment['date_add'], true)['date_ago'] ?? '' ?></time>
+                      <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>"><?= set_date($comment['date_add'], true)['date_ago'] ?? '' ?>назад</time>
                     </div>
                     <p class="comments__text">
                       <?= htmlspecialchars($comment['text'] ?? '') ?>
@@ -79,25 +82,21 @@
                 </li>
                 <?php endforeach; ?>
               </ul>
-              <a class="comments__more-link" href="#">
-                <span>Показать все комментарии</span>
-                <sup class="comments__amount">45</sup>
-              </a>
             </div>
           </div>
         </div>
         <div class="post-details__user user">
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
-              <a class="post-details__avatar-link user__avatar-link" href="#">
-                <img class="post-details__picture user__picture" src="img/<?= htmlspecialchars($post['avatar_path'] ?? '') ?>" alt="Аватар пользователя">
+              <a class="post-details__avatar-link user__avatar-link" href="/profile.php?user=<?= $post['user_id'] . '&tab=posts' ?? '' ?>">
+                <img class="post-details__picture user__picture" src="<?= htmlspecialchars($post['avatar_path'] ?? 'img/userpic-tanya.jpg') ?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">
-              <a class="post-details__name user__name" href="#">
+              <a class="post-details__name user__name" href="/profile.php?user=<?= $post['user_id'] . '&tab=posts' ?? '' ?>">
                 <span><?= htmlspecialchars($post['login'] ?? '') ?></span>
               </a>
-              <time class="post-details__time user__time" datetime="2014-03-20">5 лет на сайте</time>
+              <time class="post-details__time user__time" datetime="<?= $post['dt_reg'] ?? '' ?>"><?= set_date($post['dt_reg'])['date_ago'] ?? '' ?>на сайте</time>
             </div>
           </div>
           <div class="post-details__rating user__rating">

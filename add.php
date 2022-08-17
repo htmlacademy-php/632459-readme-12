@@ -15,7 +15,6 @@
     }
 
     [$is_auth, $user_name, $page_titles, $validate_rules, $input_names] = require('data.php');
-    $con = require('init.php');
 
     if (!$con) {
         $error = mysqli_connect_error();
@@ -46,8 +45,8 @@
 
             switch($type) {
                 case TYPE_QUOTE:
-                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text, cite_author) VALUES (NOW(), 1, 0, ?, ?, ?, ?)';
-                    $params =  [$type_id, $inputArray['title'], $inputArray['cite-text'], $inputArray['quote-author']];
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text, cite_author) VALUES (NOW(), ?, 0, ?, ?, ?, ?)';
+                    $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $inputArray['cite-text'], $inputArray['quote-author']];
                     $result = form_sql_request($con, $sql_post, $params, false);
 
                     if ($result) {
@@ -59,8 +58,8 @@
                     break;
 
                 case TYPE_TEXT:
-                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text) VALUES (NOW(), 3, 0, ?, ?, ?)';
-                    $params =  [$type_id, $inputArray['title'], $inputArray['text']];
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text) VALUES (NOW(), ?, 0, ?, ?, ?)';
+                    $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $inputArray['text']];
 
                     $result = form_sql_request($con, $sql_post, $params, false);
 
@@ -81,8 +80,8 @@
                         $img_path = getUrlContent($inputArray);
                     }
 
-                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, img) VALUES (NOW(), 3, 0, ?, ?, ?)';
-                    $params =  [$type_id, $inputArray['title'], $img_path];
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, img) VALUES (NOW(), ?, 0, ?, ?, ?)';
+                    $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $img_path];
 
                     $result = form_sql_request($con, $sql_post, $params, false);
 
@@ -95,8 +94,8 @@
                     break;
 
                 case TYPE_VIDEO:
-                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, video) VALUES (NOW(), 4, 0, ?, ?, ?)';
-                    $params =  [$type_id, $inputArray['title'], $inputArray['video']];
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, video) VALUES (NOW(), ?, 0, ?, ?, ?)';
+                    $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $inputArray['video']];
 
                     $result = form_sql_request($con, $sql_post, $params, false);
 
@@ -109,8 +108,8 @@
                     break;
 
                 case TYPE_LINK:
-                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, link) VALUES (NOW(), 3, 0, ?, ?, ?)';
-                    $params =  [$type_id, $inputArray['title'], $inputArray['link']];
+                    $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, link) VALUES (NOW(), ?, 0, ?, ?, ?)';
+                    $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $inputArray['link']];
 
                     $result = form_sql_request($con, $sql_post, $params, false);
 
