@@ -218,5 +218,37 @@ SET avatar_path = "img/userpic-tanya.jpg" WHERE id = 8;
 UPDATE users
 SET avatar_path = "img/userpic-petro.jpg" WHERE id = 9;
 
+--Добавление сообщений
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+("2022-04-01 14:00:05", 'Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы.', 7, 8);
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+  ("2022-04-01 14:13:05", 'Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой.', 8, 7);
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+  ("2022-04-11 20:10:05", 'Привет!', 8, 1);
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+  ("2022-04-11 20:10:05", 'Привет! Как дела?', 1, 8);
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+  ("2022-04-11 20:10:05", 'Привет!', 11, 8);
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+  ("2022-04-11 20:10:05", 'Привет!', 11, 3);
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+  ("2022-04-11 20:10:05", 'Привет!', 11, 2);
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+  ("2022-04-11 20:10:05", 'Привет!', 11, 1);
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+  ("2022-04-11 20:10:05", 'Привет!', 11, 7);
+
+INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES
+  ("2022-04-11 20:10:05", 'Привет!', 7, 11);
+
 
 

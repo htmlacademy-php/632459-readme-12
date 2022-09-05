@@ -1,6 +1,5 @@
 <?php
-    $is_auth = rand(0, 1);
-
+    $is_auth = rand(0,1);
     $user_name = 'Алина Глинская';
 
     $page_titles = [
@@ -9,7 +8,8 @@
         'reg' => 'readme: регистрация',
         'feed' => 'readme: моя лента',
         'search_results'=> 'readme: результаты поиска',
-        'profile' => 'readme: профиль пользователя'
+        'profile' => 'readme: профиль пользователя',
+        'messages'=> 'readme: личные сообщения'
     ];
 
     $validate_rules = [
