@@ -32,7 +32,8 @@
         'userpic-file' => 'uploaded_file',
         'authorize-login' => 'required|email|exists:users,email',
         'authorize-password' => 'required|verify:authorize-login,users,email,password',
-        'comment' => 'required|min:4'
+        'comment' => 'required|min:4',
+        'message' => 'required'
     ];
 
     $input_names = [

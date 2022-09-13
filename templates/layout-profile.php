@@ -49,7 +49,7 @@
                         </a>
                     </li>
                     <li class="header__my-page header__my-page--messages">
-                        <a class="header__page-link" href="/messages.php" title="Личные сообщения">
+                        <a class="header__page-link" href="/messages.php?user=<?= $user_id ?? '' ?>" title="Личные сообщения">
                             <span class="visually-hidden">Личные сообщения</span>
                         </a>
                     </li>
@@ -103,17 +103,17 @@
                         <a class="header__post-button button button--transparent" href="/add.php?type=text">Пост</a>
                     </li>
                 </ul>
-            <?php endif; ?>
-            <?php if (!$_SESSION || !$_SESSION['user']): ?>
-                <ul class="header__user-nav">
-                    <li class="header__authorization">
-                        <a class="header__user-button header__authorization-button button" href="/">Вход</a>
-                    </li>
-                    <li>
-                        <a class="header__user-button header__user-button--active header__register-button button" href="reg.php">Регистрация</a>
-                    </li>
-                </ul>
-            <?php endif; ?>
+                <?php endif; ?>
+                <?php if (!$_SESSION || !$_SESSION['user']): ?>
+                    <ul class="header__user-nav">
+                        <li class="header__authorization">
+                            <a class="header__user-button header__authorization-button button" href="/">Вход</a>
+                        </li>
+                        <li>
+                            <a class="header__user-button header__user-button--active header__register-button button" href="reg.php">Регистрация</a>
+                        </li>
+                    </ul>
+                <?php endif; ?>
             </nav>
         </div>
     </div>

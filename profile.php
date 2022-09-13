@@ -128,9 +128,10 @@
         'tags_to_posts' => $tags_to_posts
     ]);
 
-    $layout_content = include_template('layout.php', [
+    $layout_content = include_template('layout-profile.php', [
         'content'   => $page_content,
-        'title'     => $page_titles['profile']
+        'title'     => $page_titles['profile'],
+        'user_id' => $user_id
     ]);
 
     print($layout_content);

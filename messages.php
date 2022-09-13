@@ -9,7 +9,7 @@ if (!$_SESSION['user']) {
     exit();
 }
 
-[$is_auth, $user_name, $page_titles] = require('data.php');
+[$is_auth, $user_name, $page_titles, $validate_rules] = require('data.php');
 $con = require('init.php');
 
 if (!$con) {
@@ -18,7 +18,8 @@ if (!$con) {
     die();
 }
 
-$first_user = 1;
+$first_user = (int)filter_input(INPUT_GET, 'user');
+
 $current_user = $_SESSION['user']['id'];
 
 $search_query = filter_input(INPUT_GET, 'search');
@@ -41,20 +42,34 @@ WHERE sender_id = ' . $current_user. ' OR reciever_id = '. $current_user . ' ';
 $result = form_sql_request($con, $sql_chats, []);
 $chats = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$all_dialogs = [];
+$dialogs_users = [];
 
-foreach ($chats as $index => $chat) {
-    if($chat['sender_id'] !== (string)$current_user) {
-        $all_dialogs[$index] = $chat['sender_id'];
-    } else if ($chat['reciever_id'] !== (string)$current_user) {
-        $all_dialogs[$index] = $chat['reciever_id'];
+$sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, u.id, u.login, u.avatar_path, (SELECT m.text FROM messages m WHERE m.id = MAX(ms.id)) AS last_text,
+ (SELECT sender_id FROM messages m WHERE m.id = MAX(ms.id)) AS sender
+  FROM messages ms JOIN users u ON (u.id IN (ms.reciever_id, ms.sender_id)) AND u.id != ? GROUP BY u.id ORDER BY last_date DESC;';
+    $result = form_sql_request($con, $sql_dialog_users, [$current_user]);
+    $dialogs_users = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$errors = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $inputArray = $_POST;
+    $errors = validateForm($inputArray, $validate_rules, $con);
+
+    if (empty($errors)) {
+        $sql_message = 'INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES (NOW(), ?, ?, ?)';
+
+        $result = form_sql_request($con, $sql_message, [$inputArray['message'], $current_user, $first_user], false);
+
+        header("Location: messages.php?user=" . $first_user);
     }
 }
 
-$dialogs_ids = array_unique($all_dialogs);
-
 $page_content = include_template('messages.php',[
-    'chat_messages' => $chat_messages
+    'chat_messages' => $chat_messages,
+    'dialogs_users' => $dialogs_users,
+    'first_user' => $first_user,
+    'errors' => $errors
 ]);
 
 $layout_content = include_template('layout.php', [

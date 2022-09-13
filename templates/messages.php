@@ -1,90 +1,36 @@
 <main class="page__main page__main--messages">
     <h1 class="visually-hidden">Личные сообщения</h1>
-    <section class="messages tabs">
+    <section class="messages tabs" style="<?= empty($dialogs_users) ? 'display: block;' : '' ?>">
         <h2 class="visually-hidden">Сообщения</h2>
-        <div class="messages__contacts">
+        <div class="messages__contacts" style="<?= empty($dialogs_users) ? 'width: auto; margin-left: 0' : '' ?>">
             <ul class="messages__contacts-list tabs__list">
+                <?php if(empty($dialogs_users)): ?>
+                <p style="width: auto; font-size: 24px; margin: 100px 0 0 25%;">У вас пока нет активных диалогов</p>
+                <?php endif; ?>
+                <?php if(!empty($dialogs_users)): ?>
+                <?php foreach ($dialogs_users as $user): ?>
                 <li class="messages__contacts-item">
-                    <a class="messages__contacts-tab messages__contacts-tab--active tabs__item tabs__item--active" href="#">
+                    <a class="messages__contacts-tab tabs__item tabs__item--active <?= $user['id'] === $first_user ? 'messages__contacts-tab--active' : '' ?> " href="/messages.php?user=<?= $user['id'] ?? '' ?>">
                         <div class="messages__avatar-wrapper">
-                            <img class="messages__avatar" src="img/userpic-larisa.jpg" alt="Аватар пользователя">
+                            <img class="messages__avatar" style="width: 100%" src="<?= $user['avatar_path'] ?? '' ?>" alt="Аватар пользователя">
                         </div>
                         <div class="messages__info">
                   <span class="messages__contact-name">
-                    Лариса Роговая
+                    <?= $user['login'] ?? '' ?>
                   </span>
                             <div class="messages__preview">
                                 <p class="messages__preview-text">
-                                    Озеро Байкал – огромное
+                                    <?= htmlspecialchars($user['last_text'] ?? '') ?>
                                 </p>
-                                <time class="messages__preview-time" datetime="2019-05-01T14:40">
-                                    14:40
+                                <time class="messages__preview-time" datetime="<?= $user['last_date'] ?? '' ?>">
+                                    <?= $user['last_date'] ?? '' ?>
                                 </time>
                             </div>
                         </div>
                     </a>
                 </li>
-                <li class="messages__contacts-item messages__contacts-item--new">
-                    <a class="messages__contacts-tab tabs__item" href="#">
-                        <div class="messages__avatar-wrapper">
-                            <img class="messages__avatar" src="img/userpic-petro.jpg" alt="Аватар пользователя">
-                            <i class="messages__indicator">2</i>
-                        </div>
-                        <div class="messages__info">
-                  <span class="messages__contact-name">
-                    Петр Демин
-                  </span>
-                            <div class="messages__preview">
-                                <p class="messages__preview-text">
-                                    Ок, бро! По рукам
-                                </p>
-                                <time class="messages__preview-time" datetime="2019-05-01T00:15">
-                                    00:15
-                                </time>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li class="messages__contacts-item">
-                    <a class="messages__contacts-tab tabs__item" href="#">
-                        <div class="messages__avatar-wrapper">
-                            <img class="messages__avatar" src="img/userpic-mark.jpg" alt="Аватар пользователя">
-                        </div>
-                        <div class="messages__info">
-                  <span class="messages__contact-name">
-                    Марк Смолов
-                  </span>
-                            <div class="messages__preview">
-                                <p class="messages__preview-text">
-                                    Вы: Марк, ждем тебя
-                                </p>
-                                <time class="messages__preview-time" datetime="2019-01-02T14:40">
-                                    2 янв
-                                </time>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li class="messages__contacts-item">
-                    <a class="messages__contacts-tab tabs__item" href="#">
-                        <div class="messages__avatar-wrapper">
-                            <img class="messages__avatar" src="img/userpic-tanya.jpg" alt="Аватар пользователя">
-                        </div>
-                        <div class="messages__info">
-                  <span class="messages__contact-name">
-                    Таня Фирсова
-                  </span>
-                            <div class="messages__preview">
-                                <p class="messages__preview-text">
-                                    Вы: Девушка не
-                                </p>
-                                <time class="messages__preview-time" datetime="2018-09-30T14:40">
-                                    31 сент
-                                </time>
-                            </div>
-                        </div>
-                    </a>
-                </li>
+                <?php endforeach; ?>
+
             </ul>
         </div>
         <div class="messages__chat">
@@ -101,7 +47,7 @@
                             </div>
                             <div class="messages__item-info">
                                 <a class="messages__author" href="#">
-                                    <?= $message['login'] ?? '' ?>
+                                    <?= htmlspecialchars($message['login'])  ?? '' ?>
                                 </a>
                                 <time class="messages__time" datetime="<?= set_date($message['date_add'])['datetime'] ?? '' ?>">
                                     <?= set_date($message['date_add'])['date_ago'] ?? '' ?>назад
@@ -109,22 +55,10 @@
                             </div>
                         </div>
                         <p class="messages__text">
-                           <?= $message['text' ?? ''] ?>
+                           <?= htmlspecialchars($message['text'] )?? '' ?>
                         </p>
                     </li>
                     <?php endforeach; ?>
-                </ul>
-
-                <ul class="messages__list tabs__content">
-
-                </ul>
-
-                <ul class="messages__list tabs__content">
-
-                </ul>
-
-                <ul class="messages__list tabs__content">
-
                 </ul>
             </div>
             <div class="comments">
@@ -132,19 +66,20 @@
                     <div class="comments__my-avatar">
                         <img class="comments__picture" src="<?= $_SESSION['user']['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>" alt="Аватар пользователя">
                     </div>
-                    <div class="form__input-section form__input-section--error">
+                    <div class="form__input-section <?= $errors ? 'form__input-section--error' : '' ?>">
                 <textarea class="comments__textarea form__textarea form__input"
-                          placeholder="Ваше сообщение"></textarea>
+                          placeholder="Ваше сообщение" name="message"></textarea>
                         <label class="visually-hidden">Ваше сообщение</label>
                         <button class="form__error-button button" type="button">!</button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Ошибка валидации</h3>
-                            <p class="form__error-desc">Это поле обязательно к заполнению</p>
+                            <p class="form__error-desc"><?= $errors['message'] ?? '' ?></p>
                         </div>
                     </div>
                     <button class="comments__submit button button--green" type="submit">Отправить</button>
                 </form>
             </div>
+            <?php endif; ?>
         </div>
     </section>
 </main>
