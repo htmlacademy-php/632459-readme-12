@@ -53,4 +53,19 @@
         'userpic-file' => 'Фото'
     ];
 
-    return [$is_auth, $user_name, $page_titles, $validate_rules, $input_names];
+$month_list = array(
+    '01 '=> 'янв',
+    '02' => 'фев',
+    '03' => 'март',
+    '04' => 'апр',
+    '05' => 'мая',
+    '06' => 'июн',
+    '07' => 'июл',
+    '08' => 'авг',
+    '09' => 'сент',
+    '10' => 'окт',
+    '11' => 'нояб',
+    '12' => 'дек'
+);
+
+    return [$is_auth, $user_name, $page_titles, $validate_rules, $input_names, $month_list];

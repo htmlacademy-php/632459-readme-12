@@ -20,10 +20,10 @@
                   </span>
                             <div class="messages__preview">
                                 <p class="messages__preview-text">
-                                    <?= htmlspecialchars($user['last_text'] ?? '') ?>
+                                    <?= htmlspecialchars($user['last_text']) ?? '' ?>
                                 </p>
                                 <time class="messages__preview-time" datetime="<?= $user['last_date'] ?? '' ?>">
-                                    <?= $user['last_date'] ?? '' ?>
+                                    <?= set_message_date($user['last_date'], $month_list) ?? '' ?>
                                 </time>
                             </div>
                         </div>

@@ -27,10 +27,28 @@
 		return array_combine($date_intervals, $date_diff_values);
     }
 
+    function set_message_date(string $date, array $month_list) {
+        $current_date = date('Y-m-d H:i:s');
+        $date_array = date_difference($current_date, $date);
+        $delta_array = array_filter($date_array);
+        $delta_value = array_key_first($delta_array);
+
+        if($delta_value === 'hours' || $delta_value === 'minutes' || $delta_value === 'seconds') {
+            return date_format(date_create($date), 'H:i');
+        } else if ($delta_value === 'years') {
+            return date_format(date_create($date), 'Y') . ' г';
+        } else if ($delta_value === 'months') {
+            $date_with_month = date_format(date_create($date), 'd%m');
+            $month = explode('%', $date_with_month);
+            return date_format(date_create($date), 'd ') . $month_list[$month[1]];
+        }
+
+    }
+
     function set_date(string $date, bool $short = false): array
 	{
         $current_date = date('Y-m-d H:i:s');
-				$time_title = date_format(date_create($date), 'd-m-Y H:i');
+        $time_title = date_format(date_create($date), 'd-m-Y H:i');
         $date_array = date_difference($current_date, $date);
         $delta_array = array_filter($date_array);
         $delta_value = array_key_first($delta_array);

@@ -9,7 +9,7 @@ if (!$_SESSION['user']) {
     exit();
 }
 
-[$is_auth, $user_name, $page_titles, $validate_rules] = require('data.php');
+[$is_auth, $user_name, $page_titles, $validate_rules, $input_names, $month_list] = require('data.php');
 $con = require('init.php');
 
 if (!$con) {
@@ -91,7 +91,8 @@ $page_content = include_template('messages.php',[
     'chat_messages' => $chat_messages,
     'dialogs_users' => $dialogs_users,
     'first_user' => $first_user,
-    'errors' => $errors
+    'errors' => $errors,
+    'month_list' => $month_list
 ]);
 
 $layout_content = include_template('layout.php', [
