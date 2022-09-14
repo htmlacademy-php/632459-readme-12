@@ -1,3 +1,5 @@
+DROP database readme;
+
 CREATE DATABASE IF NOT EXISTS readme
   DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -35,6 +37,9 @@ CREATE TABLE IF NOT EXISTS posts (
   show_count INT UNSIGNED,
 	user_id INT UNSIGNED,
 	content_type INT UNSIGNED,
+  repost VARCHAR(255),
+  original_author VARCHAR(255),
+  parent_id INT UNSIGNED,
   CONSTRAINT user_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT content_type_fk FOREIGN KEY (content_type) REFERENCES content_types (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -55,6 +60,7 @@ CREATE TABLE IF NOT EXISTS messages (
   text TEXT,
 	sender_id INT UNSIGNED,
 	reciever_id INT UNSIGNED,
+	new INT UNSIGNED,
   CONSTRAINT sender_fk FOREIGN KEY (sender_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT reciever_fk FOREIGN KEY (reciever_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -95,14 +101,3 @@ ADD priority INT UNSIGNED;
 -- Создание индекса полнотекстового поиска
 
 CREATE FULLTEXT INDEX post_ft_search ON posts(title, text);
-
--- Добавление колонки «репост»
-
-ALTER TABLE posts
-ADD repost VARCHAR(255);
-
-ALTER TABLE posts
-ADD original_author VARCHAR(255);
-
-ALTER TABLE posts
-ADD parent_id INT UNSIGNED;

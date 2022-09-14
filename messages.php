@@ -21,6 +21,7 @@ if (!$con) {
 $first_user = (int)filter_input(INPUT_GET, 'user');
 
 $current_user = $_SESSION['user']['id'];
+$previous_page = $_SERVER['HTTP_REFERER'] ?? null;
 
 $search_query = filter_input(INPUT_GET, 'search');
 if (!empty($search_query)) {
@@ -51,13 +52,34 @@ $sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, u.id, u.login, u.ava
     $dialogs_users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $errors = [];
+$is_dialog_exists = false;
+$new_dialog = null;
+
+foreach ($dialogs_users as $dialog) {
+    if($dialog['id'] === $first_user) {
+        $is_dialog_exists = true;
+    }
+}
+
+if(strripos($previous_page, 'profile.php') && !$is_dialog_exists) {
+    $sql_new_dialog = 'SELECT id, login, avatar_path FROM users WHERE id = ?';
+    $result = form_sql_request($con, $sql_new_dialog, [$first_user]);
+    if($result) {
+        $new_dialog = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        array_push($dialogs_users, $new_dialog[0]);
+    }
+}
+
+if ($first_user === 0) {
+    $first_user = $dialogs_users[0]['id'];
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $inputArray = $_POST;
     $errors = validateForm($inputArray, $validate_rules, $con);
 
     if (empty($errors)) {
-        $sql_message = 'INSERT INTO messages(date_add, text, sender_id, reciever_id) VALUES (NOW(), ?, ?, ?)';
+        $sql_message = 'INSERT INTO messages(date_add, text, sender_id, reciever_id, new) VALUES (NOW(), ?, ?, ?, 1)';
 
         $result = form_sql_request($con, $sql_message, [$inputArray['message'], $current_user, $first_user], false);
 
