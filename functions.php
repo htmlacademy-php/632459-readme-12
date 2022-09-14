@@ -16,6 +16,15 @@
         return "<p>" . $string . "</p>";
     }
 
+    function clip_message_text(string $string, int $limit = 10): string
+    {
+        if (mb_strlen($string) > $limit) {
+            $cutted_array = explode("#!#!", utf8_wordwrap($string, $limit, "#!#!"));
+            return $cutted_array[0] . "...";
+        }
+        return $string;
+    }
+
     function date_difference($date_1 , $date_2 , $differenceFormat = '%y %m %d %h %i %s'): array
     {
         $datetime1 = date_create($date_1);

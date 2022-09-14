@@ -13,6 +13,9 @@
                     <a class="messages__contacts-tab tabs__item tabs__item--active <?= $user['id'] === $first_user ? 'messages__contacts-tab--active' : '' ?> " href="/messages.php?user=<?= $user['id'] ?? '' ?>">
                         <div class="messages__avatar-wrapper">
                             <img class="messages__avatar" style="width: 100%" src="<?= $user['avatar_path'] ?? '' ?>" alt="Аватар пользователя">
+                            <?php if ($user['unread']): ?>
+                            <i class="messages__indicator"><?= $user['unread'] ?? '' ?></i>
+                            <?php endif; ?>
                         </div>
                         <div class="messages__info">
                   <span class="messages__contact-name">
@@ -20,7 +23,13 @@
                   </span>
                             <div class="messages__preview">
                                 <p class="messages__preview-text">
-                                    <?= htmlspecialchars($user['last_text']) ?? '' ?>
+                                    <?php if($user['sender'] === $_SESSION['user']['id']): ?>
+                                    <?= 'Вы: ' . htmlspecialchars(clip_message_text($user['last_text'])) ?? '' ?>
+                                    <?php endif; ?>
+
+                                    <?php if($user['sender'] !== $_SESSION['user']['id']): ?>
+                                        <?= htmlspecialchars(clip_message_text($user['last_text'])) ?? '' ?>
+                                    <?php endif; ?>
                                 </p>
                                 <time class="messages__preview-time" datetime="<?= $user['last_date'] ?? '' ?>">
                                     <?= set_message_date($user['last_date'], $month_list) ?? '' ?>

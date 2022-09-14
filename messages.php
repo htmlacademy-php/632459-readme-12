@@ -28,14 +28,6 @@ if (!empty($search_query)) {
     header("Location: /search.php?search=$search_query");
 }
 
-$sql_chat_messages = 'SELECT sender_id, date_add, text, login, avatar_path FROM messages
-JOIN users u ON sender_id = u.id
- WHERE sender_id IN(' . $current_user . ', ?) AND reciever_id IN (' . $current_user . ', ?) ORDER BY DATE_ADD';
-
-$result = form_sql_request($con, $sql_chat_messages, [$first_user, $first_user]);
-
-$chat_messages = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
 $sql_chats = 'SELECT sender_id, reciever_id, date_add, text, login, avatar_path FROM messages
 JOIN users u ON sender_id = u.id
 WHERE sender_id = ' . $current_user. ' OR reciever_id = '. $current_user . ' ';
@@ -45,7 +37,7 @@ $chats = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $dialogs_users = [];
 
-$sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, u.id, u.login, u.avatar_path, (SELECT m.text FROM messages m WHERE m.id = MAX(ms.id)) AS last_text,
+$sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, COUNT(ms.new) as unread, u.id, u.login, u.avatar_path, (SELECT m.text FROM messages m WHERE m.id = MAX(ms.id)) AS last_text,
  (SELECT sender_id FROM messages m WHERE m.id = MAX(ms.id)) AS sender
   FROM messages ms JOIN users u ON (u.id IN (ms.reciever_id, ms.sender_id)) AND u.id != ? GROUP BY u.id ORDER BY last_date DESC;';
     $result = form_sql_request($con, $sql_dialog_users, [$current_user]);
@@ -73,6 +65,18 @@ if(strripos($previous_page, 'profile.php') && !$is_dialog_exists) {
 if ($first_user === 0) {
     $first_user = $dialogs_users[0]['id'];
 }
+
+$sql_chat_messages = 'SELECT sender_id, date_add, text, login, avatar_path FROM messages
+JOIN users u ON sender_id = u.id
+ WHERE sender_id IN(' . $current_user . ', ?) AND reciever_id IN (' . $current_user . ', ?) ORDER BY DATE_ADD';
+
+$result = form_sql_request($con, $sql_chat_messages, [$first_user, $first_user]);
+
+$chat_messages = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$sql_update_unread = 'UPDATE messages SET new = null WHERE reciever_id = ?';
+$result = form_sql_request($con, $sql_update_unread, [$_SESSION['user']['id']], false);
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $inputArray = $_POST;
