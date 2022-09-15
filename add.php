@@ -34,6 +34,8 @@
         header("Location: /search.php?search=$search_query");
     }
 
+    $unread = getUnreadMessages($con);
+
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
     $result = form_sql_request($con, $sql_types, []);
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -169,7 +171,8 @@
         'title_input' => $title_input,
         'tags_input' => $tags_input,
         'errors' => $errors,
-        'input_names' => $input_names
+        'input_names' => $input_names,
+        'unread' => $unread
     ]);
 
     print($page_content);

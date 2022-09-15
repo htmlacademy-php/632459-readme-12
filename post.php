@@ -26,6 +26,8 @@
         header("Location: /search.php?search=$search_query");
     }
 
+    $unread = getUnreadMessages($con);
+
     /* Данные о посте и пользователе */
     $post_id = filter_input(INPUT_GET, 'post', FILTER_VALIDATE_INT);
 
@@ -182,7 +184,8 @@
             'content' => $page_content,
             'title' => $page_titles['post'],
             'user_name' => $user_name,
-            'is_auth' => $is_auth
+            'is_auth' => $is_auth,
+            'unread' => $unread
         ]);
 
         print($layout_content);

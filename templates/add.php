@@ -48,7 +48,7 @@
                 </a>
               </li>
               <li class="header__my-page header__my-page--messages">
-                <a class="header__page-link" href="messages.html" title="Личные сообщения">
+                <a class="header__page-link" href="/messages.php" title="Личные сообщения">
                   <span class="visually-hidden">Личные сообщения</span>
                 </a>
               </li>
@@ -80,7 +80,9 @@
                         <a class="header__profile-nav-link" href="#">
                           <span class="header__profile-nav-text">
                             Сообщения
-                            <i class="header__profile-indicator">2</i>
+                              <?php if($unread !== 0): ?>
+                            <i class="header__profile-indicator"><?= $unread ?? '' ?></i>
+                              <?php endif; ?>
                           </span>
                         </a>
                       </li>

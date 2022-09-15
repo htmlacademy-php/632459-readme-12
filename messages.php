@@ -18,6 +18,8 @@ if (!$con) {
     die();
 }
 
+$unread = getUnreadMessages($con);
+
 $first_user = (int)filter_input(INPUT_GET, 'user');
 
 $current_user = $_SESSION['user']['id'];
@@ -101,7 +103,8 @@ $page_content = include_template('messages.php',[
 
 $layout_content = include_template('layout.php', [
     'content'   => $page_content,
-    'title'     => $page_titles['messages']
+    'title'     => $page_titles['messages'],
+    'unread' => $unread
 ]);
 
 print($layout_content);

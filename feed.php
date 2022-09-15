@@ -22,6 +22,8 @@
         header("Location: /search.php?search=$search_query");
     }
 
+    $unread = getUnreadMessages($con);
+
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
     $result = form_sql_request($con, $sql_types, []);
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -104,7 +106,8 @@
 
     $layout_content = include_template('layout.php', [
         'content'   => $page_content,
-        'title'     => $page_titles['feed']
+        'title'     => $page_titles['feed'],
+        'unread' => $unread
     ]);
 
     print($layout_content);

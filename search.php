@@ -15,6 +15,8 @@
 
     $search_text = trim($search_query);
 
+    $unread = getUnreadMessages($con);
+
     if (empty($search_text)) {
         $page_content = include_template('no-results.php', [
             'search_text' => $search_text,
@@ -70,7 +72,8 @@
 
     $layout_content = include_template('layout.php', [
         'content'   => $page_content,
-        'title'     => $page_titles['search_results']
+        'title'     => $page_titles['search_results'],
+        'unread' => $unread
     ]);
 
     print($layout_content);

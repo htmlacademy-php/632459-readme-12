@@ -80,10 +80,12 @@
                                         </a>
                                     </li>
                                     <li class="header__profile-nav-item">
-                                        <a class="header__profile-nav-link" href="#">
+                                        <a class="header__profile-nav-link" href="/messages.php">
                           <span class="header__profile-nav-text">
                             Сообщения
-                            <i class="header__profile-indicator">2</i>
+                             <?php if($unread !== 0): ?>
+                                 <i class="header__profile-indicator"><?= $unread ?? '' ?></i>
+                             <?php endif; ?>
                           </span>
                                         </a>
                                     </li>

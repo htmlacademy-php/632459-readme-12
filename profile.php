@@ -21,6 +21,8 @@
         die();
     }
 
+    $unread = getUnreadMessages($con);
+
     $user_id = filter_input(INPUT_GET, 'user');
 
     $sql_user = 'SELECT id, dt_reg, login, avatar_path FROM users '

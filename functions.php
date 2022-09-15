@@ -25,6 +25,13 @@
         return $string;
     }
 
+    function getUnreadMessages($con) {
+        $sql_unread = ' SELECT COUNT(new) as unread FROM messages WHERE reciever_id = ?';
+        $result = form_sql_request($con, $sql_unread, [$_SESSION['user']['id']]);
+        $unread = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        return $unread[0]['unread'];
+    }
+
     function date_difference($date_1 , $date_2 , $differenceFormat = '%y %m %d %h %i %s'): array
     {
         $datetime1 = date_create($date_1);

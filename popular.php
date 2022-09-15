@@ -21,6 +21,8 @@
         header("Location: /search.php?search=$search_query");
     }
 
+    $unread = getUnreadMessages($con);
+
     $cur_page = filter_input(INPUT_GET, 'page');
     $page_items = 6;
     $sql_all_posts = 'SELECT COUNT(*) as count FROM posts WHERE repost IS NULL';
@@ -88,7 +90,8 @@
 
     $layout_content = include_template('layout.php', [
         'content'   => $page_content,
-        'title'     => $page_titles['index']
+        'title'     => $page_titles['index'],
+        'unread' => $unread
     ]);
 
     print($layout_content);
