@@ -18,7 +18,7 @@
 
         if (empty($errors)) {
             $sql_user = 'SELECT id, login, avatar_path FROM users WHERE email = ?';
-            $result = form_sql_request($con, $sql_user, [$inputArray['authorize-login']]);
+            $result = formSqlRequest($con, $sql_user, [$inputArray['authorize-login']]);
             $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
             $_SESSION['user'] = $user;

@@ -24,15 +24,15 @@
                             <div class="messages__preview">
                                 <p class="messages__preview-text">
                                     <?php if($user['sender'] === $_SESSION['user']['id']): ?>
-                                    <?= 'Вы: ' . htmlspecialchars(clip_message_text($user['last_text'])) ?? '' ?>
+                                    <?= 'Вы: ' . htmlspecialchars(clipMessageText($user['last_text'])) ?? '' ?>
                                     <?php endif; ?>
 
                                     <?php if($user['sender'] !== $_SESSION['user']['id']): ?>
-                                        <?= htmlspecialchars(clip_message_text($user['last_text'])) ?? '' ?>
+                                        <?= htmlspecialchars(clipMessageText($user['last_text'])) ?? '' ?>
                                     <?php endif; ?>
                                 </p>
                                 <time class="messages__preview-time" datetime="<?= $user['last_date'] ?? '' ?>">
-                                    <?= set_message_date($user['last_date'], $month_list) ?? '' ?>
+                                    <?= setMessageDate($user['last_date'], $month_list) ?? '' ?>
                                 </time>
                             </div>
                         </div>
@@ -58,8 +58,8 @@
                                 <a class="messages__author" href="#">
                                     <?= htmlspecialchars($message['login'])  ?? '' ?>
                                 </a>
-                                <time class="messages__time" datetime="<?= set_date($message['date_add'])['datetime'] ?? '' ?>">
-                                    <?= set_date($message['date_add'])['date_ago'] ?? '' ?>назад
+                                <time class="messages__time" datetime="<?= setDate($message['date_add'])['datetime'] ?? '' ?>">
+                                    <?= setDate($message['date_add'])['date_ago'] ?? '' ?>назад
                                 </time>
                             </div>
                         </div>

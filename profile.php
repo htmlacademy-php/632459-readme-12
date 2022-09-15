@@ -28,28 +28,28 @@
     $sql_user = 'SELECT id, dt_reg, login, avatar_path FROM users '
     . 'WHERE id = ?';
 
-    $result = form_sql_request($con, $sql_user, [$user_id]);
+    $result = formSqlRequest($con, $sql_user, [$user_id]);
     $user = mysqli_fetch_array($result);
 
     $sql_subscribers = 'SELECT COUNT(follower_id) AS total FROM subscriptions '
     . 'JOIN users u ON u.id = subscribe_id '
     . 'WHERE u.id = ?';
 
-    $result = form_sql_request($con, $sql_subscribers, [$user_id]);
+    $result = formSqlRequest($con, $sql_subscribers, [$user_id]);
 
     $subscribers = mysqli_fetch_array($result);
 
     $sql_publications = 'SELECT COUNT(id) AS total FROM posts '
     . 'WHERE user_id = ?';
 
-    $result = form_sql_request($con, $sql_publications, [$user_id]);
+    $result = formSqlRequest($con, $sql_publications, [$user_id]);
 
     $publications = mysqli_fetch_array($result);
 
     $is_subscribe = false;
 
     $sql_subscribe = 'SELECT subscribe_id FROM subscriptions WHERE subscribe_id = ? AND follower_id = ?';
-    $result = form_sql_request($con, $sql_subscribe, [$user_id, $_SESSION['user']['id']]);
+    $result = formSqlRequest($con, $sql_subscribe, [$user_id, $_SESSION['user']['id']]);
 
     if (mysqli_num_rows($result) > 0) {
         $is_subscribe = true;
@@ -63,7 +63,7 @@
     . 'WHERE user_id = ? GROUP BY posts.id '
     . 'ORDER BY date_add DESC';
 
-    $result = form_sql_request($con, $sql_posts, [$user_id]);
+    $result = formSqlRequest($con, $sql_posts, [$user_id]);
     $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $tags_to_posts = [];
@@ -80,7 +80,7 @@
             JOIN hashtags h ON h.id = post_tags.hashtag_id
             WHERE post_id IN (' . $post_ids_res . ') GROUP BY post_id, h.name';
 
-        $result = form_sql_request($con, $sql_hashtags, []);
+        $result = formSqlRequest($con, $sql_hashtags, []);
         $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         foreach ($hashtags as $hashtag) {
@@ -94,7 +94,7 @@
     }
 
     $sql_reposts = 'SELECT id, (SELECT COUNT(*) FROM posts p WHERE p.parent_id = posts.id GROUP BY p.parent_id) AS repost_count FROM posts';
-    $result = form_sql_request($con, $sql_reposts, []);
+    $result = formSqlRequest($con, $sql_reposts, []);
     $reposts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $sql_profile_likes = 'SELECT l.*, img, type, name, u.id, login, avatar_path FROM likes l '
@@ -103,7 +103,7 @@
     . 'JOIN users u ON u.id = l.user_id '
     . 'WHERE p.user_id = ? ORDER BY l.date DESC';
 
-    $result = form_sql_request($con, $sql_profile_likes, [$user['id']]);
+    $result = formSqlRequest($con, $sql_profile_likes, [$user['id']]);
     $profile_likes = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $sql_profile_subscribes = 'SELECT s.subscribe_id, u.id, login, avatar_path, dt_reg, '
@@ -115,7 +115,7 @@
         . 'JOIN posts p ON p.user_id = u.id '
         . 'WHERE follower_id = ? GROUP BY s.subscribe_id';
 
-    $result = form_sql_request($con, $sql_profile_subscribes, [$_SESSION['user']['id'], $user_id]);
+    $result = formSqlRequest($con, $sql_profile_subscribes, [$_SESSION['user']['id'], $user_id]);
     $profile_subs = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $page_content = include_template('profile.php', [

@@ -13,13 +13,13 @@
     $post_id = filter_input(INPUT_GET, 'post');
 
     $sql_post = 'SELECT * FROM posts WHERE id = ?';
-    $result = form_sql_request($con, $sql_post, [$post_id]);
+    $result = formSqlRequest($con, $sql_post, [$post_id]);
 
     if (mysqli_num_rows($result) > 0) {
         $post = mysqli_fetch_array($result);
         $sql_repost = 'INSERT INTO posts SET date_add = NOW(), title = ?, text = ?, cite_author = ?, img = ?, video = ?, link = ?, show_count = '
         . '?, content_type = ?, user_id = ?, repost = true, original_author = ?, parent_id = ?';
-        form_sql_request($con, $sql_repost, [
+        formSqlRequest($con, $sql_repost, [
             $post['title'],
             $post['text'],
             $post['cite_author'],

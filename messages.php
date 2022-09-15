@@ -34,7 +34,7 @@ $sql_chats = 'SELECT sender_id, reciever_id, date_add, text, login, avatar_path 
 JOIN users u ON sender_id = u.id
 WHERE sender_id = ' . $current_user. ' OR reciever_id = '. $current_user . ' ';
 
-$result = form_sql_request($con, $sql_chats, []);
+$result = formSqlRequest($con, $sql_chats, []);
 $chats = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $dialogs_users = [];
@@ -42,7 +42,7 @@ $dialogs_users = [];
 $sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, COUNT(ms.new) as unread, u.id, u.login, u.avatar_path, (SELECT m.text FROM messages m WHERE m.id = MAX(ms.id)) AS last_text,
  (SELECT sender_id FROM messages m WHERE m.id = MAX(ms.id)) AS sender
   FROM messages ms JOIN users u ON (u.id IN (ms.reciever_id, ms.sender_id)) AND u.id != ? GROUP BY u.id ORDER BY last_date DESC;';
-    $result = form_sql_request($con, $sql_dialog_users, [$current_user]);
+    $result = formSqlRequest($con, $sql_dialog_users, [$current_user]);
     $dialogs_users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $errors = [];
@@ -57,7 +57,7 @@ foreach ($dialogs_users as $dialog) {
 
 if(strripos($previous_page, 'profile.php') && !$is_dialog_exists) {
     $sql_new_dialog = 'SELECT id, login, avatar_path FROM users WHERE id = ?';
-    $result = form_sql_request($con, $sql_new_dialog, [$first_user]);
+    $result = formSqlRequest($con, $sql_new_dialog, [$first_user]);
     if($result) {
         $new_dialog = mysqli_fetch_all($result, MYSQLI_ASSOC);
         array_push($dialogs_users, $new_dialog[0]);
@@ -72,12 +72,12 @@ $sql_chat_messages = 'SELECT sender_id, date_add, text, login, avatar_path FROM 
 JOIN users u ON sender_id = u.id
  WHERE sender_id IN(' . $current_user . ', ?) AND reciever_id IN (' . $current_user . ', ?) ORDER BY DATE_ADD';
 
-$result = form_sql_request($con, $sql_chat_messages, [$first_user, $first_user]);
+$result = formSqlRequest($con, $sql_chat_messages, [$first_user, $first_user]);
 
 $chat_messages = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $sql_update_unread = 'UPDATE messages SET new = null WHERE reciever_id = ?';
-$result = form_sql_request($con, $sql_update_unread, [$_SESSION['user']['id']], false);
+$result = formSqlRequest($con, $sql_update_unread, [$_SESSION['user']['id']], false);
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $sql_message = 'INSERT INTO messages(date_add, text, sender_id, reciever_id, new) VALUES (NOW(), ?, ?, ?, 1)';
 
-        $result = form_sql_request($con, $sql_message, [$inputArray['message'], $current_user, $first_user], false);
+        $result = formSqlRequest($con, $sql_message, [$inputArray['message'], $current_user, $first_user], false);
 
         header("Location: messages.php?user=" . $first_user);
     }

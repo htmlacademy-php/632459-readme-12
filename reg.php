@@ -28,7 +28,7 @@
             $params = [$inputArray['email-reg'], $inputArray['login'], $passwordHash, $img_path];
 
 
-            $result = form_sql_request($con, $sql, $params, false);
+            $result = formSqlRequest($con, $sql, $params, false);
 
             if ($result) {
                 header("Location: /");

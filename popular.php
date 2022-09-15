@@ -26,7 +26,7 @@
     $cur_page = filter_input(INPUT_GET, 'page');
     $page_items = 6;
     $sql_all_posts = 'SELECT COUNT(*) as count FROM posts WHERE repost IS NULL';
-    $result = form_sql_request($con, $sql_all_posts, []);
+    $result = formSqlRequest($con, $sql_all_posts, []);
     $items_count = mysqli_fetch_assoc($result)['count'];
 
     $pagination_info = getPaginationPages($items_count, $page_items, $cur_page);
@@ -36,7 +36,7 @@
     $offset = $pagination_info['offset'];
 
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
-    $result = form_sql_request($con, $sql_types, []);
+    $result = formSqlRequest($con, $sql_types, []);
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $tab = filter_input(INPUT_GET, 'tab');
@@ -54,7 +54,7 @@
 
     if ($tab) {
         $sql_all_posts = 'SELECT COUNT(*) as count FROM posts JOIN content_types c ON content_type = c.id WHERE repost IS NULL AND c.id = ?';
-        $result = form_sql_request($con, $sql_all_posts, [$tab]);
+        $result = formSqlRequest($con, $sql_all_posts, [$tab]);
         $items_count = mysqli_fetch_assoc($result)['count'];
 
         $pagination_info = getPaginationPages($items_count, $page_items, $cur_page);
@@ -75,7 +75,7 @@
         $params = [$tab];
     }
 
-    $result = form_sql_request($con, $sql_filter, $params);
+    $result = formSqlRequest($con, $sql_filter, $params);
 
     $popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 

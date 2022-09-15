@@ -9,7 +9,7 @@
             </div>
             <div class="profile__name-wrapper user__name-wrapper">
             <span class="profile__name user__name"><?= $user['login'] ?? '' ?></span>
-            <time class="profile__user-time user__time" datetime="<?= $user['dt_reg'] ?? '' ?>"><?= set_date($user['dt_reg'])['date_ago'] ?? '' ?>на сайте</time>
+            <time class="profile__user-time user__time" datetime="<?= $user['dt_reg'] ?? '' ?>"><?= setDate($user['dt_reg'])['date_ago'] ?? '' ?>на сайте</time>
             </div>
         </div>
         <div class="profile__rating user__rating">
@@ -61,7 +61,7 @@
                         </div>
                         <div class="post__info">
                         <b class="post__author-name">Репост: <?= $post['login'] ?? '' ?></b>
-                        <time class="post__time" datetime="<?= $post['date_add'] ?? '' ?>"><?= set_date($post['date_add'])['date_ago'] . ' назад' ?? ''  ?></time>
+                        <time class="post__time" datetime="<?= $post['date_add'] ?? '' ?>"><?= setDate($post['date_add'])['date_ago'] . ' назад' ?? ''  ?></time>
                         </div>
                       </a>
                     </div>
@@ -154,7 +154,7 @@
                         <span class="visually-hidden">количество репостов</span>
                     </a>
                     </div>
-                    <time class="post__time" title="<?= set_date($post['date_add'])['time_title'] ?? '' ?>" datetime="<?= $post['date_add'] ?>"><?= set_date($post['date_add'])['date_ago'] ?? '' ?> назад</time>
+                    <time class="post__time" title="<?= setDate($post['date_add'])['time_title'] ?? '' ?>" datetime="<?= $post['date_add'] ?>"><?= setDate($post['date_add'])['date_ago'] ?? '' ?> назад</time>
                 </div>
                 <ul class="post__tags">
                     <?php foreach ($post['tags'] as $tag): ?>
@@ -186,7 +186,7 @@
                     </a>
                     <div class="post-mini__action">
                         <span class="post-mini__activity user__additional">Лайкнул вашу публикацию</span>
-                        <time class="post-mini__time user__additional" datetime="<?= $like['date'] ?? '' ?>"><?= set_date($like['date'])['date_ago'] ?? '' ?> назад</time>
+                        <time class="post-mini__time user__additional" datetime="<?= $like['date'] ?? '' ?>"><?= setDate($like['date'])['date_ago'] ?? '' ?> назад</time>
                     </div>
                     </div>
                 </div>
@@ -253,7 +253,7 @@
                     <a class="post-mini__name user__name" href="/profile.php?user=<?= $subscribe['subscribe_id'] . '&tab=posts' ?? '' ?>">
                         <span><?= htmlspecialchars($subscribe['login'] ?? '') ?></span>
                     </a>
-                    <time class="post-mini__time user__additional" datetime="<?= $subscribe['dt_reg'] ?? '' ?>"><?= set_date($subscribe['dt_reg'])['date_ago'] ?? '' ?> на сайте</time>
+                    <time class="post-mini__time user__additional" datetime="<?= $subscribe['dt_reg'] ?? '' ?>"><?= setDate($subscribe['dt_reg'])['date_ago'] ?? '' ?> на сайте</time>
                     </div>
                 </div>
                 <div class="post-mini__rating user__rating">

@@ -73,7 +73,7 @@
                       <a class="comments__user-name" href="/profile.php?user=<?= $comment['user_id'] . '&tab=posts' ?? '' ?>">
                         <span><?= htmlspecialchars($comment['login'] ?? '') ?></span>
                       </a>
-                      <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>"><?= set_date($comment['date_add'], true)['date_ago'] ?? '' ?>назад</time>
+                      <time class="comments__time" datetime="<?= $comment['date_add'] ?? '' ?>"><?= setDate($comment['date_add'], true)['date_ago'] ?? '' ?>назад</time>
                     </div>
                     <p class="comments__text">
                       <?= htmlspecialchars($comment['text'] ?? '') ?>
@@ -96,7 +96,7 @@
               <a class="post-details__name user__name" href="/profile.php?user=<?= $post['user_id'] . '&tab=posts' ?? '' ?>">
                 <span><?= htmlspecialchars($post['login'] ?? '') ?></span>
               </a>
-              <time class="post-details__time user__time" datetime="<?= $post['dt_reg'] ?? '' ?>"><?= set_date($post['dt_reg'])['date_ago'] ?? '' ?>на сайте</time>
+              <time class="post-details__time user__time" datetime="<?= $post['dt_reg'] ?? '' ?>"><?= setDate($post['dt_reg'])['date_ago'] ?? '' ?>на сайте</time>
             </div>
           </div>
           <div class="post-details__rating user__rating">

@@ -1,22 +1,22 @@
 <?php
 
-    function utf8_wordwrap($string, $width, $break="#!#!")
+    function utf8Wordwrap($string, $width, $break="#!#!")
     {
         $pattern = '/(?=\s)(.{1,'.$width.'})(?:\s|$)/uS';
         $replace = '$1'.$break;
         return preg_replace($pattern, $replace, $string);
     }
 
-    function clip_post_text(string $string, int $post_id, int $limit = 300): string
+    function clipPostText(string $string, int $post_id, int $limit = 300): string
     {
         if (mb_strlen($string) > $limit) {
-            $cutted_array = explode("#!#!", utf8_wordwrap($string, $limit, "#!#!"));
+            $cutted_array = explode("#!#!", utf8Wordwrap($string, $limit, "#!#!"));
             return "<p>" . $cutted_array[0] . "..." . "</p>" . "<a class=\"post-text__more-link\" href=\"/post.php?post=" . $post_id . "\">" . "Читать далее</a>";
         }
         return "<p>" . $string . "</p>";
     }
 
-    function clip_message_text(string $string, int $limit = 10): string
+    function clipMessageText(string $string, int $limit = 10): string
     {
         if (mb_strlen($string) > $limit) {
             $cutted_array = explode("#!#!", utf8_wordwrap($string, $limit, "#!#!"));
@@ -27,12 +27,12 @@
 
     function getUnreadMessages($con) {
         $sql_unread = ' SELECT COUNT(new) as unread FROM messages WHERE reciever_id = ?';
-        $result = form_sql_request($con, $sql_unread, [$_SESSION['user']['id']]);
+        $result = formSqlRequest($con, $sql_unread, [$_SESSION['user']['id']]);
         $unread = mysqli_fetch_all($result, MYSQLI_ASSOC);
         return $unread[0]['unread'];
     }
 
-    function date_difference($date_1 , $date_2 , $differenceFormat = '%y %m %d %h %i %s'): array
+    function dateDifference($date_1 , $date_2 , $differenceFormat = '%y %m %d %h %i %s'): array
     {
         $datetime1 = date_create($date_1);
         $datetime2 = date_create($date_2);
@@ -43,9 +43,9 @@
 		return array_combine($date_intervals, $date_diff_values);
     }
 
-    function set_message_date(string $date, array $month_list) {
+    function setMessageDate(string $date, array $month_list) {
         $current_date = date('Y-m-d H:i:s');
-        $date_array = date_difference($current_date, $date);
+        $date_array = dateDifference($current_date, $date);
         $delta_array = array_filter($date_array);
         $delta_value = array_key_first($delta_array);
 
@@ -61,11 +61,11 @@
 
     }
 
-    function set_date(string $date, bool $short = false): array
+    function setDate(string $date, bool $short = false): array
 	{
         $current_date = date('Y-m-d H:i:s');
         $time_title = date_format(date_create($date), 'd-m-Y H:i');
-        $date_array = date_difference($current_date, $date);
+        $date_array = dateDifference($current_date, $date);
         $delta_array = array_filter($date_array);
         $delta_value = array_key_first($delta_array);
         $delta_key = $delta_array[$delta_value];
@@ -92,7 +92,7 @@
         ];
     }
 
-    function form_sql_request(mysqli $link, string $request, array $params, bool $get_data = true) {
+    function formSqlRequest(mysqli $link, string $request, array $params, bool $get_data = true) {
         if (!$params) {
             return $result = mysqli_query($link, $request);
         }
@@ -176,11 +176,11 @@
 
             foreach($tags as $tag) {
                 $request = 'SELECT id FROM hashtags WHERE name = ?';
-                $res = form_sql_request($dbConnection, $request, [$tag]);
+                $res = formSqlRequest($dbConnection, $request, [$tag]);
                 $result = mysqli_fetch_array($res)['id'];
                 if (!$result) {
                     $request = 'INSERT INTO hashtags SET name = ?';
-                    $res = form_sql_request($dbConnection, $request, [$tag], false);
+                    $res = formSqlRequest($dbConnection, $request, [$tag], false);
                     $new_tag_id = mysqli_insert_id($dbConnection);
                     array_push($tags_array, $new_tag_id);
                 }
@@ -189,7 +189,7 @@
 
             foreach ($tags_array as $tag) {
                 $request = 'INSERT INTO post_tags SET post_id = ?, hashtag_id = ?';
-                $res = form_sql_request($dbConnection, $request, [$newPostId, $tag], false);
+                $res = formSqlRequest($dbConnection, $request, [$newPostId, $tag], false);
             }
         }
 
@@ -250,7 +250,7 @@
         }
 
         $request = 'SELECT ' . $dbfield . ' FROM ' . $dbtable . ' WHERE ' . $dbfield . ' = ?';
-        $result = form_sql_request($dbConnection, $request, [$inputArray[$field]]);
+        $result = formSqlRequest($dbConnection, $request, [$inputArray[$field]]);
 
         return mysqli_num_rows($result) > 0 ? null : 'Выбранного значения нет в базе';
     }
@@ -261,7 +261,7 @@
         }
 
         $request = 'SELECT ' . $dbfield . ' FROM ' . $dbtable . ' WHERE ' . $dbfield . ' = ?';
-        $result = form_sql_request($dbConnection, $request, [$inputArray[$field]]);
+        $result = formSqlRequest($dbConnection, $request, [$inputArray[$field]]);
 
         return mysqli_num_rows($result) > 0 ? 'Выбранное значение уже существует в базе' : null;
      }
@@ -462,7 +462,7 @@
         if (isset($inputArray[$field])) {
             if(!empty($inputArray[$login])) {
                 $request = 'SELECT ' . $dbfieldPassword . ' FROM ' . $dbtable . ' WHERE ' . $dbfieldLogin . ' = ?';
-                $result = form_sql_request($dbConnection, $request, [$inputArray[$login]]);
+                $result = formSqlRequest($dbConnection, $request, [$inputArray[$login]]);
 
                 $password = mysqli_fetch_array($result, MYSQLI_ASSOC)['password'];
                 if (password_verify($inputArray[$field], $password)) {

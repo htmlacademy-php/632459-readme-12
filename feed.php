@@ -25,7 +25,7 @@
     $unread = getUnreadMessages($con);
 
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
-    $result = form_sql_request($con, $sql_types, []);
+    $result = formSqlRequest($con, $sql_types, []);
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $tab = filter_input(INPUT_GET, 'tab');
@@ -61,7 +61,7 @@
         $params = [$user_id, $tab];
     }
 
-    $result = form_sql_request($con, $sql_feed, $params);
+    $result = formSqlRequest($con, $sql_feed, $params);
 
     $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -79,7 +79,7 @@
             JOIN hashtags h ON h.id = post_tags.hashtag_id
             WHERE post_id IN (' . $post_ids_res . ') GROUP BY post_id, h.name';
 
-        $result = form_sql_request($con, $sql_hashtags, []);
+        $result = formSqlRequest($con, $sql_hashtags, []);
         $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         foreach ($hashtags as $hashtag) {
@@ -93,7 +93,7 @@
     }
 
     $sql_reposts = 'SELECT id, (SELECT COUNT(*) FROM posts p WHERE p.parent_id = posts.id GROUP BY p.parent_id) AS repost_count FROM posts';
-    $result = form_sql_request($con, $sql_reposts, []);
+    $result = formSqlRequest($con, $sql_reposts, []);
     $reposts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $page_content = include_template('feed.php', [

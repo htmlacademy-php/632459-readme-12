@@ -81,7 +81,7 @@
                         <?php break ?>
 
                         <?php case 'post-text': ?>
-                            <p><?= clip_post_text(htmlspecialchars($post['text'] ?? ''), $post['id']) ?></p>
+                            <p><?= clipPostText(htmlspecialchars($post['text'] ?? ''), $post['id']) ?></p>
                         <?php break ?>
 
                         <?php case 'post-video': ?>
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="post__info">
                                     <b class="post__author-name"><?= htmlspecialchars($post['login'] ?? '') ?></b>
-                                    <time class="post__time" title="<?= set_date($post['date_add'])['time_title'] ?? '' ?>" datetime="<?= $post['date_add'] ?>"><?= set_date($post['date_add'])['date_ago'] ?? '' ?>назад</time>
+                                    <time class="post__time" title="<?= setDate($post['date_add'])['time_title'] ?? '' ?>" datetime="<?= $post['date_add'] ?>"><?= setDate($post['date_add'])['date_ago'] ?? '' ?>назад</time>
                                 </div>
                             </a>
                         </div>

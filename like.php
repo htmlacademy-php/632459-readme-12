@@ -13,11 +13,11 @@
     $post_id = filter_input(INPUT_GET, 'post');
 
     $sql_post_id = 'SELECT id FROM posts WHERE id = ?';
-    $result = form_sql_request($con, $sql_post_id, [$post_id]);
+    $result = formSqlRequest($con, $sql_post_id, [$post_id]);
 
     if (mysqli_num_rows($result) > 0) {
         $sql_like = 'INSERT INTO likes (user_id, post_id, date) VALUES (?, ?, NOW())';
-        form_sql_request($con, $sql_like, [$_SESSION['user']['id'], $post_id], false);
+        formSqlRequest($con, $sql_like, [$_SESSION['user']['id'], $post_id], false);
     }
 
     header("Location: " . $_SERVER['HTTP_REFERER']);

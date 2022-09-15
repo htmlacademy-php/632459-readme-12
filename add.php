@@ -37,7 +37,7 @@
     $unread = getUnreadMessages($con);
 
     $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
-    $result = form_sql_request($con, $sql_types, []);
+    $result = formSqlRequest($con, $sql_types, []);
     $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     $type = filter_input(INPUT_GET, 'type');
@@ -56,7 +56,7 @@
                 case TYPE_QUOTE:
                     $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text, cite_author) VALUES (NOW(), ?, 0, ?, ?, ?, ?)';
                     $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $inputArray['cite-text'], $inputArray['quote-author']];
-                    $result = form_sql_request($con, $sql_post, $params, false);
+                    $result = formSqlRequest($con, $sql_post, $params, false);
 
                     if ($result) {
                         $new_post_id = mysqli_insert_id($con);
@@ -70,7 +70,7 @@
                     $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, text) VALUES (NOW(), ?, 0, ?, ?, ?)';
                     $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $inputArray['text']];
 
-                    $result = form_sql_request($con, $sql_post, $params, false);
+                    $result = formSqlRequest($con, $sql_post, $params, false);
 
                     if ($result) {
                         $new_post_id = mysqli_insert_id($con);
@@ -92,7 +92,7 @@
                     $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, img) VALUES (NOW(), ?, 0, ?, ?, ?)';
                     $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $img_path];
 
-                    $result = form_sql_request($con, $sql_post, $params, false);
+                    $result = formSqlRequest($con, $sql_post, $params, false);
 
                     if ($result) {
                         $new_post_id = mysqli_insert_id($con);
@@ -106,7 +106,7 @@
                     $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, video) VALUES (NOW(), ?, 0, ?, ?, ?)';
                     $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $inputArray['video']];
 
-                    $result = form_sql_request($con, $sql_post, $params, false);
+                    $result = formSqlRequest($con, $sql_post, $params, false);
 
                     if ($result) {
                         $new_post_id = mysqli_insert_id($con);
@@ -120,7 +120,7 @@
                     $sql_post = 'INSERT INTO posts (date_add, user_id, show_count, content_type, title, link) VALUES (NOW(), ?, 0, ?, ?, ?)';
                     $params =  [$_SESSION['user']['id'], $type_id, $inputArray['title'], $inputArray['link']];
 
-                    $result = form_sql_request($con, $sql_post, $params, false);
+                    $result = formSqlRequest($con, $sql_post, $params, false);
 
                     if ($result) {
                         $new_post_id = mysqli_insert_id($con);
@@ -130,7 +130,7 @@
                             . 'JOIN users u ON u.id = subscribe_id '
                             . 'WHERE u.id = ?';
 
-                        $result = form_sql_request($con, $sql_subscribers, [$_SESSION['user']['id']]);
+                        $result = formSqlRequest($con, $sql_subscribers, [$_SESSION['user']['id']]);
                         $subscribers = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
                         foreach ($subscribers as $sub) {

@@ -36,12 +36,12 @@
     . 'JOIN users u ON user_id = u.id '
     . 'WHERE posts.id = ?';
 
-    $result = form_sql_request($con, $sql_posts, [$post_id]);
+    $result = formSqlRequest($con, $sql_posts, [$post_id]);
 
     $post = mysqli_fetch_array($result);
 
     $sql_reposts = 'SELECT COUNT(*) as COUNT FROM posts WHERE parent_id = ?';
-    $result = form_sql_request($con, $sql_reposts, [$post_id]);
+    $result = formSqlRequest($con, $sql_reposts, [$post_id]);
     $reposts = mysqli_fetch_array($result);
 
     /* Подсчет подписчиков пользователя */
@@ -49,7 +49,7 @@
     . 'JOIN posts p ON p.user_id = subscribe_id '
     . 'WHERE p.id = ?';
 
-    $result = form_sql_request($con, $sql_subscribers, [$post_id]);
+    $result = formSqlRequest($con, $sql_subscribers, [$post_id]);
 
     $subscribers = mysqli_fetch_array($result);
 
@@ -59,7 +59,7 @@
     . 'WHERE user_id = (SELECT user_id FROM posts '
     . 'WHERE id = ?)';
 
-    $result = form_sql_request($con, $sql_publications, [$post_id]);
+    $result = formSqlRequest($con, $sql_publications, [$post_id]);
 
     $publications = mysqli_fetch_array($result);
 
@@ -68,7 +68,7 @@
     $sql_likes = 'SELECT COUNT(id) AS total FROM likes '
     . 'WHERE post_id = ?';
 
-    $result = form_sql_request($con, $sql_likes, [$post_id]);
+    $result = formSqlRequest($con, $sql_likes, [$post_id]);
 
     $likes = mysqli_fetch_array($result);
 
@@ -79,7 +79,7 @@
     . 'JOIN hashtags h ON pt.hashtag_id=h.id '
     . 'WHERE p.id = ?';
 
-    $result = form_sql_request($con, $sql_hashtags, [$post_id]);
+    $result = formSqlRequest($con, $sql_hashtags, [$post_id]);
 
     $hashtags = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -89,7 +89,7 @@
     . 'JOIN users u ON u.id=c.user_id '
     . 'WHERE c.post_id = ?';
 
-    $result = form_sql_request($con, $sql_comments, [$post_id]);
+    $result = formSqlRequest($con, $sql_comments, [$post_id]);
 
     $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -98,14 +98,14 @@
     $sql_comments_amount = 'SELECT COUNT(id) AS total FROM comments '
     . 'WHERE post_id = ?';
 
-    $result = form_sql_request($con, $sql_comments_amount, [$post_id]);
+    $result = formSqlRequest($con, $sql_comments_amount, [$post_id]);
 
     $comments_amount = mysqli_fetch_array($result);
 
     /* Увеличение количества просмотров */
 
     $sql_show_count = 'UPDATE posts SET show_count = show_count + 1 WHERE id = ?';
-    form_sql_request($con, $sql_show_count, [$post_id], false);
+    formSqlRequest($con, $sql_show_count, [$post_id], false);
 
     /* Добавление комментария */
 
@@ -117,12 +117,12 @@
 
         if(empty($errors)) {
             $sql_post_exists = 'SELECT id FROM posts WHERE id = ?';
-            $result = form_sql_request($con, $sql_post_exists, [$inputArray['post']]);
+            $result = formSqlRequest($con, $sql_post_exists, [$inputArray['post']]);
         }
 
         if (mysqli_num_rows($result) > 0) {
             $sql_add_comment = 'INSERT INTO comments (date_add, text, user_id, post_id) VALUES (NOW(), ?, ?, ?)';
-            form_sql_request($con, $sql_add_comment, [$inputArray['comment'], $_SESSION['user']['id'], $post_id], false);
+            formSqlRequest($con, $sql_add_comment, [$inputArray['comment'], $_SESSION['user']['id'], $post_id], false);
             header("Location: profile.php?user=" . $post['user_id'] . "&tab=posts");
         }
 

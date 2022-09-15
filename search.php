@@ -39,7 +39,7 @@
         . 'LEFT JOIN comments com ON com.post_id = posts.id '
         . 'WHERE MATCH(posts.title,posts.text) AGAINST(?) AND posts.repost IS NULL GROUP BY posts.id ORDER BY date_add DESC';
 
-        $result = form_sql_request($con, $sql_posts, [$search_text]);
+        $result = formSqlRequest($con, $sql_posts, [$search_text]);
 
     if (substr($search_text, 0, 1) === "#") {
         $hashtag = substr($search_text, 1, strlen($search_text) - 1);
@@ -54,7 +54,7 @@
             . 'JOIN hashtags h ON pt.hashtag_id=h.id '
             . 'WHERE h.name = ? AND posts.repost IS NULL GROUP BY posts.id ORDER BY date_add DESC';
 
-        $result = form_sql_request($con, $sql_posts, [$hashtag]);
+        $result = formSqlRequest($con, $sql_posts, [$hashtag]);
     }
 
     $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
