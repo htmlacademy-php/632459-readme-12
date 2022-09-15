@@ -1,32 +1,62 @@
 <?php
-    require_once 'init.php';
-    require_once 'helpers.php';
-    require_once 'functions.php';
 
-    if (!$_SESSION['user']) {
-        header("Location: /");
-        exit();
-    }
+require_once 'init.php';
+require_once 'helpers.php';
+require_once 'functions.php';
 
-    [$is_auth, $user_name, $page_titles] = require('data.php');
+if (!$_SESSION['user']) {
+    header("Location: /");
+    exit();
+}
 
-    if (!$con) {
-        $error = mysqli_connect_error();
-        print("Ошибка подключения: " . $error);
-        die();
-    }
+[$is_auth, $user_name, $page_titles] = require('data.php');
 
-    $search_query = filter_input(INPUT_GET, 'search');
-    if (!empty($search_query)) {
-        header("Location: /search.php?search=$search_query");
-    }
+if (!$con) {
+    $error = mysqli_connect_error();
+    print("Ошибка подключения: ".$error);
+    die();
+}
 
-    $unread = getUnreadMessages($con);
+$search_query = filter_input(INPUT_GET, 'search');
+if (!empty($search_query)) {
+    header("Location: /search.php?search=$search_query");
+}
 
-    $cur_page = filter_input(INPUT_GET, 'page');
-    $page_items = 6;
-    $sql_all_posts = 'SELECT COUNT(*) as count FROM posts WHERE repost IS NULL';
-    $result = formSqlRequest($con, $sql_all_posts, []);
+$unread = getUnreadMessages($con);
+
+$cur_page = filter_input(INPUT_GET, 'page');
+$page_items = 6;
+$sql_all_posts = 'SELECT COUNT(*) as count FROM posts WHERE repost IS NULL';
+$result = formSqlRequest($con, $sql_all_posts, []);
+$items_count = mysqli_fetch_assoc($result)['count'];
+
+$pagination_info = getPaginationPages($items_count, $page_items, $cur_page);
+
+$pages = $pagination_info['pages'];
+$pages_count = $pagination_info['pages_count'];
+$offset = $pagination_info['offset'];
+
+$sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
+$result = formSqlRequest($con, $sql_types, []);
+$types = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$tab = filter_input(INPUT_GET, 'tab');
+
+$sql_filter = 'SELECT posts.*, login, avatar_path, class, type, '
+    .'(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
+    .'(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = posts.id) AS likes_count FROM posts '
+    .'JOIN users u ON user_id = u.id '
+    .'LEFT JOIN comments com ON com.post_id = posts.id '
+    .'JOIN content_types c ON content_type = c.id '
+    .'WHERE repost IS NULL GROUP BY posts.id '
+    .'ORDER BY show_count DESC LIMIT '.$page_items.' OFFSET '.$offset;
+
+$params = [];
+
+if ($tab) {
+    $sql_all_posts
+        = 'SELECT COUNT(*) as count FROM posts JOIN content_types c ON content_type = c.id WHERE repost IS NULL AND c.id = ?';
+    $result = formSqlRequest($con, $sql_all_posts, [$tab]);
     $items_count = mysqli_fetch_assoc($result)['count'];
 
     $pagination_info = getPaginationPages($items_count, $page_items, $cur_page);
@@ -35,63 +65,35 @@
     $pages_count = $pagination_info['pages_count'];
     $offset = $pagination_info['offset'];
 
-    $sql_types = 'SELECT id, type, name FROM content_types ORDER BY priority';
-    $result = formSqlRequest($con, $sql_types, []);
-    $types = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    $tab = filter_input(INPUT_GET, 'tab');
-
     $sql_filter = 'SELECT posts.*, login, avatar_path, class, type, '
-    . '(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
-    . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = posts.id) AS likes_count FROM posts '
-        . 'JOIN users u ON user_id = u.id '
-        . 'LEFT JOIN comments com ON com.post_id = posts.id '
-        . 'JOIN content_types c ON content_type = c.id '
-        . 'WHERE repost IS NULL GROUP BY posts.id '
-        . 'ORDER BY show_count DESC LIMIT ' . $page_items . ' OFFSET ' . $offset;
+        .'(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
+        .'(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = posts.id) AS likes_count FROM posts '
+        .'JOIN users u ON user_id = u.id '
+        .'JOIN content_types c ON content_type = c.id '
+        .'LEFT JOIN comments com ON com.post_id = posts.id '
+        .'WHERE c.id = ? AND repost IS NULL GROUP BY posts.id '
+        .'ORDER BY show_count DESC LIMIT '.$page_items.' OFFSET '.$offset;
 
-    $params = [];
+    $params = [$tab];
+}
 
-    if ($tab) {
-        $sql_all_posts = 'SELECT COUNT(*) as count FROM posts JOIN content_types c ON content_type = c.id WHERE repost IS NULL AND c.id = ?';
-        $result = formSqlRequest($con, $sql_all_posts, [$tab]);
-        $items_count = mysqli_fetch_assoc($result)['count'];
+$result = formSqlRequest($con, $sql_filter, $params);
 
-        $pagination_info = getPaginationPages($items_count, $page_items, $cur_page);
+$popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-        $pages = $pagination_info['pages'];
-        $pages_count = $pagination_info['pages_count'];
-        $offset = $pagination_info['offset'];
+$page_content = include_template('popular.php', [
+    'popular_posts' => $popular_posts,
+    'types'         => $types,
+    'tab'           => $tab,
+    'pages_count'   => $pages_count,
+    'cur_page'      => $cur_page,
+    'pages'         => $pages,
+]);
 
-        $sql_filter = 'SELECT posts.*, login, avatar_path, class, type, '
-        . '(SELECT COUNT(comment.id) FROM comments AS comment WHERE comment.post_id = posts.id) AS comments_count, '
-        . '(SELECT COUNT(liked.id) FROM likes AS liked WHERE liked.post_id = posts.id) AS likes_count FROM posts '
-            . 'JOIN users u ON user_id = u.id '
-            . 'JOIN content_types c ON content_type = c.id '
-            . 'LEFT JOIN comments com ON com.post_id = posts.id '
-            . 'WHERE c.id = ? AND repost IS NULL GROUP BY posts.id '
-            . 'ORDER BY show_count DESC LIMIT ' . $page_items . ' OFFSET ' . $offset;
+$layout_content = include_template('layout.php', [
+    'content' => $page_content,
+    'title'   => $page_titles['index'],
+    'unread'  => $unread,
+]);
 
-        $params = [$tab];
-    }
-
-    $result = formSqlRequest($con, $sql_filter, $params);
-
-    $popular_posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    $page_content = include_template('popular.php', [
-        'popular_posts' => $popular_posts,
-        'types'         => $types,
-        'tab'           => $tab,
-        'pages_count' => $pages_count,
-        'cur_page' => $cur_page,
-        'pages' => $pages
-    ]);
-
-    $layout_content = include_template('layout.php', [
-        'content'   => $page_content,
-        'title'     => $page_titles['index'],
-        'unread' => $unread
-    ]);
-
-    print($layout_content);
+print($layout_content);

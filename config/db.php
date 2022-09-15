@@ -1,8 +1,8 @@
 <?php
 
 $db = [
-    'host' => 'localhost',
-    'user' => 'alina',
+    'host'     => 'localhost',
+    'user'     => 'alina',
     'password' => '',
-    'database' => 'readme'
+    'database' => 'readme',
 ];
