@@ -22,6 +22,13 @@
         die();
     }
 
+    use Symfony\Component\Mailer\Transport;
+    use Symfony\Component\Mailer\Mailer;
+    use Symfony\Component\Mime\Email;
+    require 'vendor/autoload.php';
+    $dsn = 'smtp://c60eabd512126a:f48119633abff7@smtp.mailtrap.io:2525?encryption=tls&auth_mode=login';
+    $transport = Transport::fromDsn($dsn);
+
     $search_query = filter_input(INPUT_GET, 'search');
     if (!empty($search_query)) {
         header("Location: /search.php?search=$search_query");
@@ -116,6 +123,29 @@
                     if ($result) {
                         $new_post_id = mysqli_insert_id($con);
                         getHashtags($inputArray, $con, $new_post_id);
+
+                        $sql_subscribers = 'SELECT u.login, u.email FROM subscriptions '
+                            . 'JOIN users u ON u.id = subscribe_id '
+                            . 'WHERE u.id = ?';
+
+                        $result = form_sql_request($con, $sql_subscribers, [$_SESSION['user']['id']]);
+                        $subscribers = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+                        foreach ($subscribers as $sub) {
+                            $message = new Email();
+                            $message->to($sub['email']);
+                            $message->from("mail@readme.com");
+                            $message->subject("Новая публикация от пользователя %логин автора поста%");
+                            $message->text("ЗЗдравствуйте, ${sub['login']}.
+                            Пользователь ${$_SESSION['user'['login']]} только что опубликовал новую запись ${$inputArray['title']}.
+                            Посмотрите её на странице пользователя: http://readme/profile.php?user=${$_SESSION['user']['id']}&tab=posts");
+                            $mailer = new Mailer($transport);
+                            try {
+                                $mailer->send($message);
+                            } catch (\Symfony\Component\Mailer\Exception\TransportExceptionInterface $e) {
+                            }
+                        }
+
                         header("Location: post.php?post=" . $new_post_id);
                     }
 
