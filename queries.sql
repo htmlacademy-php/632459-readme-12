@@ -6,8 +6,8 @@ INSERT INTO content_types(type, class) VALUES
   ("link", "post-link");
 
 INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
-  ("2021-03-01 13:10:10", "dmitriy1983@mail.ru", "Dima", "qwerty", "userpic.jpg"),
-  ("2020-11-23 23:50:00", "ivan_smirnov@gmail.com", "Werwolf", "123456", "userpic.jpg");
+  ("2021-03-01 13:10:10", "dmitriy1983@mail.ru", "Dima", "qwerty", "img/userpic.jpg"),
+  ("2020-11-23 23:50:00", "ivan_smirnov@gmail.com", "Werwolf", "123456", "img/userpic.jpg");
 
 INSERT INTO posts
   SET date_add = "2020-05-12 12:00:05", title = "Цитата", text = "Мы в жизни любим только раз, а после ищем лишь похожих", cite_author = "Неизвестный Автор", show_count = 111, user_id = "1", content_type = "1";
@@ -16,10 +16,10 @@ INSERT INTO posts
   SET date_add = "2019-12-12 10:05:16", title = "Игра Престолов", text = "Не могу дождаться начала финального сезона своего любимого сериала!", show_count = 1756, user_id = "2", content_type = "2";
 
 INSERT INTO posts
-  SET date_add = "2021-11-10 23:45:00", title = "Наконец, обработал фотки!", img = "rock-medium.jpg", show_count = 98, user_id = "1", content_type = "3";
+  SET date_add = "2021-11-10 23:45:00", title = "Наконец, обработал фотки!", img = "img/rock-medium.jpg", show_count = 98, user_id = "1", content_type = "3";
 
 INSERT INTO posts
-  SET date_add = "2020-03-08 11:11:00", title = "Моя мечта", img = "coast-medium.jpg", show_count = 229, user_id = "2", content_type = "3";
+  SET date_add = "2020-03-08 11:11:00", title = "Моя мечта", img = "img/coast-medium.jpg", show_count = 229, user_id = "2", content_type = "3";
 
 INSERT INTO posts
   SET date_add = "2021-05-17 17:20:20", title = "Лучшие курсы", text = "Лучшие курсы", link = "https://www.htmlacademy.ru", show_count = 500, user_id = "1", content_type = "5";
@@ -51,15 +51,15 @@ WHERE post_id = 2;
 -- Добавление пользователей
 
 INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
-  ("2021-03-11 16:10:00", "lara@mail.ru", "Лариса", "123", "userpic-larisa.jpg"),
-  ("2020-11-01 13:15:10", "vlad777@mail.ru", "Владик", "456", "userpic.jpg"),
-  ("2021-11-24 23:55:00", "v_ivanov@gmail.com", "Виктор", "11111", "userpic-mark.jpg");
+  ("2021-03-11 16:10:00", "lara@mail.ru", "Лариса", "123", "img/userpic-larisa-small.jpg"),
+  ("2020-11-01 13:15:10", "vlad777@mail.ru", "Владик", "456", "img/userpic.jpg"),
+  ("2021-11-24 23:55:00", "v_ivanov@gmail.com", "Виктор", "11111", "img/userpic-mark.jpg");
 
 INSERT INTO users(dt_reg, email, login, password, avatar_path) VALUES
-  ("2018-09-09 15:00:01", "markopolo@mail.ru", "Марк Смолов", "f00fcf", "userpic-mark.jpg"),
-  ("2017-03-09 13:07:07", "elvira1987@mail.ru", "Эльвира Хайпулинова", "135el", "userpic-elvira.jpg"),
-  ("2022-01-14 22:15:00", "firsovatanyua@gmail.com", "Таня Фирсова", "awesome", "userpic-tanya.jpg"),
-  ("2021-01-29 23:23:20", "petr-demin@mail.ru", "Петр Демин", "wasd!;", "userpic-petro.jpg");
+  ("2018-09-09 15:00:01", "markopolo@mail.ru", "Марк Смолов", "f00fcf", "img/userpic-mark.jpg"),
+  ("2017-03-09 13:07:07", "elvira1987@mail.ru", "Эльвира Хайпулинова", "135el", "img/userpic-elvira.jpg"),
+  ("2022-01-14 22:15:00", "firsovatanyua@gmail.com", "Таня Фирсова", "awesome", "img/userpic-tanya.jpg"),
+  ("2021-01-29 23:23:20", "petr-demin@mail.ru", "Петр Демин", "wasd!;", "img/userpic-petro.jpg");
 
 -- Добавление лайка к посту
 
@@ -190,33 +190,6 @@ INSERT INTO comments(date_add, text, user_id, post_id) VALUES
   ("2022-03-09 16:33:00", "Учусь в Академии с 2018 года", 6, 5),
   ("2022-03-09 15:12:08", "Интересно, кто автор", 7, 1),
   ("2022-01-15 16:12:00", "Купила себе всю серию книг «Песнь льда и пламени»", 7, 2);
-
-
--- Обновление информации о фото
-
-UPDATE posts
-SET img = "img/rock-medium.jpg" WHERE id = 3;
-
-UPDATE posts
-SET img = "img/coast-medium.jpg" WHERE id = 4;
-
-UPDATE users
-SET avatar_path = "img/userpic.jpg" WHERE id = 1 OR id = 2 OR id = 4;
-
-UPDATE users
-SET avatar_path = "img/userpic-larisa-small.jpg" WHERE id = 3;
-
-UPDATE users
-SET avatar_path = "img/userpic-mark.jpg" WHERE id = 5 OR id = 6;
-
-UPDATE users
-SET avatar_path = "img/userpic-elvira.jpg" WHERE id = 7;
-
-UPDATE users
-SET avatar_path = "img/userpic-tanya.jpg" WHERE id = 8;
-
-UPDATE users
-SET avatar_path = "img/userpic-petro.jpg" WHERE id = 9;
 
 
 

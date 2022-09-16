@@ -149,7 +149,8 @@
                         </a>
                     </li>
                     <li class="header__my-page header__my-page--messages">
-                        <a class="header__page-link" href="/messages.php"
+                        <a class="header__page-link"
+                           href="/messages.php?user=<?= $user_id ?? '' ?>"
                            title="Личные сообщения">
                             <span
                                 class="visually-hidden">Личные сообщения</span>
