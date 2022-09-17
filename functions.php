@@ -24,7 +24,7 @@ function clipPostText(string $string, int $post_id, int $limit = 300): string
 function clipMessageText(string $string, int $limit = 10): string
 {
     if (mb_strlen($string) > $limit) {
-        $cutted_array = explode("#!#!", utf8_wordwrap($string, $limit, "#!#!"));
+        $cutted_array = explode("#!#!", utf8Wordwrap($string, $limit, "#!#!"));
 
         return $cutted_array[0]."...";
     }
@@ -74,18 +74,18 @@ function setMessageDate(string $date, array $month_list)
         || $delta_value === 'seconds'
     ) {
         return date_format(date_create($date), 'H:i');
-    } else {
-        if ($delta_value === 'years') {
-            return date_format(date_create($date), 'Y').' г';
-        } else {
-            if ($delta_value === 'months') {
-                $date_with_month = date_format(date_create($date), 'd%m');
-                $month = explode('%', $date_with_month);
+    }
 
-                return date_format(date_create($date), 'd ')
-                    .$month_list[$month[1]];
-            }
-        }
+    if ($delta_value === 'years') {
+        return date_format(date_create($date), 'Y').' г';
+    }
+
+    if ($delta_value === 'months') {
+        $date_with_month = date_format(date_create($date), 'd%m');
+        $month = explode('%', $date_with_month);
+
+        return date_format(date_create($date), 'd ')
+            .$month_list[$month[1]];
     }
 }
 
@@ -105,61 +105,51 @@ function setDate(string $date, bool $short = false): array
                 ' секунды ',
                 ' секунд '
             )) : $delta_key.' с ';
+    } elseif ($delta_value === 'minutes') {
+        $date_ago = !$short ? ($delta_key.get_noun_plural_form(
+                $delta_key,
+                ' минута ',
+                ' минуты ',
+                ' минут '
+            )) : $delta_key.' мин ';
+    } elseif ($delta_value === 'hours') {
+        $date_ago = !$short ? ($delta_key.get_noun_plural_form(
+                $delta_key,
+                ' час ',
+                ' часа ',
+                ' часов '
+            )) : $delta_key.' ч ';
+    } elseif ($delta_value === 'days' && $delta_key < 7) {
+        $date_ago = !$short ? ($delta_key.get_noun_plural_form(
+                $delta_key,
+                ' день ',
+                ' дня ',
+                ' дней '
+            )) : $delta_key.' д ';
+    } elseif ($delta_value === 'days' && $delta_key >= 7) {
+        $date_ago = !$short ? (round(($delta_key / 7))
+            .get_noun_plural_form(
+                round($delta_key / 7),
+                ' неделя ',
+                ' недели ',
+                ' недель '
+            )) : round(($delta_key / 7)).' нед ';
+    } elseif ($delta_value === 'months') {
+        $date_ago = !$short ? ($delta_key
+            .get_noun_plural_form(
+                $delta_key,
+                ' месяц ',
+                ' месяца ',
+                ' месяцев '
+            )) : $delta_key.' мес ';
     } else {
-        if ($delta_value === 'minutes') {
-            $date_ago = !$short ? ($delta_key.get_noun_plural_form(
-                    $delta_key,
-                    ' минута ',
-                    ' минуты ',
-                    ' минут '
-                )) : $delta_key.' мин ';
-        } else {
-            if ($delta_value === 'hours') {
-                $date_ago = !$short ? ($delta_key.get_noun_plural_form(
-                        $delta_key,
-                        ' час ',
-                        ' часа ',
-                        ' часов '
-                    )) : $delta_key.' ч ';
-            } else {
-                if ($delta_value === 'days' && $delta_key < 7) {
-                    $date_ago = !$short ? ($delta_key.get_noun_plural_form(
-                            $delta_key,
-                            ' день ',
-                            ' дня ',
-                            ' дней '
-                        )) : $delta_key.' д ';
-                } else {
-                    if ($delta_value === 'days' && $delta_key >= 7) {
-                        $date_ago = !$short ? (round(($delta_key / 7))
-                            .get_noun_plural_form(
-                                round($delta_key / 7),
-                                ' неделя ',
-                                ' недели ',
-                                ' недель '
-                            )) : round(($delta_key / 7)).' нед ';
-                    } else {
-                        if ($delta_value === 'months') {
-                            $date_ago = !$short ? ($delta_key
-                                .get_noun_plural_form(
-                                    $delta_key,
-                                    ' месяц ',
-                                    ' месяца ',
-                                    ' месяцев '
-                                )) : $delta_key.' мес ';
-                        } else {
-                            $date_ago = !$short ? ($delta_key
-                                .get_noun_plural_form(
-                                    $delta_key,
-                                    ' год ',
-                                    ' года ',
-                                    ' лет '
-                                )) : $delta_key.' г ';
-                        }
-                    }
-                }
-            }
-        }
+        $date_ago = !$short ? ($delta_key
+            .get_noun_plural_form(
+                $delta_key,
+                ' год ',
+                ' года ',
+                ' лет '
+            )) : $delta_key.' г ';
     }
 
     return [
@@ -616,15 +606,16 @@ function validateRequiredUnless(
     $firstFieldName,
     $secondFieldName
 ): ?string {
-    if (isset($inputArray[$secondFieldName]['tmp_name'])) {
-        if (!file_exists($inputArray[$secondFieldName]['tmp_name'])
-            && empty($inputArray[$firstFieldName])
-        ) {
-            $secondFieldName = "«Файл»";
-            $firstFieldName = "«Ссылка из интернета»";
+    if (isset($inputArray[$secondFieldName]['tmp_name'])
+        && !file_exists(
+            $inputArray[$secondFieldName]['tmp_name']
+        )
+        && empty($inputArray[$firstFieldName])
+    ) {
+        $secondFieldName = "«Файл»";
+        $firstFieldName = "«Ссылка из интернета»";
 
-            return "Это поле должно быть заполнено, если не заполнено поле $firstFieldName";
-        }
+        return "Это поле должно быть заполнено, если не заполнено поле $firstFieldName";
     }
 
     return null;

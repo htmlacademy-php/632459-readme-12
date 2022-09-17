@@ -69,7 +69,7 @@ $posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 $tags_to_posts = [];
 
 if (!empty($posts)) {
-    $post_ids = array_reduce($posts, function ($carry, $post) {
+    $post_ids = array_reduce($posts, static function ($carry, $post) {
         $carry[] = $post['id'];
 
         return $carry;
