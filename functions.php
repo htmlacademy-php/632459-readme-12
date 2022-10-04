@@ -70,12 +70,6 @@ function setMessageDate(string $date, array $month_list)
     $delta_array = array_filter($date_array);
     $delta_value = array_key_first($delta_array);
 
-    if ($delta_value === 'hours' || $delta_value === 'minutes'
-        || $delta_value === 'seconds'
-    ) {
-        return date_format(date_create($date), 'H:i');
-    }
-
     if ($delta_value === 'years') {
         return date_format(date_create($date), 'Y').' г';
     }
@@ -87,6 +81,8 @@ function setMessageDate(string $date, array $month_list)
         return date_format(date_create($date), 'd ')
             .$month_list[$month[1]];
     }
+
+    return date_format(date_create($date), 'H:i');
 }
 
 function setDate(string $date, bool $short = false): array
@@ -165,7 +161,7 @@ function formSqlRequest(
     bool $get_data = true
 ) {
     if (!$params) {
-        return $result = mysqli_query($link, $request);
+        return mysqli_query($link, $request);
     }
 
     $stmt = db_get_prepare_stmt($link, $request, $params);
@@ -269,7 +265,7 @@ function getHashtags($inputArray, $dbConnection, $newPostId)
             $result = mysqli_fetch_array($res)['id'];
             if (!$result) {
                 $request = 'INSERT INTO hashtags SET name = ?';
-                $res = formSqlRequest($dbConnection, $request, [$tag], false);
+                formSqlRequest($dbConnection, $request, [$tag], false);
                 $new_tag_id = mysqli_insert_id($dbConnection);
                 array_push($tags_array, $new_tag_id);
             }
@@ -278,7 +274,7 @@ function getHashtags($inputArray, $dbConnection, $newPostId)
 
         foreach ($tags_array as $tag) {
             $request = 'INSERT INTO post_tags SET post_id = ?, hashtag_id = ?';
-            $res = formSqlRequest(
+            formSqlRequest(
                 $dbConnection,
                 $request,
                 [$newPostId, $tag],
@@ -306,6 +302,8 @@ function getUploadedFile($inputArray, $field)
 
         return $file_path.$file_name;
     }
+
+    return null;
 }
 
 function getUrlContent($inputArray)
@@ -325,8 +323,10 @@ function getTypeId($types, $filter_type)
 {
     foreach ($types as $type) {
         if ($type['type'] === $filter_type) {
-            return $id = intval($type['id']);
+            return intval($type['id']);
         }
+
+        return 2;
     }
 }
 
