@@ -43,6 +43,7 @@
                                         <?php
                                         if ($user['sender']
                                             === $_SESSION['user']['id']
+                                            && $user['last_text']
                                         ): ?>
                                             <?= 'Вы: '.htmlspecialchars(
                                                 clipMessageText(
@@ -55,6 +56,7 @@
                                         <?php
                                         if ($user['sender']
                                             !== $_SESSION['user']['id']
+                                            && $user['last_text']
                                         ): ?>
                                             <?= htmlspecialchars(
                                                 clipMessageText(
@@ -67,10 +69,12 @@
                                     <time class="messages__preview-time"
                                           datetime="<?= $user['last_date'] ??
                                           '' ?>">
+                                          <?php if($user['last_date']): ?>
                                         <?= setMessageDate(
                                             $user['last_date'],
                                             $month_list
                                         ) ?? '' ?>
+                                        <?php endif; ?>
                                     </time>
                                 </div>
                             </div>

@@ -57,7 +57,7 @@
                         <input class="visually-hidden" type="text" name="user"
                                value="<?= $user['id'] ?? '' ?>">
                         <a class="profile__user-button user__button user__button--writing button button--green"
-                           href="#">Сообщение</a>
+                           href="/messages.php?user=<?= $user['id'] ?? '' ?>">Сообщение</a>
                     </div>
                 </form>
             </div>
