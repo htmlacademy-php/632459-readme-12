@@ -1,6 +1,15 @@
 <?php
 
-function utf8Wordwrap($string, $width, $break = "#!#!")
+/**
+* Переносит строку по заданному кол-ву символов
+* с учётом кодировки
+* @param string $string Строка для переноса
+* @param int $width Количество символов
+* @param string $break Символы переноса строки
+*
+* @return string Строка
+*/
+function utf8Wordwrap(string $string, int $width, string $break = "#!#!"): string
 {
     $pattern = '/(?=\s)(.{1,'.$width.'})(?:\s|$)/uS';
     $replace = '$1'.$break;
@@ -8,6 +17,15 @@ function utf8Wordwrap($string, $width, $break = "#!#!")
     return preg_replace($pattern, $replace, $string);
 }
 
+/**
+ * Обрезает строку в параграфе, если его длина больше лимита,
+ * добавляет ссылку на пост
+ * @param string $string Строка
+ * @param int $post_id Пост
+ * @param int $limit Максимальная длина строки
+ *
+ * @return string Параграф или параграф со ссылкой на пост «Читать далее»
+ */
 function clipPostText(string $string, int $post_id, int $limit = 300): string
 {
     if (mb_strlen($string) > $limit) {
@@ -21,6 +39,14 @@ function clipPostText(string $string, int $post_id, int $limit = 300): string
     return "<p>".$string."</p>";
 }
 
+/**
+ * Обрезает сообщение в диалоге до указанного лимита
+ * @param string $string Сообщение
+ * @param int $limit Максимальная длина сообщения
+ *
+ * @return string Сообщение
+ */
+
 function clipMessageText(string $string, int $limit = 10): string
 {
     if (mb_strlen($string) > $limit) {
@@ -32,6 +58,12 @@ function clipMessageText(string $string, int $limit = 10): string
     return $string;
 }
 
+/**
+ * Возвращает кол-во непрочитанных сообщений от пользователя
+ * @param $con Соединение с БД
+ *
+ * @return int Количество сообщений
+ */
 function getUnreadMessages($con)
 {
     $sql_unread
@@ -42,6 +74,14 @@ function getUnreadMessages($con)
     return $unread[0]['unread'];
 }
 
+/**
+ * Возвращает интервал между двумя датами в формате «ключ-значение»
+ * @param string $date_1 Первая дата
+ * @param string $date_2 Вторая дата
+ * @param $differenceFormat Формат разницы значений
+ *
+ * @return array Массив с интервалом двух дат
+ */
 function dateDifference(
     $date_1,
     $date_2,
@@ -63,6 +103,13 @@ function dateDifference(
     return array_combine($date_intervals, $date_diff_values);
 }
 
+/**
+ * Устанавливает дату, прошедшую с момента отправки сообщения
+ * @param string $date Дата публикации
+ * @param array $month_list Список месяцев
+ *
+ * @return string Дата
+ */
 function setMessageDate(string $date, array $month_list)
 {
     $current_date = date('Y-m-d H:i:s');
@@ -85,6 +132,14 @@ function setMessageDate(string $date, array $month_list)
     return date_format(date_create($date), 'H:i');
 }
 
+
+/**
+ * Устанавливает дату момента публикации «для машин» и «для людей»
+ * @param string $date Дата публикации
+ * @param bool $short Укороченный формат даты
+ *
+ * @return array Массив с двумя датами
+ */
 function setDate(string $date, bool $short = false): array
 {
     $current_date = date('Y-m-d H:i:s');
@@ -154,6 +209,15 @@ function setDate(string $date, bool $short = false): array
     ];
 }
 
+/**
+ * Формирует и выполняет запрос к БД и возвращает результат при необходимости
+ * @param mysqli $link Параметры соединения
+ * @param string Запрос
+ * @param array $params Параметры запроса
+ * @param bool $get_data Если необходимо получить результат
+ *
+ * @return $result Результат запроса
+ */
 function formSqlRequest(
     mysqli $link,
     string $request,
@@ -180,11 +244,25 @@ function formSqlRequest(
     return $result;
 }
 
-function getPostVal($name)
+/**
+ * Возвращает имя инпута, содержащего контент поста
+ * @param string Инпут
+ *
+ * @return string Имя инпута
+ */
+function getPostVal(string $name): string
 {
     return $_POST[$name] ?? "";
 }
 
+/**
+ * Производит расчёты для пагинации
+ * @param string $items_count Общее количество постов
+ * @param int $page_items Количество постов на странице
+ * @param string $cur_page Текущая страница
+ *
+ * @return array Массив значений для пагинации
+ */
 function getPaginationPages(
     string $items_count,
     int $page_items,
@@ -200,13 +278,25 @@ function getPaginationPages(
     ];
 }
 
-function snakeToCamel($input)
+/**
+ * Переводит строку из snake_case в camelCase
+ * @param string $input Строка
+ *
+ * @return string Строка в camelCase
+ */
+function snakeToCamel(string $input)
 {
     return ucfirst(
         str_replace(' ', '', ucwords(str_replace('_', ' ', $input)))
     );
 }
 
+/**
+ * Возвращает имя функции валидации
+ * @param string Название валидации
+ *
+ * @return string Имя функции
+ */
 function getValidationFunctionName(string $name): string
 {
     $name = snakeToCamel($name);
