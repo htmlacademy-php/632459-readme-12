@@ -304,6 +304,14 @@ function getValidationFunctionName(string $name): string
     return "validate$name";
 }
 
+/**
+ * Валидирует форму и возвращает ошибки валидации
+ * @param array $inputArray Массив значений инпутов
+ * @param array Правила валидации
+ * @param $dbConnection Соединение с БД
+ *
+ * @return array Массив ошибок валидации
+ */
 function validateForm(
     array $inputArray,
     array $validationRules,
@@ -343,6 +351,12 @@ function validateForm(
     return array_filter($errors);
 }
 
+/**
+ * Получает хэштеги к посту
+ * @param $inputArray Массив значений инпутов
+ * @param $dbConnection Соединение с бд
+ * @param $newPostId Id опубликованного поста
+ */
 function getHashtags($inputArray, $dbConnection, $newPostId)
 {
     if (!empty($inputArray['tags'])) {
@@ -376,6 +390,13 @@ function getHashtags($inputArray, $dbConnection, $newPostId)
     return null;
 }
 
+/**
+ * Помещает файл в uploads и возвращает путь к нему
+ * @param $inputArray Массив значений инпутов
+ * @param $field Поле загрузки файла
+ *
+ * @return string Путь к файлу, если он успешно загружен
+ */
 function getUploadedFile($inputArray, $field)
 {
     if (file_exists($inputArray[$field]['tmp_name'])
@@ -396,7 +417,13 @@ function getUploadedFile($inputArray, $field)
     return null;
 }
 
-function getUrlContent($inputArray)
+/**
+ * Загружает файл по ссылке в uploads
+ * @param $inputArray Массив значений инпутов
+ *
+ * @return string Путь к файлу
+ */
+function getUrlContent($inputArray): string
 {
     $path = 'uploads/';
     $file = file_get_contents($inputArray['img_url']);
@@ -409,7 +436,14 @@ function getUrlContent($inputArray)
     return $path.$file_name;
 }
 
-function getTypeId($types, $filter_type)
+/**
+ * Возвращает id тип контента или значение по умолчанию
+ * @param array $types Типы контента
+ * @param string $filter_type Выбранный тип контента
+ *
+ * @return int Тип контента
+ */
+function getTypeId(array $types, string $filter_type)
 {
     foreach ($types as $type) {
         if ($type['type'] === $filter_type) {
@@ -420,6 +454,11 @@ function getTypeId($types, $filter_type)
     }
 }
 
+/**
+ * Возвращает текущий адрес без параметров адресной строки
+ *
+ * @return string Текущий url
+ */
 function getCurrentUrl()
 {
     $url = $_SERVER['REQUEST_URI'];
@@ -430,6 +469,13 @@ function getCurrentUrl()
 
 // Функции валидации
 
+/**
+ * Валидация обязательного поля
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateRequired(array $inputArray, string $field): ?string
 {
     if (isset($inputArray[$field]) && empty($inputArray[$field])) {
@@ -439,6 +485,16 @@ function validateRequired(array $inputArray, string $field): ?string
     return null;
 }
 
+/**
+ * Валидация на существование в бд
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ * @param $dbConnection Соединение с бд
+ * @param string $dbTable Название таблицы бд
+ * @param string $dbfield Поле в бд
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateExists(
     array $inputArray,
     string $field,
@@ -457,6 +513,16 @@ function validateExists(
         : 'Выбранного значения нет в базе';
 }
 
+/**
+ * Валидация на уникальность значения в бд
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ * @param $dbConnection Соединение с бд
+ * @param string $dbTable Название таблицы бд
+ * @param string $dbfield Поле в бд
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateUnique(
     array $inputArray,
     string $field,
@@ -475,6 +541,13 @@ function validateUnique(
         ? 'Выбранное значение уже существует в базе' : null;
 }
 
+/**
+ * Валидация строки
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateString(array $inputArray, string $field): ?string
 {
     if (!isset($inputArray[$field])) {
@@ -485,6 +558,13 @@ function validateString(array $inputArray, string $field): ?string
         : 'Значение должно быть строкой';
 }
 
+/**
+ * Валидация числа
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateNumber(array $inputArray, string $field): ?string
 {
     if (isset($inputArray[$field])) {
@@ -495,15 +575,13 @@ function validateNumber(array $inputArray, string $field): ?string
     return null;
 }
 
-function validateDate(array $inputArray, string $field): ?string
-{
-    if (isset($inputArray[$field])) {
-        return strtotime($field) ? null : 'Неверный формат даты';
-    }
-
-    return null;
-}
-
+/**
+ * Валидация email
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateEmail(array $inputArray, string $field): ?string
 {
     if (isset($inputArray[$field])) {
@@ -514,6 +592,13 @@ function validateEmail(array $inputArray, string $field): ?string
     return null;
 }
 
+/**
+ * Валидация ссылки
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateUrl(array $inputArray, string $field): ?string
 {
     if (!empty($inputArray[$field])) {
@@ -524,6 +609,15 @@ function validateUrl(array $inputArray, string $field): ?string
     return null;
 }
 
+/**
+ * Валидация в указанных значениях
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ * @param $dbConnection Соединение с бд
+ * @param $values Значения
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateIn(
     array $inputArray,
     string $field,
@@ -538,6 +632,13 @@ function validateIn(
         : "Значение поля $field должно быть одним из ".implode(', ', $values);
 }
 
+/**
+ * Валидация тегов
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateTags(array $inputArray, string $field): ?string
 {
     if (!empty($inputArray[$field])) {
@@ -550,6 +651,13 @@ function validateTags(array $inputArray, string $field): ?string
     return null;
 }
 
+/**
+ * Валидация ссылки на видео
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateVideoUrl(array $inputArray, string $field): ?string
 {
     if (!empty($inputArray[$field])) {
@@ -560,6 +668,13 @@ function validateVideoUrl(array $inputArray, string $field): ?string
     return null;
 }
 
+/**
+ * Валидация загруженного файла
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateUploadedFile(array $inputArray, string $field): ?string
 {
     if (isset($inputArray[$field])
@@ -592,6 +707,13 @@ function validateUploadedFile(array $inputArray, string $field): ?string
     return null;
 }
 
+/**
+ * Валидация минимального значения
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateMin(
     array $inputArray,
     string $field,
@@ -620,6 +742,13 @@ function validateMin(
     return null;
 }
 
+/**
+ * Валидация максимального значения
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateMax(
     array $inputArray,
     string $field,
@@ -648,6 +777,16 @@ function validateMax(
     return null;
 }
 
+/**
+ * Валидация обязательного значения при условии
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ * @param $dbConnection Соединение с бд
+ * @param string $value Условие
+ * @param $values Условия
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateRequiredIfValue(
     array $inputArray,
     string $field,
@@ -672,6 +811,13 @@ function validateRequiredIfValue(
     return null;
 }
 
+/**
+ * Валидация контента по ссылке
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateUrlContent(array $inputArray, string $field): ?string
 {
     if (empty($inputArray[$field])) {
@@ -689,6 +835,16 @@ function validateUrlContent(array $inputArray, string $field): ?string
     return 'Ссылка должна быть корректной, файл должен быть в формате png, jpeg, gif';
 }
 
+/**
+ * Валидация полей, одно из которых обязательное
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ * @param $dbConnection Соединение с бд
+ * @param $firstFieldName Первое поле
+ * @param $secondFieldName Второе поле
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateRequiredUnless(
     array $inputArray,
     string $field,
@@ -712,6 +868,12 @@ function validateRequiredUnless(
 }
 
 
+/**
+ * Возвращает корректный mime-type загруженного по ссылке файла
+ * @param $url Ссылка
+ *
+ * @return string mime-type
+ */
 function getRemoteMimeType($url)
 {
     $url = filter_var($url, FILTER_VALIDATE_URL);
@@ -728,6 +890,16 @@ function getRemoteMimeType($url)
     return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 }
 
+/**
+ * Валидация пароля и его повтора
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ * @param $dbConnection Соединение с бд
+ * @param $password Пароль
+ * @param $repeat Повтор пароля
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validatePassword(
     array $inputArray,
     string $field,
@@ -746,6 +918,18 @@ function validatePassword(
     return null;
 }
 
+/**
+ * Валидация правильного пароля
+ * @param array $inputArray Массив значений инпутов
+ * @param string $field Значение инпута
+ * @param $dbConnection Соединение с бд
+ * @param $login Логин
+ * @param $dbtable Таблица в бд
+ * @param $dbfieldLogin Поле логина в бд
+ * @param $dbfieldPassword Поле пароля в бд
+ *
+ * @return ?string Текст ошибки или null, если валидация прошла
+ */
 function validateVerify(
     array $inputArray,
     string $field,
