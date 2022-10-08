@@ -216,7 +216,7 @@ function setDate(string $date, bool $short = false): array
  * @param array $params Параметры запроса
  * @param bool $get_data Если необходимо получить результат
  *
- * @return $result Результат запроса
+ * @return mysqli $result Результат запроса
  */
 function formSqlRequest(
     mysqli $link,
@@ -450,7 +450,7 @@ function getTypeId(array $types, string $filter_type)
             return intval($type['id']);
         }
 
-        return 2;
+        return null;
     }
 }
 
@@ -490,7 +490,7 @@ function validateRequired(array $inputArray, string $field): ?string
  * @param array $inputArray Массив значений инпутов
  * @param string $field Значение инпута
  * @param $dbConnection Соединение с бд
- * @param string $dbTable Название таблицы бд
+ * @param string $dbtable Название таблицы бд
  * @param string $dbfield Поле в бд
  *
  * @return ?string Текст ошибки или null, если валидация прошла
@@ -518,7 +518,7 @@ function validateExists(
  * @param array $inputArray Массив значений инпутов
  * @param string $field Значение инпута
  * @param $dbConnection Соединение с бд
- * @param string $dbTable Название таблицы бд
+ * @param string $dbtable Название таблицы бд
  * @param string $dbfield Поле в бд
  *
  * @return ?string Текст ошибки или null, если валидация прошла
