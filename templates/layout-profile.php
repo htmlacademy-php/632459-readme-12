@@ -197,7 +197,7 @@
                           <span class="header__profile-nav-text">
                             Сообщения
                              <?php
-                             if ($unread !== 0): ?>
+                             if ($unread > 0): ?>
                                  <i class="header__profile-indicator"><?= $unread
                                      ?? '' ?></i>
                              <?php

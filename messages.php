@@ -20,8 +20,6 @@ if (!$con) {
     die();
 }
 
-$unread = getUnreadMessages($con);
-
 $first_user = (int)filter_input(INPUT_GET, 'user');
 
 $current_user = $_SESSION['user']['id'];
