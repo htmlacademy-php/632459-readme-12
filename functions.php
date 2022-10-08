@@ -121,7 +121,7 @@ function setMessageDate(string $date, array $month_list)
         return date_format(date_create($date), 'Y').' г';
     }
 
-    if ($delta_value === 'months') {
+    if ($delta_value === 'months' || $delta_value === 'days') {
         $date_with_month = date_format(date_create($date), 'd%m');
         $month = explode('%', $date_with_month);
 
