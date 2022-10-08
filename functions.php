@@ -1,16 +1,20 @@
 <?php
 
 /**
-* Переносит строку по заданному кол-ву символов
-* с учётом кодировки
-* @param string $string Строка для переноса
-* @param int $width Количество символов
-* @param string $break Символы переноса строки
-*
-* @return string Строка
-*/
-function utf8Wordwrap(string $string, int $width, string $break = "#!#!"): string
-{
+ * Переносит строку по заданному кол-ву символов
+ * с учётом кодировки
+ *
+ * @param  string  $string  Строка для переноса
+ * @param  int     $width   Количество символов
+ * @param  string  $break   Символы переноса строки
+ *
+ * @return string Строка
+ */
+function utf8Wordwrap(
+    string $string,
+    int $width,
+    string $break = "#!#!"
+): string {
     $pattern = '/(?=\s)(.{1,'.$width.'})(?:\s|$)/uS';
     $replace = '$1'.$break;
 
@@ -20,9 +24,10 @@ function utf8Wordwrap(string $string, int $width, string $break = "#!#!"): strin
 /**
  * Обрезает строку в параграфе, если его длина больше лимита,
  * добавляет ссылку на пост
- * @param string $string Строка
- * @param int $post_id Пост
- * @param int $limit Максимальная длина строки
+ *
+ * @param  string  $string   Строка
+ * @param  int     $post_id  Пост
+ * @param  int     $limit    Максимальная длина строки
  *
  * @return string Параграф или параграф со ссылкой на пост «Читать далее»
  */
@@ -41,8 +46,9 @@ function clipPostText(string $string, int $post_id, int $limit = 300): string
 
 /**
  * Обрезает сообщение в диалоге до указанного лимита
- * @param string $string Сообщение
- * @param int $limit Максимальная длина сообщения
+ *
+ * @param  string  $string  Сообщение
+ * @param  int     $limit   Максимальная длина сообщения
  *
  * @return string Сообщение
  */
@@ -60,6 +66,7 @@ function clipMessageText(string $string, int $limit = 10): string
 
 /**
  * Возвращает кол-во непрочитанных сообщений от пользователя
+ *
  * @param $con Соединение с БД
  *
  * @return int Количество сообщений
@@ -76,9 +83,10 @@ function getUnreadMessages($con)
 
 /**
  * Возвращает интервал между двумя датами в формате «ключ-значение»
- * @param string $date_1 Первая дата
- * @param string $date_2 Вторая дата
- * @param $differenceFormat Формат разницы значений
+ *
+ * @param  string  $date_1           Первая дата
+ * @param  string  $date_2           Вторая дата
+ * @param          $differenceFormat Формат разницы значений
  *
  * @return array Массив с интервалом двух дат
  */
@@ -105,8 +113,9 @@ function dateDifference(
 
 /**
  * Устанавливает дату, прошедшую с момента отправки сообщения
- * @param string $date Дата публикации
- * @param array $month_list Список месяцев
+ *
+ * @param  string  $date        Дата публикации
+ * @param  array   $month_list  Список месяцев
  *
  * @return string Дата
  */
@@ -135,8 +144,9 @@ function setMessageDate(string $date, array $month_list)
 
 /**
  * Устанавливает дату момента публикации «для машин» и «для людей»
- * @param string $date Дата публикации
- * @param bool $short Укороченный формат даты
+ *
+ * @param  string  $date   Дата публикации
+ * @param  bool    $short  Укороченный формат даты
  *
  * @return array Массив с двумя датами
  */
@@ -211,10 +221,11 @@ function setDate(string $date, bool $short = false): array
 
 /**
  * Формирует и выполняет запрос к БД и возвращает результат при необходимости
- * @param mysqli $link Параметры соединения
- * @param string Запрос
- * @param array $params Параметры запроса
- * @param bool $get_data Если необходимо получить результат
+ *
+ * @param  mysqli  $link      Параметры соединения
+ * @param  string Запрос
+ * @param  array   $params    Параметры запроса
+ * @param  bool    $get_data  Если необходимо получить результат
  *
  * @return mysqli $result Результат запроса
  */
@@ -246,7 +257,8 @@ function formSqlRequest(
 
 /**
  * Возвращает имя инпута, содержащего контент поста
- * @param string Инпут
+ *
+ * @param  string Инпут
  *
  * @return string Имя инпута
  */
@@ -257,9 +269,10 @@ function getPostVal(string $name): string
 
 /**
  * Производит расчёты для пагинации
- * @param string $items_count Общее количество постов
- * @param int $page_items Количество постов на странице
- * @param string $cur_page Текущая страница
+ *
+ * @param  string  $items_count  Общее количество постов
+ * @param  int     $page_items   Количество постов на странице
+ * @param  string  $cur_page     Текущая страница
  *
  * @return array Массив значений для пагинации
  */
@@ -272,15 +285,16 @@ function getPaginationPages(
     $offset = ($cur_page - 1) * $page_items;
 
     return [
-        'pages' => range(1, $pages_count),
+        'pages'       => range(1, $pages_count),
         'pages_count' => $pages_count,
-        'offset' => $offset,
+        'offset'      => $offset,
     ];
 }
 
 /**
  * Переводит строку из snake_case в camelCase
- * @param string $input Строка
+ *
+ * @param  string  $input  Строка
  *
  * @return string Строка в camelCase
  */
@@ -293,7 +307,8 @@ function snakeToCamel(string $input)
 
 /**
  * Возвращает имя функции валидации
- * @param string Название валидации
+ *
+ * @param  string Название валидации
  *
  * @return string Имя функции
  */
@@ -306,9 +321,10 @@ function getValidationFunctionName(string $name): string
 
 /**
  * Валидирует форму и возвращает ошибки валидации
- * @param array $inputArray Массив значений инпутов
- * @param array Правила валидации
- * @param $dbConnection Соединение с БД
+ *
+ * @param  array  $inputArray   Массив значений инпутов
+ * @param  array Правила валидации
+ * @param         $dbConnection Соединение с БД
  *
  * @return array Массив ошибок валидации
  */
@@ -353,9 +369,10 @@ function validateForm(
 
 /**
  * Получает хэштеги к посту
- * @param $inputArray Массив значений инпутов
+ *
+ * @param $inputArray   Массив значений инпутов
  * @param $dbConnection Соединение с бд
- * @param $newPostId Id опубликованного поста
+ * @param $newPostId    Id опубликованного поста
  */
 function getHashtags($inputArray, $dbConnection, $newPostId)
 {
@@ -392,8 +409,9 @@ function getHashtags($inputArray, $dbConnection, $newPostId)
 
 /**
  * Помещает файл в uploads и возвращает путь к нему
+ *
  * @param $inputArray Массив значений инпутов
- * @param $field Поле загрузки файла
+ * @param $field      Поле загрузки файла
  *
  * @return string Путь к файлу, если он успешно загружен
  */
@@ -419,6 +437,7 @@ function getUploadedFile($inputArray, $field)
 
 /**
  * Загружает файл по ссылке в uploads
+ *
  * @param $inputArray Массив значений инпутов
  *
  * @return string Путь к файлу
@@ -438,8 +457,9 @@ function getUrlContent($inputArray): string
 
 /**
  * Возвращает id тип контента или значение по умолчанию
- * @param array $types Типы контента
- * @param string $filter_type Выбранный тип контента
+ *
+ * @param  array   $types        Типы контента
+ * @param  string  $filter_type  Выбранный тип контента
  *
  * @return int Тип контента
  */
@@ -471,8 +491,9 @@ function getCurrentUrl()
 
 /**
  * Валидация обязательного поля
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -487,11 +508,12 @@ function validateRequired(array $inputArray, string $field): ?string
 
 /**
  * Валидация на существование в бд
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
- * @param $dbConnection Соединение с бд
- * @param string $dbtable Название таблицы бд
- * @param string $dbfield Поле в бд
+ *
+ * @param  array   $inputArray   Массив значений инпутов
+ * @param  string  $field        Значение инпута
+ * @param          $dbConnection Соединение с бд
+ * @param  string  $dbtable      Название таблицы бд
+ * @param  string  $dbfield      Поле в бд
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -515,11 +537,12 @@ function validateExists(
 
 /**
  * Валидация на уникальность значения в бд
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
- * @param $dbConnection Соединение с бд
- * @param string $dbtable Название таблицы бд
- * @param string $dbfield Поле в бд
+ *
+ * @param  array   $inputArray   Массив значений инпутов
+ * @param  string  $field        Значение инпута
+ * @param          $dbConnection Соединение с бд
+ * @param  string  $dbtable      Название таблицы бд
+ * @param  string  $dbfield      Поле в бд
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -543,8 +566,9 @@ function validateUnique(
 
 /**
  * Валидация строки
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -560,8 +584,9 @@ function validateString(array $inputArray, string $field): ?string
 
 /**
  * Валидация числа
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -577,8 +602,9 @@ function validateNumber(array $inputArray, string $field): ?string
 
 /**
  * Валидация email
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -594,8 +620,9 @@ function validateEmail(array $inputArray, string $field): ?string
 
 /**
  * Валидация ссылки
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -611,10 +638,11 @@ function validateUrl(array $inputArray, string $field): ?string
 
 /**
  * Валидация в указанных значениях
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
- * @param $dbConnection Соединение с бд
- * @param $values Значения
+ *
+ * @param  array   $inputArray   Массив значений инпутов
+ * @param  string  $field        Значение инпута
+ * @param          $dbConnection Соединение с бд
+ * @param          $values       Значения
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -634,8 +662,9 @@ function validateIn(
 
 /**
  * Валидация тегов
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -653,8 +682,9 @@ function validateTags(array $inputArray, string $field): ?string
 
 /**
  * Валидация ссылки на видео
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -670,8 +700,9 @@ function validateVideoUrl(array $inputArray, string $field): ?string
 
 /**
  * Валидация загруженного файла
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -709,8 +740,9 @@ function validateUploadedFile(array $inputArray, string $field): ?string
 
 /**
  * Валидация минимального значения
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -744,8 +776,9 @@ function validateMin(
 
 /**
  * Валидация максимального значения
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -779,11 +812,12 @@ function validateMax(
 
 /**
  * Валидация обязательного значения при условии
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
- * @param $dbConnection Соединение с бд
- * @param string $value Условие
- * @param $values Условия
+ *
+ * @param  array   $inputArray   Массив значений инпутов
+ * @param  string  $field        Значение инпута
+ * @param          $dbConnection Соединение с бд
+ * @param  string  $value        Условие
+ * @param          $values       Условия
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -813,8 +847,9 @@ function validateRequiredIfValue(
 
 /**
  * Валидация контента по ссылке
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
+ *
+ * @param  array   $inputArray  Массив значений инпутов
+ * @param  string  $field       Значение инпута
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -837,11 +872,12 @@ function validateUrlContent(array $inputArray, string $field): ?string
 
 /**
  * Валидация полей, одно из которых обязательное
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
- * @param $dbConnection Соединение с бд
- * @param $firstFieldName Первое поле
- * @param $secondFieldName Второе поле
+ *
+ * @param  array   $inputArray      Массив значений инпутов
+ * @param  string  $field           Значение инпута
+ * @param          $dbConnection    Соединение с бд
+ * @param          $firstFieldName  Первое поле
+ * @param          $secondFieldName Второе поле
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -870,6 +906,7 @@ function validateRequiredUnless(
 
 /**
  * Возвращает корректный mime-type загруженного по ссылке файла
+ *
  * @param $url Ссылка
  *
  * @return string mime-type
@@ -892,11 +929,12 @@ function getRemoteMimeType($url)
 
 /**
  * Валидация пароля и его повтора
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
- * @param $dbConnection Соединение с бд
- * @param $password Пароль
- * @param $repeat Повтор пароля
+ *
+ * @param  array   $inputArray   Массив значений инпутов
+ * @param  string  $field        Значение инпута
+ * @param          $dbConnection Соединение с бд
+ * @param          $password     Пароль
+ * @param          $repeat       Повтор пароля
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */
@@ -920,13 +958,14 @@ function validatePassword(
 
 /**
  * Валидация правильного пароля
- * @param array $inputArray Массив значений инпутов
- * @param string $field Значение инпута
- * @param $dbConnection Соединение с бд
- * @param $login Логин
- * @param $dbtable Таблица в бд
- * @param $dbfieldLogin Поле логина в бд
- * @param $dbfieldPassword Поле пароля в бд
+ *
+ * @param  array   $inputArray      Массив значений инпутов
+ * @param  string  $field           Значение инпута
+ * @param          $dbConnection    Соединение с бд
+ * @param          $login           Логин
+ * @param          $dbtable         Таблица в бд
+ * @param          $dbfieldLogin    Поле логина в бд
+ * @param          $dbfieldPassword Поле пароля в бд
  *
  * @return ?string Текст ошибки или null, если валидация прошла
  */

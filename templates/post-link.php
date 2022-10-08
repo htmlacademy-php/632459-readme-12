@@ -5,7 +5,8 @@
             <div class="post-link__info-wrapper">
                 <div class="post-link__icon-wrapper">
                     <img
-                        src="https://www.google.com/s2/favicons?domain=<?= $url ?? '' ?>"
+                        src="https://www.google.com/s2/favicons?domain=<?= $url
+                        ?? '' ?>"
                         alt="Иконка">
                 </div>
                 <div class="post-link__info">

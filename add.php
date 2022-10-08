@@ -24,8 +24,8 @@ if (!$con) {
     die();
 }
 
-use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
 
 require 'vendor/autoload.php';

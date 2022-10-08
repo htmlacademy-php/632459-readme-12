@@ -69,12 +69,14 @@
                                     <time class="messages__preview-time"
                                           datetime="<?= $user['last_date'] ??
                                           '' ?>">
-                                          <?php if($user['last_date']): ?>
-                                        <?= setMessageDate(
-                                            $user['last_date'],
-                                            $month_list
-                                        ) ?? '' ?>
-                                        <?php endif; ?>
+                                        <?php
+                                        if ($user['last_date']): ?>
+                                            <?= setMessageDate(
+                                                $user['last_date'],
+                                                $month_list
+                                            ) ?? '' ?>
+                                        <?php
+                                        endif; ?>
                                     </time>
                                 </div>
                             </div>

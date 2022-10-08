@@ -50,11 +50,15 @@ $dialogs_users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 $unread = [];
 
 if (!empty($dialogs_users)) {
-    $dialogs_ids = array_reduce($dialogs_users, static function ($carry, $dialog) {
-        $carry[] = $dialog['id'];
+    $dialogs_ids = array_reduce(
+        $dialogs_users,
+        static function ($carry, $dialog) {
+            $carry[] = $dialog['id'];
 
-        return $carry;
-    }, []);
+            return $carry;
+        },
+        []
+    );
 
     $dialogs_ids_res = implode(",", $dialogs_ids);
 
@@ -134,12 +138,12 @@ $page_content = include_template('messages.php', [
     'first_user'    => $first_user,
     'errors'        => $errors,
     'month_list'    => $month_list,
-    'unread'        => $unread
+    'unread'        => $unread,
 ]);
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'title'   => $page_titles['messages']
+    'title'   => $page_titles['messages'],
 ]);
 
 print($layout_content);

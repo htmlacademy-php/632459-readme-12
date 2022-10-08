@@ -105,9 +105,9 @@
     var regDropzone = new Dropzone('.registration__file-zone', {
       url: '#',
       maxFiles: 1,
-      init: function() {
-        this.on("addedfile", function() {
-          if (this.files[1]!=null){
+      init: function () {
+        this.on("addedfile", function () {
+          if (this.files[1] != null) {
             this.removeFile(this.files[0]);
           }
         });
@@ -129,9 +129,9 @@
     var addingPhotoDropzone = new Dropzone('.adding-post__file-zone--photo', {
       url: '#',
       maxFiles: 1,
-      init: function() {
-        this.on("addedfile", function() {
-          if (this.files[1]!=null){
+      init: function () {
+        this.on("addedfile", function () {
+          if (this.files[1] != null) {
             this.removeFile(this.files[0]);
           }
         });
@@ -153,9 +153,9 @@
     var addingVideoDropzone = new Dropzone('.adding-post__file-zone--video', {
       url: '#',
       maxFiles: 1,
-      init: function() {
-        this.on("addedfile", function() {
-          if (this.files[1]!=null){
+      init: function () {
+        this.on("addedfile", function () {
+          if (this.files[1] != null) {
             this.removeFile(this.files[0]);
           }
         });
