@@ -137,7 +137,7 @@ $page_content = include_template('messages.php', [
     'first_user'    => $first_user,
     'errors'        => $errors,
     'month_list'    => $month_list,
-    'unread'        => $unread
+    'unread'        => $unread,
 ]);
 
 $layout_content = include_template('layout.php', [
