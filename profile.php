@@ -150,7 +150,6 @@ $layout_content = include_template('layout-profile.php', [
     'content' => $page_content,
     'title'   => $page_titles['profile'],
     'user_id' => $user_id,
-    'unread'  => $unread,
 ]);
 
 print($layout_content);

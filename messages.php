@@ -41,7 +41,7 @@ $chats = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $dialogs_users = [];
 
-$sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, u.id, u.login, u.avatar_path, (SELECT m.text FROM messages m WHERE m.id = MAX(ms.id)) AS last_text,
+$sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, COUNT(ms.new) as unread, u.id, u.login, u.avatar_path, (SELECT m.text FROM messages m WHERE m.id = MAX(ms.id)) AS last_text,
  (SELECT sender_id FROM messages m WHERE m.id = MAX(ms.id)) AS sender
   FROM messages ms JOIN users u ON (u.id IN (ms.reciever_id, ms.sender_id)) AND u.id != ? GROUP BY u.id ORDER BY last_date DESC;';
 $result = formSqlRequest($con, $sql_dialog_users, [$current_user]);
@@ -113,6 +113,7 @@ $result = formSqlRequest(
     false
 );
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $inputArray = $_POST;
     $errors = validateForm($inputArray, $validate_rules, $con);
@@ -138,7 +139,6 @@ $page_content = include_template('messages.php', [
     'first_user'    => $first_user,
     'errors'        => $errors,
     'month_list'    => $month_list,
-    'unread'        => $unread,
 ]);
 
 $layout_content = include_template('layout.php', [

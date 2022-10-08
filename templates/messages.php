@@ -28,8 +28,8 @@
                                      src="<?= $user['avatar_path'] ?? '' ?>"
                                      alt="Аватар пользователя">
                                 <?php
-                                if ($unread[$user['sender']] > 0): ?>
-                                    <i class="messages__indicator"><?= $unread[$user['sender']]
+                                if ($user['unread']): ?>
+                                    <i class="messages__indicator"><?= $user['unread']
                                         ?? '' ?></i>
                                 <?php
                                 endif; ?>
