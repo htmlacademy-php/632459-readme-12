@@ -470,7 +470,7 @@ function getTypeId(array $types, string $filter_type)
             return intval($type['id']);
         }
 
-        return null;
+        return 2;
     }
 }
 
