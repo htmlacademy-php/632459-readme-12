@@ -28,8 +28,8 @@
                                      src="<?= $user['avatar_path'] ?? '' ?>"
                                      alt="Аватар пользователя">
                                 <?php
-                                if ($user['unread']): ?>
-                                    <i class="messages__indicator"><?= $user['unread']
+                                if ($unread[$user['sender']] > 0): ?>
+                                    <i class="messages__indicator"><?= $unread[$user['sender']]
                                         ?? '' ?></i>
                                 <?php
                                 endif; ?>
@@ -43,6 +43,7 @@
                                         <?php
                                         if ($user['sender']
                                             === $_SESSION['user']['id']
+                                            && $user['last_text']
                                         ): ?>
                                             <?= 'Вы: '.htmlspecialchars(
                                                 clipMessageText(
@@ -55,6 +56,7 @@
                                         <?php
                                         if ($user['sender']
                                             !== $_SESSION['user']['id']
+                                            && $user['last_text']
                                         ): ?>
                                             <?= htmlspecialchars(
                                                 clipMessageText(
@@ -67,10 +69,14 @@
                                     <time class="messages__preview-time"
                                           datetime="<?= $user['last_date'] ??
                                           '' ?>">
-                                        <?= setMessageDate(
-                                            $user['last_date'],
-                                            $month_list
-                                        ) ?? '' ?>
+                                        <?php
+                                        if ($user['last_date']): ?>
+                                            <?= setMessageDate(
+                                                $user['last_date'],
+                                                $month_list
+                                            ) ?? '' ?>
+                                        <?php
+                                        endif; ?>
                                     </time>
                                 </div>
                             </div>

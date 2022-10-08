@@ -1,16 +1,16 @@
 {
-    "name": "alina/readme",
-    "autoload": {
-        "psr-4": {
-            "Alina\\Readme\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "alina"
-        }
-    ],
-    "require": {
-        "symfony/mailer": "^5.4"
+  "name": "alina/readme",
+  "autoload": {
+    "psr-4": {
+      "Alina\\Readme\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "alina"
+    }
+  ],
+  "require": {
+    "symfony/mailer": "^5.4"
+  }
 }

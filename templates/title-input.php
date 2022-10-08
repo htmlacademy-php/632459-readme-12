@@ -1,7 +1,7 @@
 <div class="adding-post__input-wrapper form__input-wrapper">
     <label class="adding-post__label form__label" for="photo-heading">Заголовок
         <span class="form__input-required">*</span></label>
-    <div class="form__input-section <?= $errors['title']
+    <div class="form__input-section <?= isset($errors['title'])
         ? "form__input-section--error" : "" ?>">
         <input class="adding-post__input form__input" id="photo-heading"
                type="text" name="title" value="<?= getPostVal('title') ?? '' ?>"

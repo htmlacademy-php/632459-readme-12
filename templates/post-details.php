@@ -43,12 +43,13 @@
                                      height="17">
                                     <use xlink:href="#icon-repost"></use>
                                 </svg>
-                                <span><?= $reposts[0] ?></span>
+                                <span><?= $reposts[0] ?? '' ?></span>
                                 <span class="visually-hidden">количество репостов</span>
                             </a>
                         </div>
                         <span
-                            class="post__view"><?= $post['show_count'] ?> <?= get_noun_plural_form(
+                            class="post__view"><?= $post['show_count'] ??
+                            '' ?> <?= get_noun_plural_form(
                                 $post['show_count'],
                                 ' просмотр',
                                 ' просмотра',
@@ -194,24 +195,26 @@
                                 class="post-details__rating-amount user__rating-amount"><?= $subscribers['total']
                                 ?? '' ?></span>
                             <span
-                                class="post-details__rating-text user__rating-text"><?= get_noun_plural_form(
-                                    $subscribers['total'],
-                                    'подписчик',
-                                    'подписчика',
-                                    'подписчиков'
-                                ) ?? '' ?></span>
+                                class="post-details__rating-text user__rating-text"><?= isset($subscribers['total'])
+                                    ? get_noun_plural_form(
+                                        $subscribers['total'],
+                                        'подписчик',
+                                        'подписчика',
+                                        'подписчиков'
+                                    ) : '' ?></span>
                         </p>
                         <p class="post-details__rating-item user__rating-item user__rating-item--publications">
                             <span
                                 class="post-details__rating-amount user__rating-amount"><?= $publications['total']
                                 ?? '' ?></span>
                             <span
-                                class="post-details__rating-text user__rating-text"><?= get_noun_plural_form(
-                                    $publications['total'],
-                                    'публикация',
-                                    'публикации',
-                                    'публикаций'
-                                ) ?? '' ?></span>
+                                class="post-details__rating-text user__rating-text"><?= isset($publications['total'])
+                                    ? get_noun_plural_form(
+                                        $publications['total'],
+                                        'публикация',
+                                        'публикации',
+                                        'публикаций'
+                                    ) : '' ?></span>
                         </p>
                     </div>
                     <div class="post-details__user-buttons user__buttons">

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?></title>
+    <title><?= $title ?? '' ?></title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body class="page">
@@ -197,7 +197,7 @@
                           <span class="header__profile-nav-text">
                             Сообщения
                              <?php
-                             if ($unread !== 0): ?>
+                             if ($unread > 0): ?>
                                  <i class="header__profile-indicator"><?= $unread
                                      ?? '' ?></i>
                              <?php

@@ -115,8 +115,9 @@
                         <ul class="form__invalid-list">
                             <?php
                             foreach ($errors as $input => $error): ?>
-                                <li class="form__invalid-item"><?= $input_names[$input] ?>
-                                    . <?= $error ?></li>
+                                <li class="form__invalid-item"><?= $input_names[$input]
+                                    ?? '' ?>
+                                    . <?= $error ?? '' ?></li>
                             <?php
                             endforeach; ?>
                         </ul>
