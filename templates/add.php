@@ -269,7 +269,7 @@
                                             for="photo-url">Ссылка из
                                             интернета</label>
                                         <div
-                                            class="form__input-section <?= $errors['img_url']
+                                            class="form__input-section <?= isset($errors['img_url'])
                                                 ? "form__input-section--error"
                                                 : "" ?>">
                                             <input

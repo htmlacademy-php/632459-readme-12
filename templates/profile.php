@@ -27,27 +27,27 @@
                             class="user__rating-amount"><?= $publications['total']
                             ?? '' ?></span>
                         <span
-                            class="profile__rating-text user__rating-text"><?= get_noun_plural_form(
+                            class="profile__rating-text user__rating-text"><?= isset($publications['total']) ? get_noun_plural_form(
                                 $publications['total'],
                                 'публикация',
                                 'публикации',
                                 'публикаций'
-                            ) ?? '' ?></span>
+                            ) : '' ?></span>
                     </p>
                     <p class="profile__rating-item user__rating-item user__rating-item--subscribers">
                         <span
                             class="user__rating-amount"><?= $subscribers['total']
                             ?? '' ?></span>
                         <span
-                            class="profile__rating-text user__rating-text"><?= get_noun_plural_form(
+                            class="profile__rating-text user__rating-text"><?= isset($subscribers['total']) ? get_noun_plural_form(
                                 $subscribers['total'],
                                 'подписчик',
                                 'подписчика',
                                 'подписчиков'
-                            ) ?? '' ?></span>
+                            ) : '' ?></span>
                     </p>
                 </div>
-                <form action="/subscribe.php?user=<?= $user['id'] ?>"
+                <form action="/subscribe.php?user=<?= $user['id'] ?? '' ?>"
                       method="get">
                     <div class="profile__user-buttons user__buttons">
                         <button
