@@ -988,9 +988,11 @@ function validateVerify(
                 [$inputArray[$login]]
             );
 
-            $password = mysqli_fetch_array($result, MYSQLI_ASSOC)['password'];
-            if (password_verify($inputArray[$field], $password)) {
-                return null;
+            $password = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+            if (isset($password['password'])) {
+                if (password_verify($inputArray[$field], $password['password']))
+                    return null;
             }
 
             return "Пароль не совпадает";

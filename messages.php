@@ -88,7 +88,9 @@ if (strripos($previous_page, 'profile.php') && !$is_dialog_exists) {
     $result = formSqlRequest($con, $sql_new_dialog, [$first_user]);
     if ($result) {
         $new_dialog = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($dialogs_users, $new_dialog[0]);
+        if (isset($new_dialog[0])) {
+            array_push($dialogs_users, $new_dialog[0]);
+        }
     }
 }
 
