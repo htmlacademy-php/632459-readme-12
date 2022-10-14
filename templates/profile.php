@@ -16,7 +16,7 @@
                             ?? '' ?></span>
                         <time class="profile__user-time user__time"
                               datetime="<?= $user['dt_reg'] ??
-                              '' ?>"><?= setDate($user['dt_reg'])['date_ago'] ??
+                              '' ?>"><?= setDate($user['dt_reg'] ?? '')['date_ago'] ??
                             '' ?>на сайте
                         </time>
                     </div>

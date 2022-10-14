@@ -383,8 +383,8 @@ function getHashtags($inputArray, $dbConnection, $newPostId)
         foreach ($tags as $tag) {
             $request = 'SELECT id FROM hashtags WHERE name = ?';
             $res = formSqlRequest($dbConnection, $request, [$tag]);
-            $result = mysqli_fetch_array($res)['id'];
-            if (!$result) {
+            $result = mysqli_fetch_array($res);
+            if (!isset($result['id'])) {
                 $request = 'INSERT INTO hashtags SET name = ?';
                 formSqlRequest($dbConnection, $request, [$tag], false);
                 $new_tag_id = mysqli_insert_id($dbConnection);
