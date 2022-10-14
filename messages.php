@@ -30,6 +30,8 @@ if (!empty($search_query)) {
     header("Location: /search.php?search=$search_query");
 }
 
+$unread = getUnreadMessages($con);
+
 $sql_chats = 'SELECT sender_id, reciever_id, date_add, text, login, avatar_path FROM messages
 JOIN users u ON sender_id = u.id
 WHERE sender_id = '.$current_user.' OR reciever_id = '.$current_user.' ';
@@ -45,7 +47,7 @@ $sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, COUNT(ms.new) as unr
 $result = formSqlRequest($con, $sql_dialog_users, [$current_user]);
 $dialogs_users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$unread = [];
+$unread_msg = [];
 
 if (!empty($dialogs_users)) {
     $dialogs_ids = array_reduce(
@@ -67,7 +69,7 @@ if (!empty($dialogs_users)) {
     $unread_messages = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     foreach ($unread_messages as $chat) {
-        $unread[$chat['sender_id']] = $chat['total'];
+        $unread_msg[$chat['sender_id']] = $chat['total'];
     }
 }
 
@@ -137,12 +139,13 @@ $page_content = include_template('messages.php', [
     'first_user'    => $first_user,
     'errors'        => $errors,
     'month_list'    => $month_list,
-    'unread'        => $unread,
+    'unread_msg'    => $unread_msg,
 ]);
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'title'   => $page_titles['messages'],
+    'unread' => $unread
 ]);
 
 print($layout_content);

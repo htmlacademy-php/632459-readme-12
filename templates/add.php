@@ -328,7 +328,7 @@
                                         </div>
                                         <button
                                             class="form__error-button button"
-                                            type="button" <?= $errors['image']
+                                            type="button" <?= isset($errors['image'])
                                             ? "style=display:block;" : "" ?>>
                                             !<span class="visually-hidden">Информация об ошибке</span>
                                         </button>
@@ -388,7 +388,7 @@
                                             for="video-url">Ссылка youtube <span
                                                 class="form__input-required">*</span></label>
                                         <div
-                                            class="form__input-section <?= $errors['video']
+                                            class="form__input-section <?= isset($errors['video'])
                                                 ? "form__input-section--error"
                                                 : "" ?>">
                                             <input
@@ -465,7 +465,7 @@
                                             for="post-text">Текст поста <span
                                                 class="form__input-required">*</span></label>
                                         <div
-                                            class="form__input-section <?= $errors['text']
+                                            class="form__input-section <?= isset($errors['text'])
                                                 ? "form__input-section--error"
                                                 : "" ?>">
                                             <textarea
@@ -542,7 +542,7 @@
                                             for="cite-text">Текст цитаты <span
                                                 class="form__input-required">*</span></label>
                                         <div
-                                            class="form__input-section <?= $errors['cite-text']
+                                            class="form__input-section <?= isset($errors['cite-text'])
                                                 ? "form__input-section--error"
                                                 : "" ?>">
                                             <textarea
@@ -574,7 +574,7 @@
                                             for="quote-author">Автор <span
                                                 class="form__input-required">*</span></label>
                                         <div
-                                            class="form__input-section <?= $errors['quote-author']
+                                            class="form__input-section <?= isset($errors['quote-author'])
                                                 ? "form__input-section--error"
                                                 : "" ?>">
                                             <input
@@ -650,7 +650,7 @@
                                             for="post-link">Ссылка <span
                                                 class="form__input-required">*</span></label>
                                         <div
-                                            class="form__input-section <?= $errors['link']
+                                            class="form__input-section <?= isset($errors['link'])
                                                 ? "form__input-section--error"
                                                 : "" ?>">
                                             <input
