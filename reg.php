@@ -25,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             || is_uploaded_file($inputArray[$file_field]['tmp_name'])
         ) {
             $img_path = getUploadedFile($inputArray, $file_field);
+        } else {
+            $img_path = null;
         }
 
         $passwordHash = password_hash(

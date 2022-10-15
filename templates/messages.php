@@ -25,7 +25,7 @@
                             <div class="messages__avatar-wrapper">
                                 <img class="messages__avatar"
                                      style="width: 100%"
-                                     src="<?= $user['avatar_path'] ?? '' ?>"
+                                     src="<?= $user['avatar_path'] ?? 'img/userpic-tanya.jpg' ?>"
                                      alt="Аватар пользователя">
                                 <?php
                                 if (!empty($unread_msg) && isset($unread_msg[$user['id']]) && $unread_msg[$user['id']] > 0): ?>
