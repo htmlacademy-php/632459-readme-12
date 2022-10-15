@@ -44,7 +44,11 @@ $dialogs_users = [];
 $sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, u.id, u.login, u.avatar_path, (SELECT m.text FROM messages m WHERE m.id = MAX(ms.id)) AS last_text,
  (SELECT sender_id FROM messages m WHERE m.id = MAX(ms.id)) AS sender
   FROM messages ms JOIN users u ON (u.id IN (ms.reciever_id, ms.sender_id)) WHERE (ms.reciever_id = ? OR ms.sender_id = ?) AND u.id != ? GROUP BY u.id ORDER BY last_date DESC;';
-$result = formSqlRequest($con, $sql_dialog_users, [$current_user, $current_user, $current_user]);
+$result = formSqlRequest(
+    $con,
+    $sql_dialog_users,
+    [$current_user, $current_user, $current_user]
+);
 $dialogs_users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $unread_msg = [];
@@ -63,7 +67,8 @@ if (!empty($dialogs_users)) {
     $dialogs_ids_res = implode(",", $dialogs_ids);
 
     $sql_unread = 'SELECT COUNT(new) as total, sender_id FROM messages
-            WHERE sender_id IN ('.$dialogs_ids_res.') AND reciever_id = ? GROUP BY sender_id';
+            WHERE sender_id IN ('.$dialogs_ids_res
+        .') AND reciever_id = ? GROUP BY sender_id';
 
     $result = formSqlRequest($con, $sql_unread, [$current_user]);
     $unread_messages = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -147,7 +152,7 @@ $page_content = include_template('messages.php', [
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'title'   => $page_titles['messages'],
-    'unread' => $unread
+    'unread'  => $unread,
 ]);
 
 print($layout_content);

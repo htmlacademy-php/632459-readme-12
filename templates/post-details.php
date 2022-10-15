@@ -217,26 +217,37 @@
                                     ) : '' ?></span>
                         </p>
                     </div>
-                    <form action="/subscribe.php?user=<?= $post['user_id'] ?? '' ?>"
-                      method="get">
-                    <div class="post-details__user-buttons user__buttons">
-                        <button
-                            class="profile__user-button user__button user__button--subscription button button--main"
-                            type="submit"><?= $is_subscribe ? 'Отписаться'
-                                : 'Подписаться' ?></button>
-                        <input class="visually-hidden" type="text" name="user"
-                               value="<?= $post['user_id'] ?? '' ?>">
-                        </button>
-                        <?php if($_SESSION['user']['id'] !== $post['user_id']): ?>
-                        <a class="profile__user-button user__button user__button--writing button button--green"
-                           href="/messages.php?user=<?= $post['user_id'] ?? '' ?>">Сообщение</a>
-                        <?php endif; ?>
-                        <?php if($_SESSION['user']['id'] === $post['user_id']): ?>
-                        <a class="profile__user-button user__button user__button--writing button button--green"
-                           href="#">Сообщение</a>
-                        <?php endif; ?>
-                    </div>
-                        </form>
+                    <form action="/subscribe.php?user=<?= $post['user_id'] ??
+                    '' ?>"
+                          method="get">
+                        <div class="post-details__user-buttons user__buttons">
+                            <button
+                                class="profile__user-button user__button user__button--subscription button button--main"
+                                type="submit"><?= $is_subscribe ? 'Отписаться'
+                                    : 'Подписаться' ?></button>
+                            <input class="visually-hidden" type="text"
+                                   name="user"
+                                   value="<?= $post['user_id'] ?? '' ?>">
+                            </button>
+                            <?php
+                            if ($_SESSION['user']['id']
+                                !== $post['user_id']
+                            ): ?>
+                                <a class="profile__user-button user__button user__button--writing button button--green"
+                                   href="/messages.php?user=<?= $post['user_id']
+                                   ?? '' ?>">Сообщение</a>
+                            <?php
+                            endif; ?>
+                            <?php
+                            if ($_SESSION['user']['id']
+                                === $post['user_id']
+                            ): ?>
+                                <a class="profile__user-button user__button user__button--writing button button--green"
+                                   href="#">Сообщение</a>
+                            <?php
+                            endif; ?>
+                        </div>
+                    </form>
                 </div>
             </div>
         </section>

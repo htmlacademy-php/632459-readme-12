@@ -201,7 +201,7 @@ if ($post_id && $post) {
         'comments_amount' => $comments_amount,
         'reposts'         => $reposts,
         'errors'          => $errors,
-        'is_subscribe' => $is_subscribe
+        'is_subscribe'    => $is_subscribe,
     ]);
 
     $layout_content = include_template('layout.php', [

@@ -403,7 +403,6 @@ function getHashtags($inputArray, $dbConnection, $newPostId)
                 false
             );
         }
-
     }
 
     return null;
@@ -473,6 +472,7 @@ function getTypeId(array $types, string $filter_type)
             $type_id = intval($type['id']);
         }
     }
+
     return $type_id;
 }
 
@@ -997,8 +997,13 @@ function validateVerify(
             $password = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
             if (isset($password['password'])) {
-                if (password_verify($inputArray[$field], $password['password']))
+                if (password_verify(
+                    $inputArray[$field],
+                    $password['password']
+                )
+                ) {
                     return null;
+                }
             }
 
             return "Пароль не совпадает";
