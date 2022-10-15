@@ -465,13 +465,13 @@ function getUrlContent($inputArray): string
  */
 function getTypeId(array $types, string $filter_type)
 {
+    $type_id = 2;
     foreach ($types as $type) {
         if ($type['type'] === $filter_type) {
-            return intval($type['id']);
+            $type_id = intval($type['id']);
         }
-
-        return 2;
     }
+    return $type_id;
 }
 
 /**

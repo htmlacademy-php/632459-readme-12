@@ -58,8 +58,14 @@
                                 : 'Подписаться' ?></button>
                         <input class="visually-hidden" type="text" name="user"
                                value="<?= $user['id'] ?? '' ?>">
+                        <?php if($_SESSION['user']['id'] !== $user['id']): ?>
                         <a class="profile__user-button user__button user__button--writing button button--green"
                            href="/messages.php?user=<?= $user['id'] ?? '' ?>">Сообщение</a>
+                        <?php endif; ?>
+                        <?php if($_SESSION['user']['id'] === $user['id']): ?>
+                        <a class="profile__user-button user__button user__button--writing button button--green"
+                           href="#">Сообщение</a>
+                        <?php endif; ?>
                     </div>
                 </form>
             </div>

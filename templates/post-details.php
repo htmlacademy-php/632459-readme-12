@@ -222,8 +222,14 @@
                             class="user__button user__button--subscription button button--main"
                             type="button">Подписаться
                         </button>
-                        <a class="user__button user__button--writing button button--green"
+                        <?php if($_SESSION['user']['id'] !== $user['id']): ?>
+                        <a class="profile__user-button user__button user__button--writing button button--green"
+                           href="/messages.php?user=<?= $user['id'] ?? '' ?>">Сообщение</a>
+                        <?php endif; ?>
+                        <?php if($_SESSION['user']['id'] === $user['id']): ?>
+                        <a class="profile__user-button user__button user__button--writing button button--green"
                            href="#">Сообщение</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

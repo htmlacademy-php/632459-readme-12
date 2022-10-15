@@ -41,7 +41,7 @@
                                 <div class="messages__preview">
                                     <p class="messages__preview-text">
                                         <?php
-                                        if ($user['sender']
+                                        if (isset($user['sender']) && $user['sender']
                                             === $_SESSION['user']['id']
                                             && $user['last_text']
                                         ): ?>
@@ -54,7 +54,7 @@
                                         endif; ?>
 
                                         <?php
-                                        if ($user['sender']
+                                        if (isset($user['sender']) && $user['sender']
                                             !== $_SESSION['user']['id']
                                             && $user['last_text']
                                         ): ?>
@@ -66,6 +66,7 @@
                                         <?php
                                         endif; ?>
                                     </p>
+                                    <?php if(isset($user['last_date'])): ?>
                                     <time class="messages__preview-time"
                                           datetime="<?= $user['last_date'] ??
                                           '' ?>">
@@ -78,6 +79,7 @@
                                         <?php
                                         endif; ?>
                                     </time>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </a>
