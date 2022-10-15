@@ -182,8 +182,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             "Новая публикация от пользователя %логин автора поста%"
                         );
                         $message->text(
-                            "ЗЗдравствуйте, ${sub['login']}.
-                            Пользователь ${$_SESSION['user'['login']]} только что опубликовал новую запись ${$inputArray['title']}.
+                            "ЗЗдравствуйте, ${$sub['login']}.
+                            Пользователь ${$_SESSION['user']['login']} только что опубликовал новую запись ${$inputArray['title']}.
                             Посмотрите её на странице пользователя: http://readme/profile.php?user=${$_SESSION['user']['id']}&tab=posts"
                         );
                         $mailer = new Mailer($transport);

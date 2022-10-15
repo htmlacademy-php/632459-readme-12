@@ -25,11 +25,15 @@
                             <div class="messages__avatar-wrapper">
                                 <img class="messages__avatar"
                                      style="width: 100%"
-                                     src="<?= $user['avatar_path'] ?? '' ?>"
+                                     src="<?= $user['avatar_path'] ??
+                                     'img/userpic-tanya.jpg' ?>"
                                      alt="Аватар пользователя">
                                 <?php
-                                if ($unread[$user['sender']] > 0): ?>
-                                    <i class="messages__indicator"><?= $unread[$user['sender']]
+                                if (!empty($unread_msg)
+                                    && isset($unread_msg[$user['id']])
+                                    && $unread_msg[$user['id']] > 0
+                                ): ?>
+                                    <i class="messages__indicator"><?= $unread_msg[$user['id']]
                                         ?? '' ?></i>
                                 <?php
                                 endif; ?>
@@ -41,7 +45,8 @@
                                 <div class="messages__preview">
                                     <p class="messages__preview-text">
                                         <?php
-                                        if ($user['sender']
+                                        if (isset($user['sender'])
+                                            && $user['sender']
                                             === $_SESSION['user']['id']
                                             && $user['last_text']
                                         ): ?>
@@ -54,7 +59,8 @@
                                         endif; ?>
 
                                         <?php
-                                        if ($user['sender']
+                                        if (isset($user['sender'])
+                                            && $user['sender']
                                             !== $_SESSION['user']['id']
                                             && $user['last_text']
                                         ): ?>
@@ -66,18 +72,23 @@
                                         <?php
                                         endif; ?>
                                     </p>
-                                    <time class="messages__preview-time"
-                                          datetime="<?= $user['last_date'] ??
-                                          '' ?>">
-                                        <?php
-                                        if ($user['last_date']): ?>
-                                            <?= setMessageDate(
-                                                $user['last_date'],
-                                                $month_list
-                                            ) ?? '' ?>
-                                        <?php
-                                        endif; ?>
-                                    </time>
+                                    <?php
+                                    if (isset($user['last_date'])): ?>
+                                        <time class="messages__preview-time"
+                                              datetime="<?= $user['last_date']
+                                              ??
+                                              '' ?>">
+                                            <?php
+                                            if ($user['last_date']): ?>
+                                                <?= setMessageDate(
+                                                    $user['last_date'],
+                                                    $month_list
+                                                ) ?? '' ?>
+                                            <?php
+                                            endif; ?>
+                                        </time>
+                                    <?php
+                                    endif; ?>
                                 </div>
                             </div>
                         </a>

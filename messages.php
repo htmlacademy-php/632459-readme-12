@@ -5,7 +5,7 @@ require_once 'helpers.php';
 require_once 'functions.php';
 require_once 'data.php';
 
-if (!$_SESSION['user']) {
+if (!isset($_SESSION['user'])) {
     header("Location: /");
     exit();
 }
@@ -30,6 +30,8 @@ if (!empty($search_query)) {
     header("Location: /search.php?search=$search_query");
 }
 
+$unread = getUnreadMessages($con);
+
 $sql_chats = 'SELECT sender_id, reciever_id, date_add, text, login, avatar_path FROM messages
 JOIN users u ON sender_id = u.id
 WHERE sender_id = '.$current_user.' OR reciever_id = '.$current_user.' ';
@@ -39,13 +41,17 @@ $chats = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $dialogs_users = [];
 
-$sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, COUNT(ms.new) as unread, u.id, u.login, u.avatar_path, (SELECT m.text FROM messages m WHERE m.id = MAX(ms.id)) AS last_text,
+$sql_dialog_users = ' SELECT MAX(ms.date_add) AS last_date, u.id, u.login, u.avatar_path, (SELECT m.text FROM messages m WHERE m.id = MAX(ms.id)) AS last_text,
  (SELECT sender_id FROM messages m WHERE m.id = MAX(ms.id)) AS sender
-  FROM messages ms JOIN users u ON (u.id IN (ms.reciever_id, ms.sender_id)) AND u.id != ? GROUP BY u.id ORDER BY last_date DESC;';
-$result = formSqlRequest($con, $sql_dialog_users, [$current_user]);
+  FROM messages ms JOIN users u ON (u.id IN (ms.reciever_id, ms.sender_id)) WHERE (ms.reciever_id = ? OR ms.sender_id = ?) AND u.id != ? GROUP BY u.id ORDER BY last_date DESC;';
+$result = formSqlRequest(
+    $con,
+    $sql_dialog_users,
+    [$current_user, $current_user, $current_user]
+);
 $dialogs_users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$unread = [];
+$unread_msg = [];
 
 if (!empty($dialogs_users)) {
     $dialogs_ids = array_reduce(
@@ -61,13 +67,14 @@ if (!empty($dialogs_users)) {
     $dialogs_ids_res = implode(",", $dialogs_ids);
 
     $sql_unread = 'SELECT COUNT(new) as total, sender_id FROM messages
-            WHERE sender_id IN ('.$dialogs_ids_res.') GROUP BY sender_id';
+            WHERE sender_id IN ('.$dialogs_ids_res
+        .') AND reciever_id = ? GROUP BY sender_id';
 
-    $result = formSqlRequest($con, $sql_unread, []);
+    $result = formSqlRequest($con, $sql_unread, [$current_user]);
     $unread_messages = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     foreach ($unread_messages as $chat) {
-        $unread[$chat['sender_id']] = $chat['total'];
+        $unread_msg[$chat['sender_id']] = $chat['total'];
     }
 }
 
@@ -86,11 +93,13 @@ if (strripos($previous_page, 'profile.php') && !$is_dialog_exists) {
     $result = formSqlRequest($con, $sql_new_dialog, [$first_user]);
     if ($result) {
         $new_dialog = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        array_push($dialogs_users, $new_dialog[0]);
+        if (isset($new_dialog[0])) {
+            array_push($dialogs_users, $new_dialog[0]);
+        }
     }
 }
 
-if ($first_user === 0) {
+if ($first_user === 0 && !empty($dialogs_users)) {
     $first_user = $dialogs_users[0]['id'];
 }
 
@@ -137,12 +146,13 @@ $page_content = include_template('messages.php', [
     'first_user'    => $first_user,
     'errors'        => $errors,
     'month_list'    => $month_list,
-    'unread'        => $unread,
+    'unread_msg'    => $unread_msg,
 ]);
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'title'   => $page_titles['messages'],
+    'unread'  => $unread,
 ]);
 
 print($layout_content);

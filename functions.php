@@ -383,14 +383,15 @@ function getHashtags($inputArray, $dbConnection, $newPostId)
         foreach ($tags as $tag) {
             $request = 'SELECT id FROM hashtags WHERE name = ?';
             $res = formSqlRequest($dbConnection, $request, [$tag]);
-            $result = mysqli_fetch_array($res)['id'];
-            if (!$result) {
+            $result = mysqli_fetch_array($res);
+            if (!isset($result['id'])) {
                 $request = 'INSERT INTO hashtags SET name = ?';
                 formSqlRequest($dbConnection, $request, [$tag], false);
                 $new_tag_id = mysqli_insert_id($dbConnection);
                 array_push($tags_array, $new_tag_id);
+            } else {
+                array_push($tags_array, $result['id']);
             }
-            array_push($tags_array, $result);
         }
 
         foreach ($tags_array as $tag) {
@@ -465,13 +466,14 @@ function getUrlContent($inputArray): string
  */
 function getTypeId(array $types, string $filter_type)
 {
+    $type_id = 2;
     foreach ($types as $type) {
         if ($type['type'] === $filter_type) {
-            return intval($type['id']);
+            $type_id = intval($type['id']);
         }
-
-        return 2;
     }
+
+    return $type_id;
 }
 
 /**
@@ -672,6 +674,10 @@ function validateTags(array $inputArray, string $field): ?string
 {
     if (!empty($inputArray[$field])) {
         $tags = explode(" ", $inputArray[$field]);
+
+        if (count(array_unique($tags)) < count($tags)) {
+            return 'Тэги не должны повторяться';
+        }
 
         return count($tags) > 1 ? null
             : "Введите одно или больше слов, разделенных пробелом";
@@ -988,9 +994,16 @@ function validateVerify(
                 [$inputArray[$login]]
             );
 
-            $password = mysqli_fetch_array($result, MYSQLI_ASSOC)['password'];
-            if (password_verify($inputArray[$field], $password)) {
-                return null;
+            $password = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+            if (isset($password['password'])) {
+                if (password_verify(
+                    $inputArray[$field],
+                    $password['password']
+                )
+                ) {
+                    return null;
+                }
             }
 
             return "Пароль не совпадает";

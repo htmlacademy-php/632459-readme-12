@@ -196,7 +196,7 @@
                           <span class="header__profile-nav-text">
                             Сообщения
                              <?php
-                             if ($unread > 0): ?>
+                             if (isset($unread) && $unread > 0): ?>
                                  <i class="header__profile-indicator"><?= $unread
                                      ?? '' ?></i>
                              <?php
@@ -286,11 +286,13 @@
             <div class="footer__my-info">
                 <ul class="footer__my-pages">
                     <li class="footer__my-page footer__my-page--feed">
-                        <a class="footer__page-link" href="<?= '/feed.php?user='
-                        .$_SESSION['user']['id'] ?>">Моя лента</a>
+                        <a class="footer__page-link"
+                           href="<?= isset($_SESSION['user']['id'])
+                               ? '/feed.php?user='
+                               .$_SESSION['user']['id'] : '#' ?>">Моя лента</a>
                     </li>
                     <li class="footer__my-page footer__my-page--popular">
-                        <a class="footer__page-link" href="/popular.php">Популярный
+                        <a class="footer__page-link" href="/popular.php?page=1">Популярный
                             контент</a>
                     </li>
                     <li class="footer__my-page footer__my-page--messages">
