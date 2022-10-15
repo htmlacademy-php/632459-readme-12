@@ -389,8 +389,9 @@ function getHashtags($inputArray, $dbConnection, $newPostId)
                 formSqlRequest($dbConnection, $request, [$tag], false);
                 $new_tag_id = mysqli_insert_id($dbConnection);
                 array_push($tags_array, $new_tag_id);
+            } else {
+                array_push($tags_array, $result['id']);
             }
-            array_push($tags_array, $result);
         }
 
         foreach ($tags_array as $tag) {
@@ -402,6 +403,7 @@ function getHashtags($inputArray, $dbConnection, $newPostId)
                 false
             );
         }
+
     }
 
     return null;
@@ -672,6 +674,10 @@ function validateTags(array $inputArray, string $field): ?string
 {
     if (!empty($inputArray[$field])) {
         $tags = explode(" ", $inputArray[$field]);
+
+        if (count(array_unique($tags)) < count($tags)) {
+            return 'Тэги не должны повторяться';
+        }
 
         return count($tags) > 1 ? null
             : "Введите одно или больше слов, разделенных пробелом";

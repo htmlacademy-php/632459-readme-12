@@ -109,6 +109,22 @@ $comments_amount = mysqli_fetch_array($result);
 $sql_show_count = 'UPDATE posts SET show_count = show_count + 1 WHERE id = ?';
 formSqlRequest($con, $sql_show_count, [$post_id], false);
 
+/* Подписаны ли на пользователя */
+
+$is_subscribe = false;
+
+$sql_subscribe
+    = 'SELECT subscribe_id FROM subscriptions WHERE subscribe_id = ? AND follower_id = ?';
+$result = formSqlRequest(
+    $con,
+    $sql_subscribe,
+    [$post['user_id'], $_SESSION['user']['id']]
+);
+
+if (mysqli_num_rows($result) > 0) {
+    $is_subscribe = true;
+}
+
 /* Добавление комментария */
 
 $errors = [];
@@ -185,6 +201,7 @@ if ($post_id && $post) {
         'comments_amount' => $comments_amount,
         'reposts'         => $reposts,
         'errors'          => $errors,
+        'is_subscribe' => $is_subscribe
     ]);
 
     $layout_content = include_template('layout.php', [

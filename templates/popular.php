@@ -232,12 +232,22 @@
         <?php
         if ($pages_count > 1): ?>
             <div class="popular__page-links">
+                <?php if (!empty($_GET['tab'])): ?>
+                <a class="popular__page-link button button--gray popular__page-link--prev"
+                   href="<?= $cur_page > 1 ? '/popular.php?page='.($cur_page
+                           - 1).'&tab='.$_GET['tab'] : '#' ?>">Предыдущая страница</a>
+                <a class="popular__page-link button button--gray popular__page-link--next"
+                   href="<?= $cur_page < $pages_count ? '/popular.php?page='
+                       .($cur_page + 1).'&tab='.$_GET['tab'] : '#' ?>">Следующая страница</a>
+                <?php endif; ?>
+                <?php if (!isset($_GET['tab']) || empty($_GET['tab'])): ?>
                 <a class="popular__page-link button button--gray popular__page-link--prev"
                    href="<?= $cur_page > 1 ? '/popular.php?page='.($cur_page
                            - 1) : '#' ?>">Предыдущая страница</a>
                 <a class="popular__page-link button button--gray popular__page-link--next"
                    href="<?= $cur_page < $pages_count ? '/popular.php?page='
                        .($cur_page + 1) : '#' ?>">Следующая страница</a>
+                <?php endif; ?>
             </div>
         <?php
         endif; ?>
